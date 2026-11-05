@@ -2,11 +2,11 @@
 
 | Domínio | Responsabilidade | Estado |
 |---|---|---|
-| `core` | Home, conteúdo público e health | Home implementada; health está em `api.v1` |
+| `core` | Home, banners, páginas informativas e conteúdo público | Home e banners implementados; health está em `api.v1` |
 | `accounts` | Identidade, autenticação e perfil pessoal | Usuário customizado; fluxos ainda pendentes |
 | `audit` | Eventos administrativos/de segurança | Modelo inicial e admin somente leitura |
-| `providers` | Perfil e disponibilidade profissional | Planejado |
-| `catalog` | Categorias e anúncios de serviços | Planejado |
+| `providers` | Perfil público e estado de aprovação de profissionais/empresas | Implementado para leitura pública e administração; cadastro pendente |
+| `catalog` | Categorias e anúncios de serviços | Implementado para descoberta, busca e administração; criação por prestadores pendente |
 | `service_requests` | Solicitação e transições de contratação | Planejado |
 | `messaging` | Conversas, participantes e mensagens | Planejado |
 | `reviews` | Avaliações vinculadas a serviço concluído | Planejado |

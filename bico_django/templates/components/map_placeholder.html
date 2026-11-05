@@ -1,0 +1,6 @@
+<div class="map-placeholder" role="group" aria-describedby="map-description">
+  <div class="map-placeholder__pattern" aria-hidden="true"><span class="map-placeholder__road map-placeholder__road--one"></span><span class="map-placeholder__road map-placeholder__road--two"></span><span class="map-placeholder__park"></span></div>
+  <div class="map-placeholder__message"><span class="map-placeholder__pin" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span><p id="map-description">A descoberta de profissionais por localização estará disponível em uma próxima etapa.</p><a href="{% url 'core:search' %}">Ver serviços publicados</a>
+    {% if navigation_categories %}<nav class="map-placeholder__categories" aria-label="Buscar perto por categoria">{% for category in navigation_categories|slice:":5" %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}</nav>{% endif %}
+  </div>
+</div>

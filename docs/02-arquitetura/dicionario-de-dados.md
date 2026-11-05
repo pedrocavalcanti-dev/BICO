@@ -16,4 +16,20 @@
 
 UUID, ator opcional (`SET_NULL`), ação, tipo/identificador do alvo, resultado, metadados JSON mínimos e data de criação. Não é um log de payloads: conteúdo de mensagens, senhas, tokens e dados pessoais não devem ser gravados.
 
-Perfis pessoais, profissionais, serviços, solicitações, conversas e avaliações ainda não possuem tabelas nesta fundação.
+## `providers_providerprofile`
+
+Perfil público 1:1 com usuário, tipo `INDIVIDUAL`/`COMPANY`, nome público, slug, descrição, avatar opcional, cidade/UF, categorias, estado de aprovação, destaque, marca demonstrativa e datas. Não contém CPF/CNPJ, e-mail público nem endereço preciso.
+
+## `catalog_servicecategory`
+
+Nome e slug únicos, descrição, capa e referência de ícone opcionais, ordem, ativo, destaque, especialidade e datas.
+
+## `catalog_servicelisting`
+
+Anúncio UUID com prestador e categoria, título/slug, descrição, imagem opcional, preço inicial Decimal opcional, tipo `FROM`/`QUOTE`, cidade/UF pública, estado `DRAFT`/`PUBLISHED`/`PAUSED`/`ARCHIVED`, destaque, marca demonstrativa e datas de criação/publicação/atualização.
+
+## `core_homebanner`
+
+Título, subtítulo, imagens desktop/mobile opcionais, texto alternativo, rótulo e destino interno, ordem, ativo, marca demonstrativa e datas. O destino validado é sempre um caminho interno.
+
+Avaliações, solicitações, pagamentos, conversas e localização geográfica ainda não possuem tabelas nesta versão.

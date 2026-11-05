@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ provider.public_name }} — BICO{% endblock %}
+{% block content %}
+<main id="main-content" class="container page-content">
+  <article class="provider-profile">
+    {% if provider.avatar %}<img class="provider-profile__avatar" src="{{ provider.avatar.url }}" alt="Foto de {{ provider.public_name }}">{% else %}<span class="provider-profile__avatar provider-profile__avatar--placeholder" aria-hidden="true">{{ provider.public_name|slice:":1"|upper }}</span>{% endif %}
+    <div><p class="eyebrow">{% if provider.provider_type == "COMPANY" %}Empresa prestadora{% else %}Profissional autônomo{% endif %}</p><h1>{{ provider.public_name }}</h1><p class="provider-profile__location">{{ provider.city }}-{{ provider.state }}</p>{% if provider.is_demo %}<span class="demo-badge">Perfil de demonstração</span>{% endif %}</div>
+    {% if provider.description %}<p class="provider-profile__description">{{ provider.description|linebreaksbr }}</p>{% endif %}
+    {% if provider.categories.all %}<div class="provider-profile__categories">{% for category in provider.categories.all %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}</div>{% endif %}
+  </article>
+  <section class="home-section" aria-labelledby="provider-listings-title"><div class="section-heading"><h2 class="section-heading__title" id="provider-listings-title">Serviços publicados</h2><span class="section-heading__rule" aria-hidden="true"></span></div>{% if listings %}<div class="listing-grid">{% for listing in listings %}{% include "components/service_card.html" %}{% endfor %}</div>{% else %}<p class="empty-state">Este perfil ainda não tem serviços publicados.</p>{% endif %}</section>
+</main>
+{% endblock %}

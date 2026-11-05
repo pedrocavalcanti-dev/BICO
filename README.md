@@ -1,8 +1,8 @@
 # BICO — Plataforma de Serviços
 
-Fundação técnica `0.1.1-alpha` de um marketplace bilateral para descoberta e contratação de serviços, iniciado em Campinas-SP. A conta é única: uma pessoa poderá contratar e, opcionalmente, ativar um perfil profissional.
+Alpha `0.2.0` da BICO: Home de marketplace para descobrir serviços publicados por profissionais e empresas, iniciada em Campinas-SP. A conta é única; os fluxos de cadastro e autenticação de clientes e prestadores ainda não estão implementados.
 
-Esta etapa configura a base Django para MySQL e prepara o branding, os tokens visuais e os estilos reutilizáveis. A Home continua mínima. Catálogo, contratação, chat, pagamentos e BICO Gestão ainda não estão implementados. O Alpha atual é exclusivamente de serviços; não inclui comércio de produtos.
+Esta etapa entrega Home, busca, páginas públicas de anúncio e perfil, modelos mínimos para categorias/prestadores/anúncios/banners e API pública somente de leitura. Contratação, chat, avaliações, pagamentos, mapa real e BICO Gestão ainda não estão implementados. O Alpha é exclusivamente de serviços; não inclui comércio de produtos físicos.
 
 ## Estrutura
 
@@ -37,9 +37,12 @@ Depois que o banco existir:
 ```powershell
 Set-Location .\bico_django
 python manage.py migrate
+python manage.py seed_bico_demo
 python manage.py createsuperuser
 python manage.py runserver
 ```
+
+`seed_bico_demo` só executa com `DEBUG=True` e MySQL. Ele cria conteúdo fictício identificável como demonstração, não usa imagens externas e não altera registros existentes que não sejam demonstrativos.
 
 A aplicação fica em `http://127.0.0.1:8000/`; a API em `/api/v1/` e o health check em `/api/v1/health/`.
 
@@ -60,11 +63,12 @@ python manage.py check
 python manage.py makemigrations --check --dry-run
 python manage.py test
 python manage.py findstatic css/site.css
+python manage.py findstatic css/home.css
 ```
 
 `migrate` e testes que usam banco precisam de MySQL disponível e credenciais válidas. Consulte [docs/01-projeto/estado-atual.md](docs/01-projeto/estado-atual.md) para o resultado da validação neste ambiente.
 
-O CSS é dividido entre [tokens](bico_django/static/css/tokens.css), [base](bico_django/static/css/base.css), [componentes](bico_django/static/css/components.css) e estilos da página em `site.css`. A Home completa continua planejada; veja [Design System](docs/04-interface/design-system.md).
+O CSS usa tokens, fontes locais Inter e Quicksand, base, componentes reutilizáveis e estilos específicos em `home.css`. Consulte [estado atual](docs/01-projeto/estado-atual.md), [contratos da API](docs/06-api-e-dados/contratos-api.md) e [Design System](docs/04-interface/design-system.md).
 
 ## Git
 

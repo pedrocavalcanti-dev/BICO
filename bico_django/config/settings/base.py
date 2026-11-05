@@ -1,4 +1,5 @@
 """Shared Django settings. Environment files are resolved from the monorepo root."""
+
 from pathlib import Path
 
 import environ
@@ -25,6 +26,8 @@ INSTALLED_APPS = [
     "apps.core.apps.CoreConfig",
     "apps.accounts.apps.AccountsConfig",
     "apps.audit.apps.AuditConfig",
+    "apps.providers.apps.ProvidersConfig",
+    "apps.catalog.apps.CatalogConfig",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +62,9 @@ ASGI_APPLICATION = "config.asgi.application"
 
 DB_ENGINE = env.str("DB_ENGINE", default="mysql").strip().lower()
 if DB_ENGINE != "mysql":
-    raise ImproperlyConfigured("A BICO usa exclusivamente MySQL; não há fallback de banco de dados.")
+    raise ImproperlyConfigured(
+        "A BICO usa exclusivamente MySQL; não há fallback de banco de dados."
+    )
 
 DATABASES = {
     "default": {
@@ -98,6 +103,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

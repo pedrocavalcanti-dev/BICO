@@ -1,7 +1,7 @@
 [project]
 name = "bico-platform"
-version = "0.1.1a0"
-description = "Fundação da plataforma BICO de contratação de serviços"
+version = "0.2.0a0"
+description = "Marketplace BICO para descoberta de serviços"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 license = { text = "Proprietary" }

@@ -1,0 +1,6 @@
+{% load static %}
+<aside class="signup-banner" aria-labelledby="signup-title">
+  <div class="signup-banner__copy"><p class="signup-banner__eyebrow">Para quem presta serviços</p><h2 id="signup-title">Seu talento tem espaço na BICO.</h2><p>Conheça a plataforma e prepare seu perfil para divulgar seus serviços.</p><a class="button button--light" href="{% url 'core:info' 'criar-conta' %}">Saiba como começar</a></div>
+  <img class="signup-banner__logo" src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="" loading="lazy" width="132" height="132">
+  <div class="signup-banner__note"><span aria-hidden="true">✦</span><p>Descubra profissionais e empresas da sua região.</p><a href="{% url 'core:search' %}">Explorar serviços <span aria-hidden="true">→</span></a></div>
+</aside>

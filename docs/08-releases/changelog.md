@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0-alpha — 2026-11-04
+
+- Home de marketplace dirigida por MySQL, busca e páginas públicas de serviços e prestadores.
+- Modelos/admin de banners, categorias, perfis de profissionais/empresas e anúncios de serviços.
+- API pública de leitura paginada e serializers de campos públicos.
+- Seed demonstrativo seguro para desenvolvimento, sem imagens externas nem avaliações inventadas.
+- Fontes locais Inter e Quicksand, CSS responsivo, área geográfica apenas visual e documentação atualizada.
+- 21 testes sem banco temporário; migrations aplicadas ao schema MySQL local existente.
+
 ## 0.1.1-alpha — 2026-11-04
 
 - Decisão vigente de MySQL, backend Django e driver `mysqlclient`; servidor 8.0.46 validado e migrations aplicadas ao schema vazio `bico`.

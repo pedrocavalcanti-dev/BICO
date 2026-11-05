@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load l10n %}
+{% block title %}{{ listing.title }} — BICO{% endblock %}
+{% block content %}
+<main id="main-content" class="container page-content">
+  <nav class="breadcrumbs" aria-label="Você está aqui"><a href="{% url 'core:home' %}">Início</a><span aria-hidden="true">/</span><a href="{% url 'core:search' %}?categoria={{ listing.category.slug|urlencode }}">{{ listing.category.name }}</a></nav>
+  <article class="detail-layout">
+    <div class="detail-main">
+      {% if listing.image %}<img class="detail-image" src="{{ listing.image.url }}" alt="Imagem do serviço {{ listing.title }}">{% else %}<div class="detail-image detail-image--placeholder" aria-hidden="true">{{ listing.category.name }}</div>{% endif %}
+      <h1>{{ listing.title }}</h1>{% if listing.is_demo %}<span class="demo-badge">Conteúdo de demonstração</span>{% endif %}
+      <p class="detail-description">{{ listing.description|linebreaksbr }}</p>
+    </div>
+    <aside class="detail-aside"><p class="detail-category">{{ listing.category.name }}</p><p class="detail-price">{% if listing.price_type == "FROM" and listing.price_start != None %}<span>A partir de</span>R$ {{ listing.price_start|floatformat:2|localize }}{% else %}Sob orçamento{% endif %}</p><p class="detail-location">{{ listing.city }}-{{ listing.state }}</p><a class="button" href="{% url 'core:info' 'conversar' %}">Saiba sobre contato</a><p class="detail-note">A solicitação de serviços e o contato pela plataforma ainda não estão disponíveis.</p><a class="detail-provider" href="{% url 'core:provider-detail' listing.provider.slug %}">{% if listing.provider.avatar %}<img src="{{ listing.provider.avatar.url }}" alt="">{% endif %}<span><strong>{{ listing.provider.public_name }}</strong><small>Ver perfil profissional</small></span></a></aside>
+  </article>
+</main>
+{% endblock %}

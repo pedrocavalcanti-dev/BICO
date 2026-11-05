@@ -1,0 +1,14 @@
+{% load static %}
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="{% url 'core:home' %}" aria-label="BICO — início"><img src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="BICO" width="64" height="64"></a>
+      <p>Conectamos pessoas a profissionais e empresas que prestam serviços.</p>
+    </div>
+    <nav aria-label="Sobre a BICO"><h2>Sobre a BICO</h2><a href="{% url 'core:info' 'quem-somos' %}">Quem somos</a><a href="{% url 'core:info' 'como-funciona' %}">Como funciona</a><a href="{% url 'core:info' 'seguranca' %}">Segurança</a><a href="{% url 'core:info' 'termos' %}">Termos de uso</a><a href="{% url 'core:info' 'privacidade' %}">Privacidade</a></nav>
+    <nav aria-label="Ajuda e suporte"><h2>Ajuda e suporte</h2><a href="{% url 'core:info' 'ajuda' %}">Central de ajuda</a><a href="{% url 'core:info' 'perguntas-frequentes' %}">Perguntas frequentes</a><a href="{% url 'core:info' 'suporte' %}">Fale conosco</a></nav>
+    <nav aria-label="Para prestadores"><h2>Para prestadores</h2><a href="{% url 'core:info' 'para-prestadores' %}">Como começar</a><a href="{% url 'core:info' 'criar-conta' %}">Divulgue seus serviços</a><a href="{% url 'core:info' 'regras-da-comunidade' %}">Regras da comunidade</a></nav>
+    <nav aria-label="Institucional"><h2>Institucional</h2><a href="{% url 'core:info' 'contato' %}">Contato</a><a href="{% url 'core:info' 'redes-sociais' %}">Redes sociais</a></nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><span>© {% now "Y" %} BICO</span><span>Marketplace de serviços</span></div></div>
+</footer>

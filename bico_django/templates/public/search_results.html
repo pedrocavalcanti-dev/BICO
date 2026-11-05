@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Serviços{% if query %} para “{{ query }}”{% endif %} — BICO{% endblock %}
+{% block content %}
+<main id="main-content" class="container page-content">
+  <header class="page-intro"><p class="eyebrow">Encontre o que você precisa</p><h1>Serviços na BICO</h1><p>Explore anúncios publicados por profissionais e empresas.</p></header>
+  <form class="filter-form" action="{% url 'core:search' %}" method="get">
+    <label>Serviço ou profissional<input class="field" type="search" name="q" value="{{ query }}" maxlength="100"></label>
+    <label>Cidade<input class="field" type="text" name="cidade" value="{{ city }}" maxlength="100"></label>
+    <label>Categoria<select class="field" name="categoria"><option value="">Todas as categorias</option>{% for category in categories %}<option value="{{ category.slug }}"{% if category.slug == selected_category %} selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></label>
+    <button class="button" type="submit">Buscar</button>
+  </form>
+  <p class="results-count">{{ result_count }} resultado{{ result_count|pluralize:"s" }}</p>
+  {% if page_obj.object_list %}<div class="listing-grid">{% for listing in page_obj %}{% include "components/service_card.html" %}{% endfor %}</div>{% else %}<p class="empty-state">Não encontramos serviços com esses filtros. Tente outra busca.</p>{% endif %}
+  {% if page_obj.paginator.num_pages > 1 %}<nav class="pagination" aria-label="Paginação"><span>{% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&cidade={{ city|urlencode }}&categoria={{ selected_category|urlencode }}&page={{ page_obj.previous_page_number }}">Anterior</a>{% endif %}</span><span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span><span>{% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&cidade={{ city|urlencode }}&categoria={{ selected_category|urlencode }}&page={{ page_obj.next_page_number }}">Próxima</a>{% endif %}</span></nav>{% endif %}
+</main>
+{% endblock %}

@@ -1,0 +1,4 @@
+<a class="category-card{% if specialty %} category-card--specialty{% endif %}" href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">
+  {% if category.cover_image %}<img src="{{ category.cover_image.url }}" alt="" loading="lazy">{% else %}<span class="category-card__art" aria-hidden="true"><span>{{ category.name|slice:":1"|upper }}</span></span>{% endif %}
+  <span class="category-card__shade"></span><span class="category-card__name">{{ category.name }}</span>
+</a>

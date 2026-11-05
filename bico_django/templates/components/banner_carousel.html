@@ -1,0 +1,23 @@
+<section class="banner-carousel" data-carousel aria-label="Destaques da BICO">
+  <div class="banner-carousel__slides">
+    {% for banner in banners %}
+      <article class="banner-slide{% if forloop.first %} is-active{% endif %}" data-slide{% if not forloop.first %} hidden{% endif %}>
+        {% if banner.image %}<picture>{% if banner.mobile_image %}<source media="(max-width: 40rem)" srcset="{{ banner.mobile_image.url }}">{% endif %}<img class="banner-slide__image" src="{{ banner.image.url }}" alt="{{ banner.image_alt }}"{% if not forloop.first %} loading="lazy"{% endif %}></picture>{% endif %}
+        <div class="banner-slide__content{% if banner.image %} banner-slide__content--with-image{% endif %}">
+          {% if banner.is_demo %}<span class="demo-badge">Demonstração</span>{% endif %}
+          <p class="banner-slide__eyebrow">BICO · Campinas e região</p>
+          {% if forloop.first %}<h1>{{ banner.title }}</h1>{% else %}<h2>{{ banner.title }}</h2>{% endif %}
+          {% if banner.subtitle %}<p>{{ banner.subtitle }}</p>{% endif %}
+          {% if banner.action_label %}<a class="button button--light" href="{{ banner.destination }}">{{ banner.action_label }}</a>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+  {% if banners|length > 1 %}
+    <button class="banner-carousel__control banner-carousel__control--previous" type="button" data-carousel-previous aria-label="Banner anterior"><span aria-hidden="true">‹</span></button>
+    <button class="banner-carousel__control banner-carousel__control--next" type="button" data-carousel-next aria-label="Próximo banner"><span aria-hidden="true">›</span></button>
+    <div class="banner-carousel__dots" role="group" aria-label="Escolher banner">
+      {% for banner in banners %}<button type="button" data-carousel-dot="{{ forloop.counter0 }}" aria-label="Mostrar banner {{ forloop.counter }}"{% if forloop.first %} aria-current="true"{% endif %}></button>{% endfor %}
+    </div>
+  {% endif %}
+</section>

@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — BICO{% endblock %}
+{% block content %}
+<main id="main-content" class="container page-content"><article class="info-page"><p class="eyebrow">BICO</p><h1>{{ title }}</h1><p>{{ message }}</p><a class="button" href="{% url 'core:home' %}">Voltar ao início</a></article></main>
+{% endblock %}

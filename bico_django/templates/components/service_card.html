@@ -1,0 +1,17 @@
+{% load l10n %}
+<article class="service-card">
+  <a class="service-card__image-link" href="{% url 'core:service-detail' listing.slug %}" aria-label="Ver {{ listing.title }}">
+    {% if listing.image %}<img class="service-card__image" src="{{ listing.image.url }}" alt="" loading="lazy">{% else %}<span class="service-card__image service-card__image--placeholder" aria-hidden="true"><span>{{ listing.category.name }}</span></span>{% endif %}
+  </a>
+  <div class="service-card__body">
+    {% if listing.is_demo %}<span class="demo-badge demo-badge--small">Demonstração</span>{% endif %}
+    <p class="service-card__category">{{ listing.category.name }}</p>
+    <h3><a href="{% url 'core:service-detail' listing.slug %}">{{ listing.title }}</a></h3>
+    <a class="service-card__provider" href="{% url 'core:provider-detail' listing.provider.slug %}">
+      {% if listing.provider.avatar %}<img src="{{ listing.provider.avatar.url }}" alt="" loading="lazy">{% else %}<span class="service-card__provider-avatar" aria-hidden="true">{{ listing.provider.public_name|slice:":1"|upper }}</span>{% endif %}
+      <span>{{ listing.provider.public_name }}</span>
+    </a>
+    <p class="service-card__location">{{ listing.city }}-{{ listing.state }}</p>
+    <p class="service-card__price">{% if listing.price_type == "FROM" and listing.price_start != None %}<span>A partir de</span> R$ {{ listing.price_start|floatformat:2|localize }}{% else %}Sob orçamento{% endif %}</p>
+  </div>
+</article>

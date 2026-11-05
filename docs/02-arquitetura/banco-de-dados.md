@@ -6,4 +6,8 @@ O driver único é `mysqlclient`. A conexão solicita `utf8mb4`, modo SQL estrit
 
 Não existe fallback para PostgreSQL ou SQLite. As credenciais locais não são versionadas. Produção exige usuário de aplicação com privilégios mínimos; não usar root.
 
-Usuários e eventos de auditoria usam UUID. Chaves estrangeiras, constraints e migrations versionadas preservam integridade. PostGIS fica para quando houver necessidade operacional de busca geográfica.
+Usuários, perfis profissionais, categorias, anúncios e banners usam UUID. `ProviderProfile` se relaciona 1:1 com `accounts.User`; perfis ligam-se a categorias em N:N; `ServiceListing` referencia um prestador e uma categoria; `HomeBanner` é independente. Índices cobrem status/destaque/data de publicação, status/categoria/data e status/cidade/data.
+
+Anúncios públicos exigem status `PUBLISHED`, perfil `APPROVED` e categoria ativa. Perfis públicos exigem `APPROVED`. Fotos são opcionais; Django `ImageField` valida a imagem e um validador limita extensões a JPG/PNG/WebP e tamanho a 5 MB. Upload em produção requer decidir storage e política de retenção. Avaliações e distância ainda não têm modelo.
+
+`seed_bico_demo` só roda com `DEBUG=True` e backend MySQL. Seus perfis, anúncios e banners têm `is_demo=True`; o comando não apaga dados e não altera linhas legítimas. A tabela de usuários também recebe contas demonstrativas com senha inutilizável.

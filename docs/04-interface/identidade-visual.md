@@ -18,7 +18,7 @@ Valores iniciais alinhados às referências recebidas; as imagens do Figma não 
 | `--color-primary` | `#FF5308` | Header, ações e destaques laranja |
 | `--color-primary-hover` | `#E9470E` | Hover/pressed e texto laranja com contraste |
 | `--color-primary-soft` | `#FFF2EB` | Superfície suave de marca |
-| `--color-text-primary` | `#233947` | Títulos e texto de alta ênfase |
+| `--color-text-primary` | `#253D4E` | Títulos e texto de alta ênfase |
 | `--color-text-body` | `#202124` | Texto corrido |
 | `--color-text-secondary` | `#66717A` | Texto auxiliar |
 | `--color-background` | `#FFFFFF` | Fundo da página |
@@ -29,6 +29,13 @@ Não usar paletas roxas/azuis concorrentes nem gradientes decorativos. Laranja, 
 
 ## Tipografia e uso
 
-Usar `Inter` quando já estiver disponível no sistema, com `system-ui`, `Segoe UI` e fontes sans-serif como fallback. A renderização básica não depende de CDN nem de fonte baixada. A escala é curta, fluida para títulos, e mantém espaçamento/altura de linha legíveis.
+As fontes oficiais estão hospedadas localmente em `bico_django/static/fonts/`, com licenças OFL incluídas; a interface não depende de CDN. Tokens de família e peso ficam em `static/css/tokens.css`.
 
-Priorizar contraste, foco de teclado visível, alvos de toque confortáveis e fotografias reais. Não exibir preços, avaliações, selos ou disponibilidade fictícios.
+- **Quicksand Bold 700:** títulos principais e de seção, normalmente 24 px / 28,8 px, cor `#253D4E`.
+- **Inter Regular 400:** navegação, descrições e textos comuns; menu em 13 px / 24 px.
+- **Inter Bold 700:** nomes de profissionais e títulos menores, referência 14 px / 23,8 px.
+- **Inter Medium/Semibold 500–600:** botões, preços, filtros e informações de destaque.
+
+Os fallbacks usam famílias sans-serif do sistema; Arial e Roboto não são substitutos visuais principais. Inter variável cobre os pesos da interface; Quicksand é fornecida em 700.
+
+Priorizar contraste, foco de teclado visível, alvos de toque confortáveis e fotografias autorizadas. Fallbacks visuais locais em CSS substituem imagens indisponíveis. Conteúdo de demonstração tem marca explícita; não exibir avaliações, distâncias ou selos de verificação fictícios.
