@@ -1,0 +1,43 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.Python
+
+# Django runtime artifacts
+*.log
+*.sqlite3
+db.sqlite3
+/var/
+/media/
+
+# IDEs and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Frontend and generated output
+node_modules/
+/bico_django/staticfiles/
+/bico_django/frontend_src/build/
+/bico_django/frontend_src/dist/
+
+# Test and tool caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/

@@ -1,0 +1,8 @@
+"""Local development settings. PostgreSQL remains the configured database."""
+from .base import *  # noqa: F403
+
+DEBUG = env.bool("DJANGO_DEBUG", default=True)  # noqa: F405
+ALLOWED_HOSTS = env.list(  # noqa: F405
+    "DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "[::1]"]
+)
+INTERNAL_IPS = ["127.0.0.1"]
