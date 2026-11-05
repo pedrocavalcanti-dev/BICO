@@ -6,6 +6,7 @@
 - Recuperação e alteração de senha com formulários, validadores e tokens nativos Django; e-mail em arquivo local no desenvolvimento e SMTP obrigatório em produção.
 - Throttle persistido no MySQL, auditoria de eventos sem credenciais/PII, API autenticada `GET/PATCH /api/v1/users/me/` e header contextual à sessão.
 - Login/cadastro responsivos com identidade BICO e links internos antigos encaminhados às rotas de conta.
+- `check`, verificação de migrations, Ruff e 20 testes focados passaram. A suíte completa ainda não inicia por falta de privilégio do usuário MySQL para criar `test_bico` (1044); por isso, a integração à `main` depende dessa validação.
 - Confirmação de e-mail, social login, modo Prestador, contratações, chat e notificações reais continuam pendentes.
 
 ## 0.2.0-alpha — 2026-11-04

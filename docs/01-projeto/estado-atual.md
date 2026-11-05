@@ -49,6 +49,11 @@
 - Ruff `check` e `format --check` nos arquivos Python alterados: sem erros.
 - Login e cadastro conferidos no Edge em 360, 390, 768, 1024 e 1440 px, sem overflow horizontal; capturas locais em `artifacts/responsive-alpha-0.3.0/` são ignoradas pelo Git.
 
+## Histórico Git e integração
+
+- A Alpha 0.2.0 está no commit `3702e69`; a Alpha 0.3.0 parte dele e está no commit `dba6100`, na branch `feature/bico-alpha-0.3.0-auth`.
+- A publicação desta branch de desenvolvimento está autorizada. A integração à `main` fica pendente até a suíte completa executar e passar no MySQL de teste; preservar a ordem Alpha 0.2.0 → Alpha 0.3.0.
+
 ## Regras e limites
 
 - O estado aprovado de perfil e publicado de anúncio controla a descoberta pública. E-mail, usuário, estado de moderação e dados documentais não fazem parte dos serializers públicos.

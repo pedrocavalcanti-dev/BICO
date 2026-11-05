@@ -70,6 +70,8 @@ python manage.py findstatic css/home.css
 
 `migrate` e testes que usam banco precisam de MySQL disponível e credenciais válidas. Consulte [docs/01-projeto/estado-atual.md](docs/01-projeto/estado-atual.md) para o resultado da validação neste ambiente.
 
+O runner de testes MySQL cria um banco isolado (`test_bico`). Use uma conta de teste autorizada a criar e remover esse banco; não conceda esses privilégios à conta de aplicação de produção. Sem isso, os testes focados que não precisam de banco podem passar, mas a suíte completa não chega a executar.
+
 O CSS usa tokens, fontes locais Inter e Quicksand, base, componentes reutilizáveis e estilos específicos em `home.css`. Consulte [estado atual](docs/01-projeto/estado-atual.md), [contratos da API](docs/06-api-e-dados/contratos-api.md) e [Design System](docs/04-interface/design-system.md).
 
 ## Git

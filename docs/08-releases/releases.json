@@ -2,7 +2,7 @@
   {
     "version": "0.3.0-alpha",
     "date": "2026-11-05",
-    "status": "implementado nesta branch; testes bloqueados por permissões do usuário MySQL de teste",
+    "status": "implementado na branch de desenvolvimento; 20 testes focados passaram; suíte completa e integração à main pendentes de privilégio MySQL para test_bico",
     "summary": "Cadastro/login por sessão Django, recuperação de senha, área do cliente, API /users/me/, throttle MySQL compartilhado e auditoria mínima."
   },
   {

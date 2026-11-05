@@ -2,7 +2,9 @@
 
 Controles existentes: segredos fora do Git; settings separados; produção sem DEBUG e com variáveis obrigatórias; cookies seguros em produção; proteção CSRF e clickjacking do Django; hosts/origens explícitos; permissões DRF autenticadas por padrão; hashing de senha Django; admin de auditoria somente leitura. MySQL usa credenciais de ambiente, conexão `utf8mb4` e um engine único explícito; produção deve usar conta de aplicação com privilégio mínimo, sem root.
 
-Ainda não existem login público, limitação de tentativas, MFA, RBAC operacional ou monitoramento de incidentes. Os 10 testes automatizados da fundação foram executados localmente; eles não substituem testes dos fluxos de autenticação, ainda não implementados. Não declarar segurança absoluta. Revise o check de deploy antes de publicar e atualize este documento quando controles forem implementados.
+Na Alpha 0.3.0, cadastro, login e sessão Web usam os mecanismos nativos do Django. Logout é POST com CSRF, `next` é validado, formulários e serializer limitam os campos editáveis e a API deriva o usuário de `request.user`. Recuperação de senha usa token temporário Django e resposta neutra. Tentativas de login, cadastro e recuperação usam buckets HMAC persistidos no MySQL. A auditoria não guarda senha, token, IP ou payload pessoal.
+
+Validação em 2026-11-05: `manage.py check`, `makemigrations --check --dry-run`, Ruff nos módulos alterados e 20 testes focados passaram. A suíte completa encontrou 40 testes, mas o runner não conseguiu criar `test_bico` por falta de privilégio MySQL (erro 1044); portanto, os fluxos que dependem da criação do banco de teste ainda não foram validados integralmente. Não declarar segurança absoluta. Revise o check de deploy antes de publicar.
 
 
 ## Autenticação Alpha 0.3.0

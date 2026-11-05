@@ -2,6 +2,12 @@
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+/secrets/
+/credentials/
 
 # Python
 .venv/
@@ -16,8 +22,19 @@ build/
 
 # Django runtime artifacts
 *.log
+*.log.*
 *.sqlite3
+*.sqlite
+*.db
+*.dump
+*.sql.gz
+*.bak
+*.tmp
+*.temp
+*.pid
 db.sqlite3
+/mysql-data/
+/.local-db/
 /var/
 /media/
 
@@ -37,6 +54,7 @@ node_modules/
 
 # Test and tool caches
 /artifacts/
+/tmp/
 .pytest_cache/
 .coverage
 htmlcov/
