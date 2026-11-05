@@ -1,5 +1,11 @@
 [
   {
+    "version": "0.1.1-alpha",
+    "date": "2026-11-04",
+    "status": "validado localmente",
+    "summary": "MySQL 8.0.46 configurado e migrations aplicadas ao schema vazio Bico/bico; branding e design system inicial integrados, sem Home completa."
+  },
+  {
     "version": "0.1.0-alpha",
     "date": "2026-11-04",
     "status": "inicialização",

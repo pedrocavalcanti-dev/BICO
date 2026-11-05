@@ -1,6 +1,6 @@
 # ADR-003 — PostgreSQL
 
-- **Estado:** aceito.
+- **Estado:** substituído por [ADR-006 — MySQL](ADR-006-mysql.md).
 - **Contexto:** marketplace requer integridade relacional e evolução para consultas geográficas.
-- **Decisão:** PostgreSQL é o banco local/principal; sem fallback SQLite; PostGIS será avaliado quando houver necessidade.
-- **Consequência:** ambiente de desenvolvimento precisa de PostgreSQL antes de aplicar migrations ou executar testes integrados.
+- **Decisão histórica:** PostgreSQL foi escolhido inicialmente para desenvolvimento e produção, sem fallback SQLite; PostGIS seria avaliado quando houvesse necessidade.
+- **Consequência histórica:** a configuração PostgreSQL nunca foi validada com o servidor local na Alpha 0.1.0. A decisão vigente é MySQL, registrada no ADR-006.

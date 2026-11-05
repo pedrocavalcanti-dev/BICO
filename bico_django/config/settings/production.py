@@ -7,10 +7,10 @@ DEBUG = False
 
 _required = (
     "DJANGO_SECRET_KEY",
-    "POSTGRES_DB",
-    "POSTGRES_USER",
-    "POSTGRES_PASSWORD",
-    "POSTGRES_HOST",
+    "DB_NAME",
+    "DB_USER",
+    "DB_PASSWORD",
+    "DB_HOST",
     "DJANGO_ALLOWED_HOSTS",
     "DJANGO_CSRF_TRUSTED_ORIGINS",
 )
@@ -20,6 +20,9 @@ if _missing:
         "Configuração de produção incompleta. Variáveis obrigatórias ausentes: "
         + ", ".join(_missing)
     )
+
+if env.str("DB_ENGINE", default="mysql").strip().lower() != "mysql":  # noqa: F405
+    raise ImproperlyConfigured("A configuração de produção da BICO exige MySQL.")
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")  # noqa: F405
 CSRF_TRUSTED_ORIGINS = env.list("DJANGO_CSRF_TRUSTED_ORIGINS")  # noqa: F405

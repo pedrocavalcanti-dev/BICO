@@ -26,7 +26,7 @@ Nunca coloque `manage.py`, `config`, `apps`, `templates` ou `static` diretamente
 
 - Django segue convenções oficiais; nomes de módulos e classes em inglês.
 - O usuário customizado é `accounts.User`; não altere `AUTH_USER_MODEL` depois da primeira migração publicada.
-- PostgreSQL é o banco local e principal. Não use SQLite como fallback nem faça operações destrutivas no banco.
+- MySQL é o banco local e principal. Use o backend Django MySQL e `mysqlclient`; não use SQLite/PostgreSQL como fallback nem faça operações destrutivas no banco.
 - Toda mudança de modelo requer migration versionada e revisão da documentação do banco.
 - UUID é usado em entidades públicas quando apropriado; datas devem ser timezone-aware.
 - Não criar apps vazios, endpoints simulados ou funcionalidades descritas como implementadas antes de existirem.
@@ -45,7 +45,7 @@ Nunca coloque `manage.py`, `config`, `apps`, `templates` ou `static` diretamente
 
 - Ambiente principal: Windows/PowerShell; Python 3.12+.
 - Instale dependências com `python -m pip install -r requirements.txt` dentro de `.venv`.
-- Execute checks, migrations e testes focados apropriados à alteração. Não declare sucesso de banco sem PostgreSQL conectado.
+- Execute checks, migrations e testes focados apropriados à alteração. Não declare sucesso de banco sem MySQL conectado.
 - Verifique alterações no `git diff`, `.gitignore` e ausência de segredos antes do commit.
 - Não sobrescreva histórico, não use `push --force` e não publique sem autorização explícita.
 

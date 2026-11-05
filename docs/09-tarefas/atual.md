@@ -1,16 +1,17 @@
 # Tarefa atual
 
-## Fundação 0.1.0
+## Alpha 0.1.1 — MySQL e base visual
 
-- [x] Inspecionar diretório, Python, Git e PostgreSQL.
-- [x] Criar estrutura Django e settings por ambiente.
-- [x] Criar apps core, accounts e audit, com usuário customizado.
-- [x] Criar rotas de API base e Home pública mínima.
-- [x] Criar documentação e proteção inicial do Git.
-- [x] Gerar e revisar migrations iniciais.
-- [ ] Aplicar migrations e validar superuser.
-- [x] Executar checks, testes sem banco, verificação dos estáticos e check de produção.
-- [ ] Repetir validação integrada com PostgreSQL e decisão de hosting.
-- [ ] Criar commit local após revisão final.
+- [x] Inspecionar instruções, estado do Git, settings, dependências e documentação afetada.
+- [x] Confirmar serviço MySQL80 ativo, versão 8.0.46 e porta 3306 acessível.
+- [x] Configurar backend MySQL com variáveis `DB_*`, opções de conexão por sessão e produção fail-closed.
+- [x] Instalar `mysqlclient` e remover dependência PostgreSQL do ambiente Python.
+- [x] Inspecionar e integrar as logos fornecidas; preservar favicon e reservar pasta de banners.
+- [x] Preparar CSS tokens/base/componentes/site e documentação do design system.
+- [x] Atualizar README, arquitetura, segurança, escopo, roadmap, ADRs, release e backlog.
+- [x] Verificar banco `Bico`, schema, charset/collation, engine, SQL mode, isolamento, tabelas e grants.
+- [x] Confirmar schema inicialmente vazio e aplicar migrations existentes, sem criar ou apagar o banco.
+- [x] Executar checks, 10 testes sem banco temporário, smoke transacional revertido, HTTP local e coleta estática dry-run.
+- [x] Revisar diff e criar commit local Alpha 0.1.1.
 
-O PostgreSQL ausente bloqueia migrations aplicadas, superuser e inicialização do `runserver`; checks e testes sem banco foram executados sem substituição silenciosa.
+O check de produção aponta somente HSTS desligado, mantido até domínio/TLS/proxy serem definidos. Produção deve usar credenciais MySQL próprias de privilégio mínimo.

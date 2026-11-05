@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import environ
+from django.core.exceptions import ImproperlyConfigured
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
 BASE_DIR = ROOT_DIR / "bico_django"
@@ -56,17 +57,27 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+DB_ENGINE = env.str("DB_ENGINE", default="mysql").strip().lower()
+if DB_ENGINE != "mysql":
+    raise ImproperlyConfigured("A BICO usa exclusivamente MySQL; não há fallback de banco de dados.")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB", default="bico"),
-        "USER": env.str("POSTGRES_USER", default="bico"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD", default=""),
-        "HOST": env.str("POSTGRES_HOST", default="127.0.0.1"),
-        "PORT": env.str("POSTGRES_PORT", default="5432"),
-        "CONN_MAX_AGE": env.int("POSTGRES_CONN_MAX_AGE", default=60),
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": env.str("DB_NAME", default="Bico"),
+        "USER": env.str("DB_USER", default=""),
+        "PASSWORD": env.str("DB_PASSWORD", default=""),
+        "HOST": env.str("DB_HOST", default="127.0.0.1"),
+        "PORT": env.str("DB_PORT", default="3306"),
+        "CONN_MAX_AGE": env.int("DB_CONN_MAX_AGE", default=60),
         "CONN_HEALTH_CHECKS": True,
-        "OPTIONS": {"connect_timeout": env.int("POSTGRES_CONNECT_TIMEOUT", default=3)},
+        "OPTIONS": {
+            "charset": "utf8mb4",
+            "sql_mode": "STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION",
+            "isolation_level": "read committed",
+            "init_command": "SET default_storage_engine=INNODB",
+            "connect_timeout": env.int("DB_CONNECT_TIMEOUT", default=3),
+        },
     }
 }
 

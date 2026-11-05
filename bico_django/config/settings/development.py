@@ -1,4 +1,4 @@
-"""Local development settings. PostgreSQL remains the configured database."""
+"""Local development settings. MySQL credentials come from the environment."""
 from .base import *  # noqa: F403
 
 DEBUG = env.bool("DJANGO_DEBUG", default=True)  # noqa: F405

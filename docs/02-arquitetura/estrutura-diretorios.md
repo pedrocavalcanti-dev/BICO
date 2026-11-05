@@ -7,7 +7,8 @@ Projeto-Bico/
 │   ├── apps/                  # core, accounts e audit
 │   ├── api/v1/                # API REST versionada
 │   ├── templates/             # base e páginas públicas
-│   ├── static/css/            # CSS servido pelo Django
+│   ├── static/branding/       # logos, favicon e banners oficiais
+│   ├── static/css/            # tokens, base, componentes e estilos de página
 │   └── manage.py
 ├── docs/                      # produto, arquitetura e operação
 ├── mobile/                    # reservado; Flutter não iniciado

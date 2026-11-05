@@ -4,7 +4,7 @@
 
 Monólito modular Django, com limites de domínio claros. Django Templates atende a Web inicial; DRF oferece API REST para Web/PWA e futuros clientes móveis. Regras críticas devem residir no backend e ser reutilizáveis entre interfaces.
 
-PostgreSQL é o banco principal. Não há fallback para SQLite. Não introduzir microsserviços, framework JavaScript ou infraestrutura externa sem necessidade e decisão registrada.
+MySQL é o banco principal. Não há fallback para PostgreSQL ou SQLite. Não introduzir microsserviços, framework JavaScript ou infraestrutura externa sem necessidade e decisão registrada.
 
 ## Componentes existentes
 

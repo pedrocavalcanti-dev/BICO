@@ -1,13 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}BICO — Serviços perto de você{% endblock %}
 
 {% block content %}
   <header class="site-header">
-    <a class="brand" href="{% url 'core:home' %}" aria-label="BICO, início">B<span>ICO</span></a>
+    <a class="brand" href="{% url 'core:home' %}" aria-label="BICO, início">
+      <img class="brand__image" src="{% static 'branding/logos/logo-bico-sem-fundo.png' %}" alt="BICO">
+    </a>
     <span class="header-note">Serviços perto de você</span>
   </header>
-  <main>
+  <main class="site-main">
     <section class="hero" aria-labelledby="hero-title">
       <p class="eyebrow">BICO · Campinas e região</p>
       <h1 id="hero-title">Encontre quem resolve.</h1>
@@ -15,7 +18,7 @@
       <a class="button" href="#sobre">Conheça a BICO</a>
     </section>
     <section class="about" id="sobre" aria-labelledby="about-title">
-      <span class="section-mark" aria-hidden="true">B</span>
+      <img class="section-mark" src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="">
       <div>
         <h2 id="about-title">Uma plataforma feita para aproximar.</h2>
         <p>A BICO está sendo construída para conectar pessoas a profissionais independentes, com foco em proximidade, confiança e reputação.</p>

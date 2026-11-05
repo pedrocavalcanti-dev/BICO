@@ -1,8 +1,12 @@
 # Escopo Alpha
 
-## Etapa 0.1.0 — fundação
+## Etapa 0.1.0 — fundação Django inicial
 
-Implementar Django, PostgreSQL como banco configurado, apps `core`, `accounts` e `audit`, usuário customizado UUID/e-mail, admin técnico, API base, Home pública mínima, segurança por ambiente e documentação. Esta etapa não implementa cadastro/login de produto nem marketplace completo.
+Implementar Django, banco configurado inicialmente para PostgreSQL, apps `core`, `accounts` e `audit`, usuário customizado UUID/e-mail, admin técnico, API base, Home pública mínima, segurança por ambiente e documentação. A configuração do banco não foi validada no ambiente local nesta versão.
+
+## Etapa 0.1.1 — MySQL e base visual
+
+Substituir PostgreSQL por MySQL como banco oficial, manter o usuário e migrations existentes, validar o servidor e aplicar migrations apenas após confirmar banco, tabelas e histórico. Integrar os assets oficiais fornecidos, registrar a paleta BICO e preparar tokens CSS, componentes e templates compartilhados. A Home permanece mínima, sem catálogo ou dados comerciais fictícios.
 
 ## Alpha funcional planejado
 
