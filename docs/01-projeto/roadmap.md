@@ -5,7 +5,7 @@
 | 0.1.0 | Fundação Django, usuário UUID, API base e documentação | Concluída |
 | 0.1.1 | MySQL local/principal, branding e design system inicial | Concluída |
 | 0.2.0 | Home do marketplace, catálogo público, perfis, busca, APIs de leitura e seed demonstrativo | Implementada nesta branch |
-| 0.3.0 | Cadastro/login, recuperação de senha e ativação de perfil profissional | Próxima etapa |
+| 0.3.0 | Cadastro/login, recuperação de senha e área do cliente | Implementada nesta branch |
 | 0.4.0 | Solicitações de serviço, estados de atendimento e notificações básicas | Planejada |
 | 0.5.0 | Chat e avaliações verificáveis vinculadas ao serviço | Planejada |
 | 0.6.0 | Busca geográfica com dados e privacidade adequados | Planejada |

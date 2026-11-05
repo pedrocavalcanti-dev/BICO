@@ -31,10 +31,12 @@ Desktop.ini
 # Frontend and generated output
 node_modules/
 /bico_django/staticfiles/
+/bico_django/.local-emails/
 /bico_django/frontend_src/build/
 /bico_django/frontend_src/dist/
 
 # Test and tool caches
+/artifacts/
 .pytest_cache/
 .coverage
 htmlcov/

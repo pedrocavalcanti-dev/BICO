@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0-alpha — 2026-11-05
+
+- Cadastro de conta única de cliente, login por sessão Django, logout POST/CSRF e área privada para consultar/editar o nome.
+- Recuperação e alteração de senha com formulários, validadores e tokens nativos Django; e-mail em arquivo local no desenvolvimento e SMTP obrigatório em produção.
+- Throttle persistido no MySQL, auditoria de eventos sem credenciais/PII, API autenticada `GET/PATCH /api/v1/users/me/` e header contextual à sessão.
+- Login/cadastro responsivos com identidade BICO e links internos antigos encaminhados às rotas de conta.
+- Confirmação de e-mail, social login, modo Prestador, contratações, chat e notificações reais continuam pendentes.
+
 ## 0.2.0-alpha — 2026-11-04
 
 - Home de marketplace dirigida por MySQL, busca e páginas públicas de serviços e prestadores.

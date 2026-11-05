@@ -3,7 +3,7 @@ import re
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.http import Http404, HttpResponseBadRequest
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.catalog.models import ServiceCategory
 from apps.providers.models import ProviderProfile
@@ -161,6 +161,16 @@ def provider_detail(request, slug):
 
 
 def info_page(request, slug):
+    account_destinations = {
+        "entrar": "accounts:login",
+        "criar-conta": "accounts:register",
+        "minha-conta": "accounts:account",
+        "conversar": "accounts:conversations",
+        "notificacoes": "accounts:notifications",
+    }
+    if destination := account_destinations.get(slug):
+        return redirect(destination)
+
     page = INFO_PAGES.get(slug)
     if page is None:
         raise Http404

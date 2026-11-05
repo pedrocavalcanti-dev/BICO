@@ -1,0 +1,12 @@
+{% load static %}
+<aside class="auth-aside" aria-label="Sobre a BICO">
+  <a class="auth-aside__brand" href="{% url 'core:home' %}" aria-label="BICO — página inicial">
+    <img src="{% static 'branding/logos/logo-bico-sem-fundo.png' %}" alt="BICO" width="88" height="74">
+  </a>
+  <div class="auth-aside__copy">
+    <p class="auth-aside__eyebrow">Serviços perto de você</p>
+    <h2>Precisa de ajuda? Aqui você encontra.</h2>
+    <p>Descubra profissionais, compare serviços e acompanhe sua conta em um só lugar.</p>
+  </div>
+  <span class="auth-aside__watermark" aria-hidden="true">B</span>
+</aside>

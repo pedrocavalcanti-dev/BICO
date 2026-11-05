@@ -1,0 +1,41 @@
+.account-page { min-height: 55vh; padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.account-page--narrow { max-width: 52rem; }
+.account-heading { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem; }
+.account-heading h1, .account-page > .account-card h1 { margin-bottom: .45rem; font-size: clamp(2rem, 4vw, 3rem); }
+.account-heading p:not(.eyebrow) { margin-bottom: 0; color: var(--color-text-secondary); }
+.account-heading--stack { align-items: flex-start; }
+.account-card { margin-bottom: 1.25rem; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: #fff; box-shadow: var(--shadow-card); }
+.account-card h2, .account-future h2 { margin-bottom: 1rem; font-family: var(--font-family-heading); font-size: 1.35rem; }
+.account-card__heading { display: flex; align-items: center; gap: 1rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--color-border); }
+.account-card__heading h2 { margin: 0 0 .2rem; font-family: var(--font-family-interface); font-size: 1.1rem; }
+.account-card__heading p { margin: 0; color: var(--color-text-secondary); }
+.account-avatar { width: 3.75rem; height: 3.75rem; display: grid; flex: 0 0 auto; place-items: center; border-radius: 50%; background: var(--color-primary-soft); color: var(--color-primary-hover); font-family: var(--font-family-heading); font-size: 1.5rem; font-weight: var(--font-weight-bold); }
+.account-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin: 1.4rem 0 0; }
+.account-details div { min-width: 0; }
+.account-details dt { margin-bottom: .25rem; color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.account-details dd { overflow-wrap: anywhere; margin: 0; font-weight: var(--font-weight-medium); }
+.account-note { margin: 1.25rem 0 0; padding: .85rem 1rem; border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.account-actions > a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 4.5rem; border-top: 1px solid var(--color-border); text-decoration: none; }
+.account-actions > a > span:first-child { display: grid; gap: .2rem; }
+.account-actions strong { color: var(--color-text-primary); font-size: var(--font-size-sm); }
+.account-actions small { color: var(--color-text-secondary); font-size: var(--font-size-xs); }
+.account-actions > a > span:last-child { color: var(--color-primary); font-size: 1.75rem; }
+.account-future { padding: 1.25rem 0; }
+.account-future h2 { margin-bottom: .35rem; }
+.account-future p { max-width: 48rem; margin: 0; color: var(--color-text-secondary); }
+.account-back { display: inline-flex; min-height: 2.75rem; align-items: center; margin-bottom: 1.25rem; color: var(--color-text-secondary); font-size: var(--font-size-sm); text-decoration: none; }
+.account-form { display: grid; gap: 1.25rem; }
+.account-form .field { min-height: 3.25rem; }
+.account-form .password-field .field { padding-right: 3.5rem; }
+.account-form__actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: .5rem; }
+.button--outline { border-color: var(--color-primary); background: white; color: var(--color-primary-hover); }
+.button--outline:hover { background: var(--color-primary-soft); color: var(--color-primary-hover); }
+.account-messages { margin-bottom: 1rem; }
+.account-message { padding: .8rem 1rem; border-radius: var(--radius-sm); background: #eef8f2; color: #176b42; }
+.account-message--error { background: #fff1f0; color: var(--color-danger); }
+@media (max-width: 40rem) {
+  .account-heading { align-items: flex-start; flex-direction: column; }
+  .account-details { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .account-form__actions { flex-direction: column-reverse; }
+  .account-form__actions .button { width: 100%; }
+}

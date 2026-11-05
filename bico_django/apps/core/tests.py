@@ -59,11 +59,6 @@ class PublicHomeTests(SimpleTestCase):
     @patch("apps.core.views.active_categories", return_value=[])
     def test_informational_routes_render_without_broken_footer_links(self, _active_categories):
         slugs = (
-            "entrar",
-            "criar-conta",
-            "minha-conta",
-            "conversar",
-            "notificacoes",
             "quem-somos",
             "como-funciona",
             "seguranca",
@@ -81,6 +76,19 @@ class PublicHomeTests(SimpleTestCase):
             with self.subTest(slug=slug):
                 response = self.client.get(reverse("core:info", args=[slug]))
                 self.assertEqual(response.status_code, 200)
+
+    def test_legacy_account_links_redirect_to_current_authentication_routes(self):
+        destinations = {
+            "entrar": "accounts:login",
+            "criar-conta": "accounts:register",
+            "minha-conta": "accounts:account",
+            "conversar": "accounts:conversations",
+            "notificacoes": "accounts:notifications",
+        }
+        for slug, destination in destinations.items():
+            with self.subTest(slug=slug):
+                response = self.client.get(reverse("core:info", args=[slug]))
+                self.assertRedirects(response, reverse(destination), fetch_redirect_response=False)
 
     @patch("apps.core.views.active_categories", return_value=[])
     @patch("apps.core.views.search_listings", return_value=[])

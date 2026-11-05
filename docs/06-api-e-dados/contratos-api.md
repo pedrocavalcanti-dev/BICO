@@ -22,3 +22,12 @@ Formato de listagem DRF: `count`, `next`, `previous`, `results`. Não existe esc
 ## Endpoints anteriores
 
 Planejamento futuro: autenticação/cadastro, solicitações, mensagens, avaliações, notificações e localização geográfica. Eles não fazem parte das rotas implementadas.
+
+## Conta autenticada — Alpha 0.3.0
+
+| Método | Rota | Autenticação | Resposta |
+|---|---|---|---|
+| GET | `/api/v1/users/me/` | Sessão Django | `name`, `email`, `created_at` do usuário da sessão |
+| PATCH | `/api/v1/users/me/` | Sessão Django + CSRF | Atualiza somente `name`; e-mail e data são somente leitura |
+
+O endpoint deriva o objeto exclusivamente de `request.user`. Não recebe UUID de usuário, ignora campos adicionais e não expõe flags/permissões. A sessão Web usa `SessionAuthentication`; mutações exigem token CSRF. Não há endpoints API de login, cadastro ou tokens mobile nesta versão.

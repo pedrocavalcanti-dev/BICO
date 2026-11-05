@@ -1,8 +1,8 @@
 # BICO — Plataforma de Serviços
 
-Alpha `0.2.0` da BICO: Home de marketplace para descobrir serviços publicados por profissionais e empresas, iniciada em Campinas-SP. A conta é única; os fluxos de cadastro e autenticação de clientes e prestadores ainda não estão implementados.
+Alpha `0.3.0` da BICO: marketplace público com cadastro, login por sessão e área do cliente. A conta é única; a ativação de prestador, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
 
-Esta etapa entrega Home, busca, páginas públicas de anúncio e perfil, modelos mínimos para categorias/prestadores/anúncios/banners e API pública somente de leitura. Contratação, chat, avaliações, pagamentos, mapa real e BICO Gestão ainda não estão implementados. O Alpha é exclusivamente de serviços; não inclui comércio de produtos físicos.
+Esta versão preserva a Home, busca, páginas públicas e APIs de leitura da Alpha 0.2.0 e adiciona recuperação de senha, edição segura do nome, sessão Web e `GET/PATCH /api/v1/users/me/`. O marketplace continua exclusivamente de serviços; não inclui comércio de produtos físicos.
 
 ## Estrutura
 
@@ -32,7 +32,9 @@ python -c "from pathlib import Path; import secrets; p=Path('.env'); p.write_tex
 
 Preencha `DB_USER` e `DB_PASSWORD` no `.env` com as credenciais locais autorizadas. `DB_NAME=Bico`, host e porta já indicam o banco existente. O projeto não cria nem recria o schema automaticamente e não troca para outro banco se o MySQL estiver indisponível.
 
-Depois que o banco existir:
+Em desenvolvimento, a recuperação de senha grava mensagens em `bico_django/.local-emails/`; não envia e-mail externo. Em produção, configure `EMAIL_HOST`, `EMAIL_FROM` e as credenciais SMTP no ambiente antes de iniciar a aplicação. Nunca coloque segredos no Git.
+
+Depois que o banco existir, aplique as migrations e inicie a aplicação:
 
 ```powershell
 Set-Location .\bico_django

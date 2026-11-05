@@ -16,6 +16,10 @@
 
 UUID, ator opcional (`SET_NULL`), ação, tipo/identificador do alvo, resultado, metadados JSON mínimos e data de criação. Não é um log de payloads: conteúdo de mensagens, senhas, tokens e dados pessoais não devem ser gravados.
 
+## `accounts_auththrottlebucket`
+
+Chave HMAC primária, início de janela e contador para limitar tentativas de autenticação em múltiplos processos usando o MySQL compartilhado. Não armazena IP ou e-mail em claro. Buckets antigos são removidos pelo comando `cleanup_auth_throttle`.
+
 ## `providers_providerprofile`
 
 Perfil público 1:1 com usuário, tipo `INDIVIDUAL`/`COMPANY`, nome público, slug, descrição, avatar opcional, cidade/UF, categorias, estado de aprovação, destaque, marca demonstrativa e datas. Não contém CPF/CNPJ, e-mail público nem endereço preciso.

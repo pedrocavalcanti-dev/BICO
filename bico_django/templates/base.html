@@ -21,9 +21,9 @@
   </head>
   <body>
     <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
-    {% include "components/header.html" %}
+    {% block site_header %}{% include "components/header.html" %}{% endblock %}
     {% block content %}{% endblock %}
-    {% include "components/footer.html" %}
+    {% block site_footer %}{% include "components/footer.html" %}{% endblock %}
     <script src="{% static 'js/site.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
   </body>

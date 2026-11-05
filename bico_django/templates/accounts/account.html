@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Minha conta — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/accounts/account.css' %}">{% endblock %}
+{% block content %}
+<main id="main-content" class="container account-page">
+  {% if messages %}<div class="account-messages" aria-live="polite">{% for message in messages %}<p class="account-message account-message--{{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+  <header class="account-heading"><div><p class="eyebrow">Área do cliente</p><h1>Minha conta</h1><p>Gerencie seus dados de acesso e perfil.</p></div><a class="button button--outline" href="{% url 'accounts:account_edit' %}">Editar perfil</a></header>
+  <section class="account-card" aria-labelledby="account-details-title">
+    <div class="account-card__heading"><span class="account-avatar" aria-hidden="true">{{ account_user.name|first|upper }}</span><div><h2 id="account-details-title">{{ account_user.name }}</h2><p>{{ account_user.email }}</p></div></div>
+    <dl class="account-details"><div><dt>Nome</dt><dd>{{ account_user.name }}</dd></div><div><dt>E-mail</dt><dd>{{ account_user.email }}</dd></div><div><dt>Membro desde</dt><dd>{{ account_user.created_at|date:"j \d\e F \d\e Y" }}</dd></div></dl>
+    <p class="account-note">A confirmação de e-mail ainda não está disponível nesta versão.</p>
+  </section>
+  <section class="account-card account-actions" aria-labelledby="account-actions-title">
+    <h2 id="account-actions-title">Segurança e perfil</h2>
+    <a href="{% url 'accounts:account_edit' %}"><span><strong>Editar perfil</strong><small>Atualize seu nome de exibição.</small></span><span aria-hidden="true">›</span></a>
+    <a href="{% url 'accounts:password_change' %}"><span><strong>Alterar senha</strong><small>Confirme sua senha atual para criar outra.</small></span><span aria-hidden="true">›</span></a>
+  </section>
+  <aside class="account-future"><h2>Quero prestar serviços</h2><p>Você poderá solicitar a ativação do modo Prestador em uma próxima etapa. Sua conta atual será mantida.</p></aside>
+</main>
+{% endblock %}

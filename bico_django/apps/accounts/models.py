@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 from .managers import UserManager
 
@@ -42,3 +43,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.email
+
+
+class AuthThrottleBucket(models.Model):
+    """Shared, privacy-preserving counter used to limit authentication attempts."""
+
+    key = models.CharField(max_length=64, primary_key=True)
+    window_started_at = models.DateTimeField(default=timezone.now, db_index=True)
+    attempts = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "limite de autenticação"
+        verbose_name_plural = "limites de autenticação"
+
+    def __str__(self) -> str:
+        return f"Limite {self.key[:10]}"

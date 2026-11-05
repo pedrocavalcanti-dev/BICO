@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Entrar — BICO{% endblock %}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">{% endblock %}
+{% block content %}
+<main id="main-content" class="auth-layout">
+  <section class="auth-main" aria-labelledby="auth-title">
+    <div class="auth-card">
+      <a class="auth-back" href="{% url 'core:home' %}">← Voltar para a BICO</a>
+      <h1 id="auth-title">Login</h1>
+      <p class="auth-lead">Entre para acessar sua conta BICO.</p>
+      {% if messages %}<div class="auth-messages" aria-live="polite">{% for message in messages %}<p class="auth-message auth-message--{{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+      <form method="post" class="auth-form" novalidate>
+        {% csrf_token %}
+        {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+        {% if form.non_field_errors %}<div class="form-errors" role="alert">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        <div class="form-field{% if form.username.errors %} form-field--error{% endif %}">
+          <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+          {{ form.username }}
+          {% for error in form.username.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="form-field{% if form.password.errors %} form-field--error{% endif %}">
+          <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+          <div class="password-field">{{ form.password }}<button class="password-toggle" type="button" data-password-toggle aria-label="Mostrar senha" aria-pressed="false"><span aria-hidden="true">◉</span></button></div>
+          {% for error in form.password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="auth-form__options">
+          <label class="check-label"><input type="checkbox" name="remember_me"><span>Manter conectado</span></label>
+          <a href="{% url 'accounts:password_reset' %}">Esqueci minha senha</a>
+        </div>
+        <button class="button auth-submit" type="submit">Entrar</button>
+      </form>
+      <p class="auth-switch">Ainda não tem uma conta BICO? <a href="{% url 'accounts:register' %}">Crie agora</a></p>
+      <p class="auth-legal">Ao continuar, você acessará uma conta única para encontrar serviços na BICO.</p>
+    </div>
+  </section>
+  {% include "components/auth_aside.html" %}
+</main>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/accounts/auth.js' %}" defer></script>{% endblock %}

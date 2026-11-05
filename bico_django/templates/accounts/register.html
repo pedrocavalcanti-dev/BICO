@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Criar conta — BICO{% endblock %}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+{% load static %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">{% endblock %}
+{% block content %}
+<main id="main-content" class="auth-layout">
+  <section class="auth-main" aria-labelledby="auth-title">
+    <div class="auth-card auth-card--register">
+      <a class="auth-back" href="{% url 'core:home' %}">← Voltar para a BICO</a>
+      <h1 id="auth-title">Criar conta</h1>
+      <p class="auth-lead">Uma conta para encontrar serviços e profissionais.</p>
+      {% if messages %}<div class="auth-messages" aria-live="polite">{% for message in messages %}<p class="auth-message auth-message--{{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+      <form method="post" class="auth-form" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="form-errors" role="alert">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        {% for field in form %}
+          <div class="form-field{% if field.errors %} form-field--error{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% if field.name == "password1" or field.name == "password2" %}<div class="password-field">{{ field }}<button class="password-toggle" type="button" data-password-toggle aria-label="Mostrar senha" aria-pressed="false"><span aria-hidden="true">◉</span></button></div>{% else %}{{ field }}{% endif %}
+            {% if field.help_text %}<div class="field-help">{{ field.help_text|safe }}</div>{% endif %}
+            {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+        {% endfor %}
+        <button class="button auth-submit" type="submit">Criar minha conta</button>
+      </form>
+      <p class="auth-switch">Já tem uma conta? <a href="{% url 'accounts:login' %}">Entrar</a></p>
+      <p class="auth-legal">Sua conta fica disponível após o cadastro. A confirmação de e-mail ainda não está habilitada.</p>
+    </div>
+  </section>
+  {% include "components/auth_aside.html" %}
+</main>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/accounts/auth.js' %}" defer></script>{% endblock %}
