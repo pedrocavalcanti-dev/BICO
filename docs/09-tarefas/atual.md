@@ -15,6 +15,7 @@
 - [x] 20 testes sem acesso ao banco passaram (`UserModelContractTests` e `apps.core.tests`).
 - [x] Revisar login e cadastro no Edge em 360, 390, 768, 1024 e 1440 px; confirmar ausência de overflow horizontal.
 - [x] Revisar diff final e registrar o commit `dba6100 feat: implement BICO authentication and customer account`.
-- [ ] Publicar a branch de desenvolvimento após esta revisão documental; não integrar à `main` enquanto a suíte completa estiver bloqueada.
+- [x] Publicar `feature/bico-alpha-0.3.0-auth` em `origin` sem force push.
+- [ ] Integrar à `main` somente após a suíte completa executar e passar no MySQL de teste.
 
 Dependência: `feature/bico-alpha-0.3.0-auth` deriva de `feature/bico-alpha-0.2.0-home` no commit `3702e69`; o commit de autenticação é `dba6100`. A Alpha 0.2.0 deve preceder esta versão na integração. Pendências do produto: confirmação de e-mail, MFA, login social, modo Prestador, chat, favoritos, notificações reais e contratação. A integração à `main` só deve ocorrer após a suíte completa passar; não usar push forçado.

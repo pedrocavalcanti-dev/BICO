@@ -52,7 +52,7 @@
 ## Histórico Git e integração
 
 - A Alpha 0.2.0 está no commit `3702e69`; a Alpha 0.3.0 parte dele e está no commit `dba6100`, na branch `feature/bico-alpha-0.3.0-auth`.
-- A publicação desta branch de desenvolvimento está autorizada. A integração à `main` fica pendente até a suíte completa executar e passar no MySQL de teste; preservar a ordem Alpha 0.2.0 → Alpha 0.3.0.
+- A branch `feature/bico-alpha-0.3.0-auth` foi publicada em `origin`. A integração à `main` fica pendente até a suíte completa executar e passar no MySQL de teste; preservar a ordem Alpha 0.2.0 → Alpha 0.3.0.
 
 ## Regras e limites
 
