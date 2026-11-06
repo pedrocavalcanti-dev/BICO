@@ -14,7 +14,8 @@
 - [x] Confirmar migration `catalog.0003_servicelistingimage` aplicada no banco local e executar `seed_bico_demo` duas vezes sem duplicação.
 - [x] Confirmar respostas HTTP 200 em Home, páginas públicas, endpoints públicos e ativos locais por meio do cliente Django e servidor local.
 - [ ] Suíte Django completa encontrou 45 testes, mas ficou bloqueada antes da execução: MySQL retorna erro 1044 ao criar `test_bico` com a conta `bico_app`. Não rodar testes no schema principal nem ampliar privilégio global da conta da aplicação.
-- [ ] Revisão visual da Alpha 0.3.1 em 360, 390, 768, 1024 e 1440 px; Edge reutilizou sessão existente e não produziu screenshots nesta sessão.
-- [ ] Publicar a branch validada após commit local; integração à `main` fica condicionada à suíte completa passar e à revisão visual final.
+- [ ] Revisão visual da Alpha 0.3.1 em 360, 390, 768, 1024 e 1440 px; tentativas com Edge não produziram screenshots nesta sessão.
+- [x] Criar o commit `c116678 feat: refine BICO marketplace experience` e publicar `feature/bico-alpha-0.3.1-experience` em `origin`, sem force push.
+- [ ] Integrar à `main` somente após a suíte completa passar e a revisão visual final.
 
 Dependência: esta branch deriva de `feature/bico-alpha-0.3.0-auth` no commit `0be5a3e`, que preserva os commits de autenticação e a Home Alpha 0.2.0 (`3702e69`). Pendências de produto permanecem: chat, contratação, avaliações reais, favoritos persistentes, notificações, modo Prestador, confirmação de e-mail, login social e pagamentos. Não usar push forçado nem integrar a `main` enquanto a suíte completa estiver bloqueada.

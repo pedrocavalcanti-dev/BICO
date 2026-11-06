@@ -51,4 +51,4 @@
 
 ## Histórico Git
 
-`feature/bico-alpha-0.3.1-experience` deriva de `feature/bico-alpha-0.3.0-auth`, commit `0be5a3e`. A Alpha 0.3.0 deriva da Home no commit `3702e69`. A `main` local ainda está em `e1a2cdd`; não integrar esta branch antes da suíte integral passar e de confirmar o estado remoto.
+`feature/bico-alpha-0.3.1-experience` deriva de `feature/bico-alpha-0.3.0-auth`, commit `0be5a3e`, e foi publicada em `origin` no commit `c116678`. A Alpha 0.3.0 deriva da Home no commit `3702e69`. A `main` local está em `e1a2cdd`; `origin` ainda não publica uma branch `main`. Não integrar esta branch antes da suíte integral passar e da revisão visual final.

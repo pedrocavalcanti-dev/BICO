@@ -8,6 +8,7 @@
 - `ServiceListingImage` e migration não destrutiva `catalog.0003_servicelistingimage`; API de anúncio expõe galerias e detalhe de prestador inclui anúncios publicados.
 - Seed idempotente passou a preencher apenas imagens ausentes em registros demonstrativos; imagens geradas foram otimizadas em WebP e documentadas. Login apresenta Google como opção visual desabilitada, sem OAuth.
 - `check`, verificação de migrations, 22 testes focados de `apps.core.tests`, Ruff nos Python alterados e `git diff --check` passaram. A migration consta aplicada no MySQL local e o seed foi executado duas vezes sem duplicação. A suíte completa continua bloqueada pelo erro MySQL 1044 ao criar `test_bico`; há SQL com escopo restrito documentado em `testes-e-qa.md`. Não integrar à `main` até executar todos os testes no banco isolado e concluir revisão visual responsiva.
+- Branch publicada: `feature/bico-alpha-0.3.1-experience`, commit `c116678`.
 
 ## 0.3.0-alpha — 2026-11-05
 
