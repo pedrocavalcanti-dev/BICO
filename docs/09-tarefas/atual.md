@@ -1,21 +1,18 @@
-# Tarefa atual — Alpha 0.3.1: Marketplace Experience Update
+# Tarefa atual — Alpha 0.3.2: imagens e refinamento visual
 
-- [x] Inspecionar instruções, documentação, Git, modelos de catálogo, seletores, páginas públicas, API, seed e design system.
-- [x] Criar `feature/bico-alpha-0.3.1-experience` a partir da branch Alpha 0.3.0, preservando a Home Alpha 0.2.0.
-- [x] Limitar as categorias do cabeçalho a sete destaques ativos, com destino para todas as categorias e overflow contido em telas estreitas.
-- [x] Refinar detalhes públicos de anúncio e perfil sem inventar avaliações, distância, disponibilidade, verificação ou transações.
-- [x] Criar galeria de imagens de anúncio, migration não destrutiva, inline de administração e contrato REST de leitura.
-- [x] Melhorar seed idempotente com imagens WebP locais por especialidade e registros claramente demonstrativos.
-- [x] Manter solicitações e chat como ações explicativas, protegidas por login, sem criar registros ou simular envio.
-- [x] Exibir marca Google como opção desabilitada “Em breve”; nenhum login social foi apresentado como integrado.
-- [x] Atualizar documentação de estado, roadmap, banco, API, segurança, navegação, marketplace público, ADR e release.
-- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 22 testes focados de `apps.core.tests`, Ruff nos arquivos Python alterados e `git diff --check`.
-- [x] Registrar que a varredura Ruff mais ampla permanece com 29 apontamentos preexistentes em `apps/accounts/admin.py` e migrations iniciais, fora dos arquivos desta entrega.
-- [x] Confirmar migration `catalog.0003_servicelistingimage` aplicada no banco local e executar `seed_bico_demo` duas vezes sem duplicação.
-- [x] Confirmar respostas HTTP 200 em Home, páginas públicas, endpoints públicos e ativos locais por meio do cliente Django e servidor local.
-- [ ] Suíte Django completa encontrou 45 testes, mas ficou bloqueada antes da execução: MySQL retorna erro 1044 ao criar `test_bico` com a conta `bico_app`. Não rodar testes no schema principal nem ampliar privilégio global da conta da aplicação.
-- [ ] Revisão visual da Alpha 0.3.1 em 360, 390, 768, 1024 e 1440 px; tentativas com Edge não produziram screenshots nesta sessão.
-- [x] Criar o commit `c116678 feat: refine BICO marketplace experience` e publicar `feature/bico-alpha-0.3.1-experience` em `origin`, sem force push.
-- [ ] Integrar à `main` somente após a suíte completa passar e a revisão visual final.
+- [x] Inspecionar instruções, estado da Alpha 0.3.1, documentação do marketplace, seed, modelos, admin e páginas públicas.
+- [x] Criar `feature/bico-alpha-0.3.2-visual-assets` a partir da Alpha 0.3.1, preservando o histórico e a Home Alpha 0.2.0.
+- [x] Gerar e otimizar 81 assets WebP locais distintos: 60 fotos de trabalho, seis imagens de anúncio, 12 retratos e três logos.
+- [x] Completar capa e galerias distintas dos 36 anúncios demo; cobrir as 12 categorias e os 18 perfis demo.
+- [x] Corrigir especialidades, apresentações e associações demonstrativas sem alterar perfis ou anúncios reais.
+- [x] Reorganizar perfil público, cards de anúncio, portfólio, perfis relacionados e recorte de logos; manter a Home e os banners sem redesign.
+- [x] Exigir duas imagens distintas no admin ao publicar anúncios novos; manter rascunhos sem fotos e permitir editar anúncios já publicados.
+- [x] Tornar o seed idempotente para arquivos com sufixo de colisão gerado pelo armazenamento, preservando arquivos personalizados.
+- [x] Documentar origem e uso dos assets, seed, páginas, regra de publicação, estado, roadmap e release.
+- [x] Executar o seed no MySQL local com `DEBUG=True`; verificações confirmaram 36 capas únicas, 41 fotos de galeria, 12 categorias com imagem e 18 perfis com avatar/logo. Repetições não criaram registros nem trocaram os nomes de arquivos já semeados.
+- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 25 testes focados de `apps.catalog.tests` e `apps.core.tests`, Ruff nos módulos Python alterados e integridade/formato dos 81 assets.
+- [x] Confirmar que `.env`, logs, banco local, caches e temporários permanecem ignorados pelo Git.
+- [x] Revisar Home, anúncio e perfil em navegador com viewport mobile de 412 px e desktop de 1440 px. A página não excede a largura do viewport; composição mobile e desktop conferidas.
+- [x] Revisar o diff, confirmar que arquivos sensíveis e locais estão ignorados e preparar o commit final local para publicação sem force push.
 
-Dependência: esta branch deriva de `feature/bico-alpha-0.3.0-auth` no commit `0be5a3e`, que preserva os commits de autenticação e a Home Alpha 0.2.0 (`3702e69`). Pendências de produto permanecem: chat, contratação, avaliações reais, favoritos persistentes, notificações, modo Prestador, confirmação de e-mail, login social e pagamentos. Não usar push forçado nem integrar a `main` enquanto a suíte completa estiver bloqueada.
+Limites mantidos: sem migrations, alteração de contratos API, contratação, chat real, avaliações, pagamento ou modo Prestador. A suíte completa continua pendente porque o usuário MySQL de aplicação não pode criar `test_bico` (erro 1044); não usar o schema principal como substituto. A branch não será integrada à `main` nesta entrega.

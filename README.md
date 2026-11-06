@@ -1,6 +1,6 @@
 # BICO — Plataforma de Serviços
 
-Alpha `0.3.1` da BICO: marketplace público com cadastro, login por sessão, área do cliente, galeria de anúncios e perfis públicos aprimorados. A conta é única; a ativação de prestador, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
+Alpha `0.3.2` da BICO: marketplace público com cadastro, login por sessão, área do cliente, galeria de anúncios e perfis públicos aprimorados. A conta é única; a ativação de prestador, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
 
 Esta versão preserva a Home, busca, páginas públicas e APIs de leitura da Alpha 0.2.0; inclui recuperação de senha, edição segura do nome, sessão Web, `GET/PATCH /api/v1/users/me/`, detalhe público com galeria e perfil profissional com portfólio demonstrativo. O marketplace continua exclusivamente de serviços; não inclui comércio de produtos físicos.
 

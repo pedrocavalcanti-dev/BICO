@@ -1,8 +1,10 @@
 <article class="provider-card{% if compact %} provider-card--compact{% endif %}">
   <a class="provider-card__link" href="{% url 'core:provider-detail' provider.slug %}">
-    {% if provider.avatar %}<img class="provider-card__avatar" src="{{ provider.avatar.url }}" alt="{% if provider.is_demo %}Imagem demonstrativa{% else %}Foto{% endif %} de {{ provider.public_name }}" loading="lazy" width="96" height="96">{% else %}<span class="provider-card__avatar provider-card__avatar--placeholder" aria-hidden="true">{{ provider.public_name|slice:":1"|upper }}</span>{% endif %}
+    {% if provider.avatar %}<img class="provider-card__avatar{% if provider.provider_type == 'COMPANY' %} provider-card__avatar--company{% endif %}" src="{{ provider.avatar.url }}" alt="{% if provider.provider_type == 'COMPANY' %}Logotipo{% elif provider.is_demo %}Imagem demonstrativa{% else %}Foto{% endif %} de {{ provider.public_name }}" loading="lazy" width="96" height="96">{% else %}<span class="provider-card__avatar provider-card__avatar--placeholder" aria-hidden="true">{{ provider.public_name|slice:":1"|upper }}</span>{% endif %}
     <span class="provider-card__name">{{ provider.public_name }}</span>
-    <span class="provider-card__kind">{% if provider.provider_type == "COMPANY" %}Empresa prestadora{% else %}{% with first_category=provider.categories.all|first %}{{ first_category.name|default:"Profissional" }}{% endwith %}{% endif %}</span>
+    {% with first_category=provider.categories.all|first %}
+      <span class="provider-card__kind">{% if provider.provider_type == "COMPANY" %}Empresa{% if first_category %} · {{ first_category.name }}{% endif %}{% else %}{{ first_category.name|default:"Profissional" }}{% endif %}</span>
+    {% endwith %}
     <span class="provider-card__location">{{ provider.city }}-{{ provider.state }}</span>
     {% if provider.is_demo %}<span class="demo-badge demo-badge--small">Demonstração</span>{% endif %}
   </a>

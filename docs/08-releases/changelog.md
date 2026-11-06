@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.2-alpha — 2026-11-05
+
+- Adicionados 81 assets WebP gerados localmente para demonstração: 60 fotografias de trabalho, seis imagens avulsas, 12 retratos de profissionais e três logos de empresas fictícias; total de 4.303.738 bytes. Origem e mapa estão em `bico_django/static/marketplace/demo/README.md`.
+- Seed demonstrativo passou a completar 36 anúncios publicados com capas e galerias distintas (41 imagens de galeria), cobrir todas as 12 categorias e dar avatar/logo aos 18 perfis demonstrativos. Associações, especialidades e apresentações foram alinhadas; arquivos personalizados e registros reais são preservados.
+- Seed reconhece o sufixo aleatório que o armazenamento adiciona aos nomes e continua idempotente sem substituir mídia personalizada.
+- Perfil profissional apresenta cards de serviço mais largos, portfólio em grade e profissionais relacionados em cards compactos. Empresas exibem logo próprio sem distorção; a rolagem horizontal da Home fica sem barra visível em desktop.
+- O admin exige duas imagens distintas para publicar um anúncio novo ou promover um rascunho. Rascunhos e anúncios anteriormente publicados seguem editáveis. Sem alterações de modelo ou migrations; APIs existentes permanecem compatíveis.
+- Validações: `manage.py check`, `makemigrations --check --dry-run`, 25 testes focados (`apps.catalog.tests` e `apps.core.tests`), Ruff nos quatro arquivos Python alterados e inspeção dos 81 WebP passaram. O seed foi repetido no MySQL local sem criar registros.
+- Revisão visual em navegador com viewport de 412 px e 1440 px passou para Home, anúncio e perfil, sem largura horizontal excedente. A suíte completa com banco isolado permanece pendente: a conta MySQL atual não pode criar `test_bico` (erro 1044). Não houve teste contra o schema principal nem integração à `main`.
+
 ## 0.3.1-alpha — 2026-11-05
 
 - Cabeçalho mostra categorias destacadas gerenciáveis no banco, até sete, e “Todas as categorias”; navegação horizontal fica restrita ao componente em telas estreitas.

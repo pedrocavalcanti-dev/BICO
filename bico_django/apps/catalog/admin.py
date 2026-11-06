@@ -1,6 +1,38 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 
 from .models import ServiceCategory, ServiceListing, ServiceListingImage
+
+
+class ServiceListingGalleryFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        listing = self.instance
+        if listing.status != ServiceListing.Status.PUBLISHED:
+            return
+
+        if not listing._state.adding:
+            current_status = (
+                ServiceListing.objects.filter(pk=listing.pk)
+                .values_list("status", flat=True)
+                .first()
+            )
+            if current_status == ServiceListing.Status.PUBLISHED:
+                return
+
+        gallery_images = []
+        for form in self.forms:
+            cleaned_data = getattr(form, "cleaned_data", {}) or {}
+            if cleaned_data.get("DELETE"):
+                continue
+            image = cleaned_data.get("image") or form.instance.image
+            if image:
+                gallery_images.append(image)
+        if not listing.has_minimum_publication_images(gallery_images):
+            raise ValidationError(
+                "Um anúncio precisa de duas imagens distintas para ser publicado."
+            )
 
 
 @admin.register(ServiceCategory)
@@ -17,6 +49,7 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 class ServiceListingAdmin(admin.ModelAdmin):
     class GalleryImageInline(admin.TabularInline):
         model = ServiceListingImage
+        formset = ServiceListingGalleryFormSet
         extra = 0
         fields = ("image", "alt_text", "display_order")
 

@@ -57,6 +57,8 @@ class ServiceCategory(models.Model):
 
 
 class ServiceListing(models.Model):
+    MIN_PUBLICATION_IMAGE_COUNT = 2
+
     class Status(models.TextChoices):
         DRAFT = "DRAFT", "Rascunho"
         PUBLISHED = "PUBLISHED", "Publicado"
@@ -135,6 +137,19 @@ class ServiceListing(models.Model):
             self.state = self.state.upper()
             if len(self.state) != 2:
                 raise ValidationError({"state": "Informe a sigla de um estado com duas letras."})
+
+    def has_minimum_publication_images(self, gallery_images=None):
+        images = [self.image]
+        if gallery_images is None and self.pk and not self._state.adding:
+            images.extend(self.gallery_images.values_list("image", flat=True))
+        elif gallery_images is not None:
+            images.extend(gallery_images)
+        image_names = set()
+        for image in images:
+            name = image if isinstance(image, str) else getattr(image, "name", "")
+            if name:
+                image_names.add(name)
+        return len(image_names) >= self.MIN_PUBLICATION_IMAGE_COUNT
 
 
 class ServiceListingImage(models.Model):

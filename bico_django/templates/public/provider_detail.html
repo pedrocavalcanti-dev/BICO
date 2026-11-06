@@ -12,7 +12,7 @@
 
   <article class="provider-hero">
     {% if provider.avatar %}
-      <img class="provider-hero__avatar" src="{{ provider.avatar.url }}" alt="{% if provider.is_demo %}Imagem demonstrativa de {{ provider.public_name }}{% else %}Foto de {{ provider.public_name }}{% endif %}" width="128" height="128" fetchpriority="high">
+      <img class="provider-hero__avatar{% if provider.provider_type == 'COMPANY' %} provider-hero__avatar--company{% endif %}" src="{{ provider.avatar.url }}" alt="{% if provider.provider_type == 'COMPANY' %}Logotipo de {{ provider.public_name }}{% elif provider.is_demo %}Imagem demonstrativa de {{ provider.public_name }}{% else %}Foto de {{ provider.public_name }}{% endif %}" width="128" height="128" fetchpriority="high">
     {% else %}
       <span class="provider-hero__avatar provider-hero__avatar--placeholder" aria-hidden="true">{{ provider.public_name|first|upper }}</span>
     {% endif %}
@@ -20,13 +20,19 @@
       <p class="eyebrow">{% if provider.provider_type == "COMPANY" %}Empresa prestadora{% else %}Profissional autônomo{% endif %}{% if provider.is_demo %} · Demonstração{% endif %}</p>
       <h1>{{ provider.public_name }}</h1>
       <p class="provider-hero__location">{{ provider.city }}-{{ provider.state }}</p>
+      {% if provider.description %}<p class="provider-hero__intro">{{ provider.description }}</p>{% endif %}
+      {% if provider.categories.all %}
+        <nav class="provider-hero__categories" aria-label="Especialidades">
+          {% for category in provider.categories.all %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}
+        </nav>
+      {% endif %}
+    </div>
+    <div class="provider-hero__actions">
+      <a class="button" href="#provider-services">Conhecer serviços</a>
+      <p class="provider-hero__contact-note" id="provider-chat-info">O chat ainda não está disponível. Nenhuma mensagem será enviada.</p>
+      <p class="provider-hero__facts"><strong>{{ listings|length }}</strong> serviço{{ listings|length|pluralize:"s" }} publicado{{ listings|length|pluralize:"s" }}</p>
       {% if provider.is_demo %}<span class="demo-badge">Perfil demonstrativo</span>{% endif %}
     </div>
-    {% if provider.categories.all %}
-      <nav class="provider-hero__categories" aria-label="Especialidades">
-        {% for category in provider.categories.all %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}
-      </nav>
-    {% endif %}
   </article>
 
   <div class="provider-detail-grid">
@@ -37,7 +43,7 @@
         {% else %}<p class="empty-state">Este profissional ainda não adicionou uma apresentação.</p>{% endif %}
       </section>
 
-      <section class="detail-section" aria-labelledby="provider-services-title">
+      <section class="detail-section" id="provider-services" aria-labelledby="provider-services-title">
         <div class="section-heading"><h2 class="section-heading__title" id="provider-services-title">Serviços publicados</h2><span class="section-heading__rule" aria-hidden="true"></span></div>
         {% if listings %}<div class="listing-grid">{% for listing in listings %}{% include "components/service_card.html" %}{% endfor %}</div>
         {% else %}<p class="empty-state">Este perfil ainda não tem serviços publicados.</p>{% endif %}
