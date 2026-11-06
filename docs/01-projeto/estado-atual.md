@@ -1,10 +1,30 @@
 # Estado atual
 
-**Versão em desenvolvimento:** 0.3.2-alpha
-**Atualizado:** 2026-11-05
-**Branch:** `feature/bico-alpha-0.3.2-visual-assets`
-**Commit da implementação:** `e857cbb` (publicado em `origin/feature/bico-alpha-0.3.2-visual-assets`)
+**Versão em desenvolvimento:** 0.4.0-alpha
+**Atualizado:** 2026-11-06
+**Branch:** `feature/bico-alpha-0.4.0-provider-onboarding`
+**Base:** Alpha 0.3.2 no commit `e857cbb`, publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
+
+## Alpha 0.4.0 — onboarding do prestador
+
+- A conta existente pode iniciar ou continuar um onboarding de cinco etapas: tipo PF/PJ, identificação/contato, perfil/especialidades, modalidades/localização e revisão/envio. O rascunho fica associado ao usuário autenticado; não cria outro usuário nem aprova um perfil público.
+- CPF/CNPJ e telefones são normalizados/validados no backend. Especialidades vêm das categorias ativas do banco e o limite é configurável por `BICO_PROVIDER_MAX_CATEGORIES` (padrão 5). Modalidades a domicílio, ponto fixo e remota podem ser combinadas; endereço de ponto fixo não é publicado.
+- A etapa documental exige frente e verso legíveis de RG, CIN ou CNH. JPG, PNG e WebP são reconhecidos pelo conteúdo, limitado a 8 MB e 25 MP, com dimensão mínima 800 × 500, inspeção básica de brilho/detalhes e re-encode para remover metadados EXIF. Não há OCR, verificação de identidade, comparação com CPF, antivirus ou autenticação governamental.
+- Os binários ficam fora de `static/`, com nomes aleatórios, storage sem URL pública e cifragem autenticada Fernet. Uma view autenticada serve somente os arquivos da solicitação do próprio usuário com `no-store`; a API não retorna caminhos nem conteúdo documental.
+- Envio transacional define `PENDING_REVIEW` e `NOT_REVIEWED`, limpa quaisquer dados internos de decisão e registra evento de auditoria sem documento ou dados pessoais. A tela mostra “Aguardando verificação documental e aprovação”. Não há aprovação ou gestão operacional nesta versão.
+- O CTA “Quero prestar serviços” foi conectado à Minha Conta e à Home. Produção mantém `PROVIDER_ONBOARDING_ENABLED` e `PROVIDER_DOCUMENT_UPLOAD_ENABLED` forçados para `False`; desenvolvimento local habilita o fluxo para uso controlado e dados sintéticos.
+- Migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` adiciona a solicitação e os metadados/arquivos privados. A migration inicial existente foi preservada.
+
+## Validação da Alpha 0.4.0
+
+- `manage.py check --settings=config.settings.development`, `makemigrations --check --dry-run`, Ruff nos módulos Python alterados e `git diff --check` passaram. A migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` foi aplicada ao MySQL local autorizado; `showmigrations` confirmou as dependências aplicadas.
+- Smoke checks sem banco de testes passaram para JPEG/PNG/WebP, rejeição de arquivo corrompido, storage cifrado sem URL pública, compilação dos templates e normalização de CPF/CNPJ formatados. A suíte de quatro testes focados cobre formato/qualidade, storage e autorização por proprietário, os dois lados e persistência pendente, e proteção dos campos internos pela API.
+- A execução de `manage.py test apps.providers.tests` parou antes de iniciar os testes: MySQL retornou erro 1044 ao criar o banco isolado `test_bico`. Nenhum teste foi executado no banco principal. Repetir somente após conceder privilégios de criação/remoção restritos ao banco de teste.
+- Revisão visual em navegador mobile/desktop ainda não foi realizada nesta etapa.
+- Uploads reais em produção dependem de aprovação jurídica, política de retenção/exclusão, proteção de banco e backups, gestão das chaves e processo seguro de revisão. Nenhuma afirmação de entrega externa de e-mail, aprovação ou identidade verificada é feita.
+
+## Alpha 0.3.2 — imagens e refinamento visual (histórico)
 
 ## Alpha 0.3.2 — imagens e refinamento visual
 

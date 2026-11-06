@@ -16,6 +16,18 @@
     <a href="{% url 'accounts:account_edit' %}"><span><strong>Editar perfil</strong><small>Atualize seu nome de exibição.</small></span><span aria-hidden="true">›</span></a>
     <a href="{% url 'accounts:password_change' %}"><span><strong>Alterar senha</strong><small>Confirme sua senha atual para criar outra.</small></span><span aria-hidden="true">›</span></a>
   </section>
-  <aside class="account-future"><h2>Quero prestar serviços</h2><p>Você poderá solicitar a ativação do modo Prestador em uma próxima etapa. Sua conta atual será mantida.</p></aside>
+  <aside class="account-future account-provider-cta">
+    {% if provider_application.status == "PENDING_REVIEW" %}
+      <h2>Acompanhar solicitação</h2><p>Aguardando verificação documental e aprovação.</p><a class="button" href="{% url 'providers:application-status' %}">Ver solicitação</a>
+    {% elif provider_application.status == "DRAFT" or provider_application.status == "NEEDS_CORRECTION" %}
+      <h2>Continuar cadastro profissional</h2><p>Retome seu cadastro de onde parou. Você pode revisar as informações antes do envio.</p><a class="button" href="{% url 'providers:start' %}">Continuar cadastro</a>
+    {% elif provider_application.status == "APPROVED" %}
+      <h2>Cadastro profissional aprovado</h2><p>A área do Prestador será disponibilizada em uma próxima etapa.</p>
+    {% elif provider_application %}
+      <h2>Solicitação profissional</h2><p>{{ provider_application.get_status_display }}. Entre em contato com o suporte se precisar de ajuda.</p>
+    {% else %}
+      <h2>Quero prestar serviços</h2><p>Divulgue seus serviços, encontre clientes e faça parte da comunidade BICO. O cadastro profissional é analisado pela equipe.</p><a class="button" href="{% url 'providers:start' %}">Começar cadastro profissional</a>
+    {% endif %}
+  </aside>
 </main>
 {% endblock %}

@@ -1,5 +1,11 @@
 [
   {
+    "version": "0.4.0-alpha",
+    "date": "2026-11-06",
+    "status": "branch feature/bico-alpha-0.4.0-provider-onboarding; check, migrations, Ruff e smoke checks passaram; migration aplicada no MySQL local; quatro testes focados bloqueados antes da execução por erro 1044 ao criar test_bico; não integrada à main",
+    "summary": "Onboarding de prestador PF/PJ em cinco etapas, validação e storage privado cifrado das duas faces de documento, revisão humana pendente, API e acompanhamento por Minha Conta. Upload em produção permanece desabilitado."
+  },
+  {
     "version": "0.3.2-alpha",
     "date": "2026-11-05",
     "status": "publicada em origin/feature/bico-alpha-0.3.2-visual-assets no commit e857cbb; 28 testes focados e revisão visual concluídos; suíte completa pendente do privilégio MySQL para test_bico; não integrada à main",

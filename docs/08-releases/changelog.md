@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0-alpha — 2026-11-06
+
+- Implementado onboarding progressivo do prestador em cinco etapas, com persistência de rascunho, PF/PJ, validação de CPF/CNPJ e telefone, categorias do banco, modalidades combináveis e localização privada.
+- Etapa 5 recebe duas imagens legíveis de RG/CIN/CNH (frente e verso), reconhece JPEG/PNG/WebP por conteúdo, limita tamanho/resolução e faz pré-validação visual básica. A imagem pode ser substituída antes do envio; não há OCR ou aprovação automática.
+- Documentos são reprocessados sem EXIF, cifrados com Fernet em storage sem URL pública e acessíveis pela prévia autenticada do proprietário. Throttle de upload/envio usa contadores HMAC compartilhados no MySQL; auditoria não guarda PII ou arquivos.
+- Envio mantém `PENDING_REVIEW`/`NOT_REVIEWED`; a interface informa “Aguardando verificação documental e aprovação”. Estados de decisão e campos de revisão existem apenas para operação interna futura.
+- API autenticada para consultar/atualizar etapas, enviar imagens e submeter; integração com Minha Conta e CTA da Home. Produção mantém onboarding e upload desabilitados até revisão jurídica e de segurança.
+- Migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more`; arquivos ignorados por Git em `.private-media/`.
+- Migration aplicada no MySQL local. `manage.py check`, `makemigrations --check --dry-run`, Ruff nos módulos alterados e `git diff --check` passaram; smoke checks sem banco passaram para formatos, storage cifrado, templates e normalização CPF/CNPJ.
+- Quatro testes focados não iniciaram por erro MySQL 1044 na criação de `test_bico`; nenhum teste usou SQLite ou o banco principal.
+- Pendentes: validar persistência/autorização com privilégio restrito para banco de teste, revisão visual responsiva, decisão jurídica e controles de retenção, banco/backups e chaves antes de produção.
+
 ## 0.3.2-alpha — 2026-11-05
 
 - Adicionados 81 assets WebP gerados localmente para demonstração: 60 fotografias de trabalho, seis imagens avulsas, 12 retratos de profissionais e três logos de empresas fictícias; total de 4.303.738 bytes. Origem e mapa estão em `bico_django/static/marketplace/demo/README.md`.

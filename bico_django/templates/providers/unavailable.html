@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Cadastro profissional indisponível — BICO{% endblock %}
+{% block content %}
+<main id="main-content" class="container account-page account-page--narrow">
+  <section class="account-card">
+    <p class="eyebrow">Cadastro profissional</p>
+    <h1>Esta etapa ainda não está disponível</h1>
+    <p>A BICO está preparando os controles de privacidade e segurança necessários antes de receber documentos de identificação.</p>
+    <a class="button" href="{% url 'accounts:account' %}">Voltar para Minha conta</a>
+  </section>
+</main>
+{% endblock %}

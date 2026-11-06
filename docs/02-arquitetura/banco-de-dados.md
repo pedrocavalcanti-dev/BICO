@@ -13,3 +13,12 @@ Na Alpha 0.3.1, `ServiceListingImage` adiciona uma galeria 1:N para anúncios, c
 Anúncios públicos exigem status `PUBLISHED`, perfil `APPROVED` e categoria ativa. Perfis públicos exigem `APPROVED`. Fotos são opcionais; Django `ImageField` valida a imagem e um validador limita extensões a JPG/PNG/WebP e tamanho a 5 MB. Upload em produção requer decidir storage e política de retenção. Avaliações e distância ainda não têm modelo.
 
 `seed_bico_demo` só roda com `DEBUG=True` e backend MySQL. Seus perfis, anúncios e banners têm `is_demo=True`; o comando não apaga dados e não altera linhas legítimas. Ele copia imagens WebP locais para campos ainda vazios nos registros demonstrativos e nas capas de categoria. A tabela de usuários também recebe contas demonstrativas com senha inutilizável. As imagens de `static/marketplace/demo/` são assets de origem para o seed, não storage definitivo de uploads; em produção deve ser escolhido um backend de mídia apropriado.
+
+## Alpha 0.4.0 — solicitação de ativação de prestador
+
+A migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` adiciona:
+
+- `ProviderApplication`: solicitação 1:1 com `accounts.User`, UUID, rascunho/progresso, dados PF/PJ privados, especialidades, modalidade/região, status e campos internos de revisão (estado, motivo, revisor e datas). O índice `status, updated_at` apoia acompanhamento operacional futuro.
+- `ProviderDocument`: metadados e referência interna para uma imagem por lado (`FRONT`/`BACK`) da solicitação. A constraint `provider_document_side_uniq` impede dois arquivos vigentes para o mesmo lado.
+
+Os binários ficam em `.private-media/` (ou `PRIVATE_MEDIA_ROOT` externo), nunca em `static/` ou `MEDIA_URL`. O storage cifra os bytes com Fernet, gera caminhos aleatórios e não implementa URL. A migration inicial existente de providers foi preservada. `providers.0002_providerapplication_providerdocument_and_more` foi aplicada no MySQL local em 2026-11-06. Antes de produção, definir proteção de campos privados no MySQL, backup cifrado, retenção/exclusão e gestão de chaves; o código mantém onboarding e upload desabilitados em production settings.

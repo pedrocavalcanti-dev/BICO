@@ -23,6 +23,8 @@
 .account-future { padding: 1.25rem 0; }
 .account-future h2 { margin-bottom: .35rem; }
 .account-future p { max-width: 48rem; margin: 0; color: var(--color-text-secondary); }
+.account-provider-cta { margin-top: 1.25rem; padding: 1.5rem; border-radius: var(--radius-md); background: var(--color-primary-soft); }
+.account-provider-cta .button { display: inline-flex; align-items: center; justify-content: center; margin-top: 1rem; }
 .account-back { display: inline-flex; min-height: 2.75rem; align-items: center; margin-bottom: 1.25rem; color: var(--color-text-secondary); font-size: var(--font-size-sm); text-decoration: none; }
 .account-form { display: grid; gap: 1.25rem; }
 .account-form .field { min-height: 3.25rem; }

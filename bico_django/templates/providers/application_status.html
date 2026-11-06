@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Acompanhamento da solicitação — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/providers/onboarding.css' %}">{% endblock %}
+{% block content %}
+<main id="main-content" class="provider-onboarding container">
+  <section class="provider-status-card">
+    <span class="provider-status-card__icon" aria-hidden="true">✓</span>
+    {% if application.status == "PENDING_REVIEW" %}
+      <p class="eyebrow">Cadastro profissional</p>
+      <h1>Recebemos sua solicitação</h1>
+      <p>Sua solicitação para se tornar um prestador BICO foi enviada.</p>
+      <strong class="provider-status-card__status">Aguardando verificação documental e aprovação</strong>
+      <p>A equipe fará a análise humana. A pré-validação das imagens não confirma a autenticidade do documento nem a correspondência com o CPF.</p>
+      <p>Enviado em {{ application.submitted_at|date:"j \d\e F \d\e Y, H:i" }}</p>
+    {% else %}
+      <p class="eyebrow">Cadastro profissional</p>
+      <h1>Status da solicitação</h1>
+      <strong class="provider-status-card__status">{{ application.get_status_display }}</strong>
+      <p>O modo Prestador só será liberado após a análise e aprovação pela BICO.</p>
+    {% endif %}
+    <a class="button" href="{% url 'core:home' %}">Voltar à página inicial</a>
+    <a class="provider-status-card__link" href="{% url 'accounts:account' %}">Ir para Minha conta</a>
+  </section>
+</main>
+{% endblock %}

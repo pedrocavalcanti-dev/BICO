@@ -3,3 +3,4 @@ djangorestframework==3.18.3
 django-environ==0.14.0
 mysqlclient==2.3.0
 Pillow==13.0.0
+cryptography==50.0.2

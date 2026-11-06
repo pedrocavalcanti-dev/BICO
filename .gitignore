@@ -41,6 +41,7 @@ db.sqlite3
 /.local-db/
 /var/
 /media/
+/.private-media/
 /bico_django/media/
 
 # IDEs and operating systems

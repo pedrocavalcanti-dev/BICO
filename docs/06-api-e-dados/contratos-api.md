@@ -33,3 +33,16 @@ Planejamento futuro: autenticação/cadastro, solicitações, mensagens, avalia�
 | PATCH | `/api/v1/users/me/` | Sessão Django + CSRF | Atualiza somente `name`; e-mail e data são somente leitura |
 
 O endpoint deriva o objeto exclusivamente de `request.user`. Não recebe UUID de usuário, ignora campos adicionais e não expõe flags/permissões. A sessão Web usa `SessionAuthentication`; mutações exigem token CSRF. Não há endpoints API de login, cadastro ou tokens mobile nesta versão.
+
+## Onboarding do prestador — Alpha 0.4.0
+
+| Método | Rota | Autenticação | Contrato |
+|---|---|---|---|
+| GET | `/api/v1/providers/onboarding/` | Sessão Django | Consulta a solicitação do usuário autenticado; campos de decisão, revisor e documentos são omitidos |
+| PATCH | `/api/v1/providers/onboarding/` | Sessão Django + CSRF | Recebe `step` (1–4) e campos permitidos pela etapa; valida com os mesmos Django Forms da Web |
+| POST | `/api/v1/providers/onboarding/documents/` | Sessão Django + CSRF, multipart | Recebe `side` (`FRONT` ou `BACK`) e `file`; valida, reprocessa e substitui o lado informado |
+| POST | `/api/v1/providers/onboarding/submit/` | Sessão Django + CSRF | Valida completude/documentos e envia para revisão humana |
+
+Os endpoints estão sujeitos à configuração de disponibilidade; em produção a implementação os deixa indisponíveis até aprovação jurídica e operacional. O usuário e a solicitação derivam de `request.user`, nunca de UUID fornecido pelo cliente. Upload e envio têm limites compartilhados por IP/usuário no MySQL. Imagens cifradas e respectivos caminhos não são retornados pela API; a prévia Web é privada, sem cache e limitada ao proprietário. Erros retornam validação DRF sem dados do arquivo. Envio repetido de uma solicitação já pendente é idempotente.
+
+Campos CPF/CNPJ, dados de empresa, representante, endereço fixo e decisão/revisor não fazem parte das APIs públicas. A futura autenticação móvel continua documentada em ADR-008; estes endpoints usam sessão Web e não implementam JWT ou tokens mobile.

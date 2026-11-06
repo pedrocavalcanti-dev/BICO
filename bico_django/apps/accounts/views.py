@@ -213,7 +213,17 @@ class BicoPasswordChangeView(PasswordChangeView):
 
 @login_required
 def account_view(request):
-    return render(request, "accounts/account.html", {"account_user": request.user})
+    from apps.providers.models import ProviderApplication
+
+    try:
+        provider_application = request.user.provider_application
+    except ProviderApplication.DoesNotExist:
+        provider_application = None
+    return render(
+        request,
+        "accounts/account.html",
+        {"account_user": request.user, "provider_application": provider_application},
+    )
 
 
 @login_required

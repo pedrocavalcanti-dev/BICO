@@ -1,4 +1,9 @@
 from apps.accounts.api_views import UserMeAPIView
+from apps.providers.api_views import (
+    ProviderApplicationSubmitAPIView,
+    ProviderDocumentUploadAPIView,
+    ProviderOnboardingAPIView,
+)
 from django.urls import path
 
 from .views import (
@@ -18,6 +23,17 @@ urlpatterns = [
     path("", ApiRootView.as_view(), name="root"),
     path("health/", HealthView.as_view(), name="health"),
     path("users/me/", UserMeAPIView.as_view(), name="user-me"),
+    path("providers/onboarding/", ProviderOnboardingAPIView.as_view(), name="provider-onboarding"),
+    path(
+        "providers/onboarding/documents/",
+        ProviderDocumentUploadAPIView.as_view(),
+        name="provider-onboarding-documents",
+    ),
+    path(
+        "providers/onboarding/submit/",
+        ProviderApplicationSubmitAPIView.as_view(),
+        name="provider-onboarding-submit",
+    ),
     path("home/", HomeAPIView.as_view(), name="home"),
     path("categories/", CategoryListAPIView.as_view(), name="categories"),
     path("providers/", ProviderListAPIView.as_view(), name="providers"),

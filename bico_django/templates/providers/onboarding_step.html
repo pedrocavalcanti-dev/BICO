@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% load provider_forms %}
+{% block title %}Cadastro profissional — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/providers/onboarding.css' %}">{% endblock %}
+{% block extra_js %}<script src="{% static 'js/providers/onboarding.js' %}" defer></script>{% endblock %}
+{% block content %}
+<main id="main-content" class="provider-onboarding container">
+  <a class="provider-onboarding__back" href="{% url 'accounts:account' %}">← Minha conta</a>
+  <div class="provider-onboarding__shell">
+    <header class="provider-onboarding__header">
+      <img class="provider-onboarding__mark" src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="BICO" width="64" height="64">
+      <p class="eyebrow">Cadastro profissional BICO</p>
+      <h1>{{ title }}</h1>
+      <p>{{ subtitle }}</p>
+    </header>
+
+    <nav class="provider-progress" aria-label="Progresso do cadastro">
+      {% for number, data in steps.items %}
+        <span class="provider-progress__step{% if number == step %} is-current{% elif number < step %} is-complete{% endif %}"{% if number == step %} aria-current="step"{% endif %}>
+          <span>{{ number }}</span><small>Etapa {{ number }}</small>
+        </span>
+      {% endfor %}
+    </nav>
+
+    {% if messages %}<div class="provider-messages" aria-live="polite">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+    <form class="provider-form" method="post"{% if step == 5 %} enctype="multipart/form-data" data-document-form{% endif %} novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="provider-form__errors" role="alert">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+
+      {% if step == 1 %}
+        <fieldset class="provider-type-options">
+          <legend class="provider-field__label">Escolha uma opção</legend>
+          {% for radio in form.provider_type %}
+            <label class="provider-type-card">
+              {{ radio.tag }}
+              <span class="provider-type-card__icon" aria-hidden="true">{% if radio.data.value == "COMPANY" %}▦{% else %}♙{% endif %}</span>
+              <strong>{% if radio.data.value == "COMPANY" %}Tenho uma empresa{% else %}Sou profissional autônomo{% endif %}</strong>
+              <span>{% if radio.data.value == "COMPANY" %}Represento uma empresa que presta serviços.{% else %}Trabalho por conta própria e quero oferecer meus serviços.{% endif %}</span>
+            </label>
+          {% endfor %}
+          {% for error in form.provider_type.errors %}<p class="provider-field__error">{{ error }}</p>{% endfor %}
+        </fieldset>
+      {% elif step == 2 %}
+        <p class="provider-private-note">As informações desta etapa são privadas e não aparecem no perfil público.</p>
+        {% for field in form %}
+          <div class="provider-field-wrap{% if field.errors %} has-error{% endif %}">
+            <label class="provider-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="provider-field__help">{{ field.help_text }}</small>{% endif %}
+            {% for error in field.errors %}<small class="provider-field__error">{{ error }}</small>{% endfor %}
+          </div>
+        {% endfor %}
+        <p class="provider-private-note">O e-mail de contato da conta é {{ request.user.email }}. A BICO não declara que ele foi verificado.</p>
+      {% elif step == 3 %}
+        {% for field in form %}
+          <div class="provider-field-wrap{% if field.errors %} has-error{% endif %}{% if field.name == 'categories' %} provider-specialties{% endif %}">
+            <label class="provider-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="provider-field__help">{{ field.help_text }}</small>{% endif %}
+            {% for error in field.errors %}<small class="provider-field__error">{{ error }}</small>{% endfor %}
+          </div>
+        {% endfor %}
+      {% elif step == 4 %}
+        {% for field in form %}
+          {% if field.name == "service_modes" %}
+            <div class="provider-field-wrap provider-service-modes">
+              <span class="provider-field__label">{{ field.label }}</span>{{ field }}
+              {% for error in field.errors %}<small class="provider-field__error">{{ error }}</small>{% endfor %}
+            </div>
+          {% else %}
+            <div class="provider-field-wrap provider-conditional-field{% if field.errors %} has-error{% endif %}" data-field="{{ field.name }}">
+              <label class="provider-field__label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+              {{ field }}
+              {% for error in field.errors %}<small class="provider-field__error">{{ error }}</small>{% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        <p class="provider-private-note">O endereço de ponto fixo é privado e não será publicado automaticamente. Não informamos distâncias calculadas.</p>
+      {% else %}
+        <section class="provider-review-summary" aria-labelledby="provider-review-title">
+          <h2 id="provider-review-title">Confira seu cadastro</h2>
+          <dl>
+            <div><dt>Tipo</dt><dd>{{ application.get_provider_type_display }}</dd></div>
+            <div><dt>Identificação</dt><dd>{% if application.provider_type == "INDIVIDUAL" %}{{ application.legal_name }} · CPF terminado em {{ application.cpf|slice:"-2:" }}{% else %}{{ application.company_trade_name|default:application.company_legal_name }} · CNPJ terminado em {{ application.cnpj|slice:"-2:" }}{% endif %}</dd></div>
+            <div><dt>Perfil profissional</dt><dd>{{ application.public_name }}{% if application.main_category %} · {{ application.main_category.name }}{% endif %}</dd></div>
+            <div><dt>Atendimento</dt><dd>{{ application.city }}-{{ application.state }} · {{ service_mode_labels|join:", " }}</dd></div>
+          </dl>
+          <p>Você pode voltar às etapas anteriores para corrigir as informações.</p>
+        </section>
+
+        <p class="provider-private-note">Envie duas fotos legíveis do documento oficial {{ application.get_document_type_display }}. São aceitos RG, CIN ou CNH. A pré-validação verifica apenas o arquivo e a qualidade básica da imagem; não confirma autenticidade nem correspondência com o CPF.</p>
+        <div class="provider-document-grid">
+          {% for side, field_name, document, label in document_uploads %}
+            <section class="provider-document" aria-labelledby="document-{{ side }}-label">
+              <h2 id="document-{{ side }}-label">{{ label }}</h2>
+              {% if document %}
+                <img class="provider-document__preview" src="{% url 'providers:document-image' side %}" alt="Prévia privada da {{ label|lower }} já enviada" data-document-preview="{{ field_name }}">
+                <p class="provider-document__saved">Imagem salva em área privada. Você pode substituí-la.</p>
+              {% else %}
+                <div class="provider-document__placeholder" data-document-placeholder="{{ field_name }}"><span aria-hidden="true">＋</span><span>A prévia aparecerá aqui</span></div>
+                <img class="provider-document__preview" alt="Prévia da imagem selecionada" data-document-preview="{{ field_name }}" hidden>
+              {% endif %}
+              <label class="provider-field__label" for="id_{{ field_name }}">Selecionar imagem</label>
+              <input class="provider-field" type="file" name="{{ field_name }}" id="id_{{ field_name }}" accept="image/jpeg,image/png,image/webp" data-document-input>
+              {% for error in form|get_field_errors:field_name %}<small class="provider-field__error">{{ error }}</small>{% endfor %}
+              <small class="provider-field__help" data-document-file-name>JPG, PNG ou WebP · até 8 MB · mínimo 800 × 500 px</small>
+            </section>
+          {% endfor %}
+        </div>
+        <div class="provider-document-guide"><strong>Para uma boa foto</strong><ul><li>Enquadre o documento inteiro e mantenha o texto legível.</li><li>Use luz uniforme, evite reflexos, sombras e desfoque.</li><li>Fotografe sobre uma superfície lisa; não envie capturas de tela.</li></ul></div>
+        <p class="provider-private-note">Os arquivos não têm URL pública e só podem ser acessados pela sua conta. A solicitação permanece aguardando verificação documental e aprovação humana.</p>
+      {% endif %}
+
+      <div class="provider-form__actions">
+        {% if previous_step %}<a class="button button--outline" href="{% url 'providers:onboarding-step' previous_step %}">Voltar</a>{% else %}<a class="button button--outline" href="{% url 'accounts:account' %}">Cancelar</a>{% endif %}
+        {% if step < 5 %}<button class="button" type="submit">Salvar e continuar <span aria-hidden="true">→</span></button>
+        {% else %}<button class="button button--outline" type="submit" name="action" value="save">Salvar imagens</button><button class="button" type="submit" name="action" value="submit">Enviar solicitação para análise</button>{% endif %}
+      </div>
+    </form>
+  </div>
+</main>
+{% endblock %}

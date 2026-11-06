@@ -1,8 +1,8 @@
 # BICO — Plataforma de Serviços
 
-Alpha `0.3.2` da BICO: marketplace público com cadastro, login por sessão, área do cliente, galeria de anúncios e perfis públicos aprimorados. A conta é única; a ativação de prestador, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
+Alpha `0.4.0` em desenvolvimento: marketplace público, autenticação por sessão, área do cliente e onboarding progressivo para solicitação de ativação como prestador. A coleta documental é habilitada apenas no ambiente local de desenvolvimento; produção mantém o fluxo fechado até a aprovação jurídica e operacional. Aprovação de prestadores, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
 
-Esta versão preserva a Home, busca, páginas públicas e APIs de leitura da Alpha 0.2.0; inclui recuperação de senha, edição segura do nome, sessão Web, `GET/PATCH /api/v1/users/me/`, detalhe público com galeria e perfil profissional com portfólio demonstrativo. O marketplace continua exclusivamente de serviços; não inclui comércio de produtos físicos.
+Esta versão preserva a Home, busca, páginas públicas e APIs de leitura da Alpha 0.2.0; inclui recuperação de senha, edição segura do nome, sessão Web, `GET/PATCH /api/v1/users/me/`, detalhe público com galeria, perfil profissional demonstrativo e o onboarding do prestador. O marketplace continua exclusivamente de serviços; não inclui comércio de produtos físicos.
 
 ## Estrutura
 
@@ -44,7 +44,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-`seed_bico_demo` só executa com `DEBUG=True` e MySQL. Ele cria conteúdo fictício identificável como demonstração e copia imagens WebP locais para campos vazios; não apaga conteúdo nem substitui mídia já existente. Os assets e seu mapa estão em `bico_django/static/marketplace/demo/README.md`. Fotos demonstrativas não representam pessoas ou serviços reais. O storage para uploads em produção ainda precisa ser definido.
+`seed_bico_demo` só executa com `DEBUG=True` e MySQL. Ele cria conteúdo fictício identificável como demonstração e copia imagens WebP locais para campos vazios; não apaga conteúdo nem substitui mídia já existente. Os assets e seu mapa estão em `bico_django/static/marketplace/demo/README.md`. Fotos demonstrativas não representam pessoas ou serviços reais. Documentos de identidade usam storage privado cifrado, fora de `static/`; o onboarding e o upload estão desabilitados em produção até a aprovação jurídica, definição de retenção e revisão dos controles de dados, backups e chaves.
 
 A aplicação fica em `http://127.0.0.1:8000/`; a API em `/api/v1/` e o health check em `/api/v1/health/`.
 
@@ -72,7 +72,7 @@ python manage.py findstatic css/home.css
 
 O runner de testes MySQL cria um banco isolado (`test_bico`). Use uma conta de teste autorizada a criar e remover esse banco; não conceda esses privilégios à conta de aplicação de produção. Sem isso, os testes focados que não precisam de banco podem passar, mas a suíte completa não chega a executar.
 
-O CSS usa tokens, fontes locais Inter e Quicksand, base, componentes reutilizáveis e estilos específicos em `home.css`, `accounts/auth.css` e `marketplace/detail.css`. Consulte [estado atual](docs/01-projeto/estado-atual.md), [contratos da API](docs/06-api-e-dados/contratos-api.md), [marketplace público](docs/05-funcionalidades/marketplace-publico.md) e [Design System](docs/04-interface/design-system.md).
+O CSS usa tokens, fontes locais Inter e Quicksand, base, componentes reutilizáveis e estilos específicos em `home.css`, `accounts/auth.css`, `marketplace/detail.css` e `providers/onboarding.css`. Consulte [estado atual](docs/01-projeto/estado-atual.md), [contratos da API](docs/06-api-e-dados/contratos-api.md), [marketplace público](docs/05-funcionalidades/marketplace-publico.md), [onboarding do prestador](docs/05-funcionalidades/prestadores.md) e [Design System](docs/04-interface/design-system.md).
 
 ## Git
 

@@ -9,6 +9,11 @@
   <main id="main-content" class="container home-content">
     {% include "components/banner_carousel.html" %}
 
+    <section class="home-provider-invite" aria-labelledby="provider-invite-title">
+      <div><p class="eyebrow">Para profissionais e empresas</p><h2 id="provider-invite-title">Seus serviços também têm espaço na BICO</h2><p>Crie seu cadastro profissional e acompanhe a análise da equipe.</p></div>
+      <a class="button" href="{% url 'providers:start' %}">Quero prestar serviços</a>
+    </section>
+
     <section class="home-section" aria-labelledby="popular-providers-title">
       {% include "components/section_heading.html" with title="Profissionais populares" title_id="popular-providers-title" %}
       {% if popular_providers %}

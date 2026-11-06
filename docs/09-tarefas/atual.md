@@ -1,18 +1,20 @@
-# Tarefa atual — Alpha 0.3.2: imagens e refinamento visual
+# Tarefa atual — Alpha 0.4.0: onboarding do prestador
 
-- [x] Inspecionar instruções, estado da Alpha 0.3.1, documentação do marketplace, seed, modelos, admin e páginas públicas.
-- [x] Criar `feature/bico-alpha-0.3.2-visual-assets` a partir da Alpha 0.3.1, preservando o histórico e a Home Alpha 0.2.0.
-- [x] Gerar e otimizar 81 assets WebP locais distintos: 60 fotos de trabalho, seis imagens de anúncio, 12 retratos e três logos.
-- [x] Completar capa e galerias distintas dos 36 anúncios demo; cobrir as 12 categorias e os 18 perfis demo.
-- [x] Corrigir especialidades, apresentações e associações demonstrativas sem alterar perfis ou anúncios reais.
-- [x] Reorganizar perfil público, cards de anúncio, portfólio, perfis relacionados e recorte de logos; manter a Home e os banners sem redesign.
-- [x] Exigir duas imagens distintas no admin ao publicar anúncios novos; manter rascunhos sem fotos e permitir editar anúncios já publicados.
-- [x] Tornar o seed idempotente para arquivos com sufixo de colisão gerado pelo armazenamento, preservando arquivos personalizados.
-- [x] Documentar origem e uso dos assets, seed, páginas, regra de publicação, estado, roadmap e release.
-- [x] Executar o seed no MySQL local com `DEBUG=True`; verificações confirmaram 36 capas únicas, 41 fotos de galeria, 12 categorias com imagem e 18 perfis com avatar/logo. Repetições não criaram registros nem trocaram os nomes de arquivos já semeados.
-- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 28 testes focados de `apps.catalog.tests` e `apps.core.tests`, Ruff nos módulos Python alterados e integridade/formato dos 81 assets.
-- [x] Confirmar que `.env`, logs, banco local, caches e temporários permanecem ignorados pelo Git.
-- [x] Revisar Home, anúncio e perfil em navegador com viewport mobile de 412 px e desktop de 1440 px. A página não excede a largura do viewport; composição mobile e desktop conferidas.
-- [x] Revisar o diff, confirmar que arquivos sensíveis e locais estão ignorados, criar o commit `e857cbb` e publicar a branch no origin sem force push.
+- [x] Inspecionar o estado Git e a implementação existente de conta, catálogo, prestadores, API, segurança e design system; partir da branch publicada Alpha 0.3.2.
+- [x] Criar `feature/bico-alpha-0.4.0-provider-onboarding`, preservando histórico e migrations existentes.
+- [x] Implementar onboarding de cinco etapas com rascunho persistente, identificação PF/PJ, dados profissionais, categorias ativas, modalidades e localização privada.
+- [x] Implementar etapa documental com uploads separados de frente/verso RG/CIN/CNH, validação real JPEG/PNG/WebP, limites de tamanho/resolução, pré-validação de imagem, prévia e substituição.
+- [x] Armazenar imagens cifradas fora de `static/`, sem URL pública, e restringir prévia ao proprietário autenticado.
+- [x] Submeter apenas com dois arquivos válidos; manter `PENDING_REVIEW`/`NOT_REVIEWED` e impedir alteração de campos internos de decisão pela Web/API.
+- [x] Adicionar rate limiting MySQL para uploads/envios e auditoria mínima sem dados documentais.
+- [x] Integrar entrada na Home e Minha Conta e adicionar endpoints autenticados para progresso, upload e envio.
+- [x] Manter onboarding e coleta desabilitados em production settings até aprovação jurídica e revisão de segurança.
+- [x] Atualizar README, estado atual, roadmap, banco, segurança, privacidade, funcionalidade de prestadores, API, changelog, índice, ADR e esta tarefa.
+- [x] Aplicar a migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` no MySQL local autorizado.
+- [x] Executar `manage.py check`, `makemigrations --check --dry-run`, Ruff nos módulos alterados e `git diff --check`.
+- [x] Fazer smoke checks sem banco de testes: JPEG/PNG/WebP, arquivo corrompido, storage cifrado sem URL pública, templates e normalização CPF/CNPJ.
+- [ ] Executar os quatro testes de integração focados. O runner parou antes de iniciar por erro MySQL 1044 ao criar `test_bico`; provisionar privilégios limitados ao banco de teste antes de tentar novamente.
+- [ ] Fazer revisão visual mobile/desktop do onboarding.
+- [ ] Revisar diff/segredos, criar commit e publicar a branch sem force push.
 
-Limites mantidos: sem migrations, alteração de contratos API, contratação, chat real, avaliações, pagamento ou modo Prestador. A suíte completa continua pendente porque o usuário MySQL de aplicação não pode criar `test_bico` (erro 1044); não usar o schema principal como substituto. A branch não será integrada à `main` nesta entrega.
+Pendências antes de coleta em produção: aprovação jurídica, finalidade e base legal, retenção/descarte, revisão de proteção do MySQL e backups, rotação/recuperação de chaves, operação de revisão e validação responsiva. Não integrar à `main` enquanto os testes MySQL focados não executarem e passarem.

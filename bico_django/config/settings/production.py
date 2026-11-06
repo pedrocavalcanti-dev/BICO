@@ -5,6 +5,9 @@ from django.core.exceptions import ImproperlyConfigured
 from .base import *  # noqa: F403
 
 DEBUG = False
+# Identity-document collection remains closed until legal approval and encrypted storage exist.
+PROVIDER_ONBOARDING_ENABLED = False
+PROVIDER_DOCUMENT_UPLOAD_ENABLED = False
 
 _required = (
     "DJANGO_SECRET_KEY",

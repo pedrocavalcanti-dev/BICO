@@ -70,6 +70,12 @@
 .provider-card:not(.provider-card--compact) .provider-card__avatar { width: 4.5rem; }
 .provider-card:not(.provider-card--compact) .provider-card__reputation { margin-top: auto; }
 
+.home-provider-invite { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin: 2rem 0 3rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--radius-lg); background: var(--color-primary-soft); }
+.home-provider-invite h2 { margin: .25rem 0; color: var(--color-text-primary); font-family: var(--font-family-heading); font-size: var(--font-size-xl); }
+.home-provider-invite p { margin: 0; color: var(--color-text-secondary); }
+.home-provider-invite .eyebrow { color: var(--color-primary-hover); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); }
+@media (max-width: 40rem) { .home-provider-invite { align-items: flex-start; flex-direction: column; } .home-provider-invite .button { width: 100%; } }
+
 @media (min-width: 62rem) {
   .provider-rail { grid-auto-columns: minmax(8rem, 1fr); }
   .category-rail--featured { grid-auto-columns: minmax(0, 1fr); }
