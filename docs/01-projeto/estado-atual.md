@@ -3,6 +3,7 @@
 **Versão em desenvolvimento:** 0.4.0-alpha
 **Atualizado:** 2026-11-06
 **Branch:** `feature/bico-alpha-0.4.0-provider-onboarding`
+**Commit da implementação:** `8fbec3e` (publicado em `origin/feature/bico-alpha-0.4.0-provider-onboarding`)
 **Base:** Alpha 0.3.2 no commit `e857cbb`, publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
 

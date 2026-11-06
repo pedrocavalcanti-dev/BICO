@@ -8,7 +8,7 @@
 | 0.3.0 | Cadastro/login, recuperação de senha e área do cliente | Implementada na branch de desenvolvimento; suíte completa bloqueada por privilégio MySQL |
 | 0.3.1 | Refinar navegação, imagens, galeria de anúncios, perfil público, contratos API e login Google futuro | Branch `feature/bico-alpha-0.3.1-experience` publicada; validações focadas concluídas; suíte MySQL completa e revisão visual pendentes |
 | 0.3.2 | Enriquecer imagens demonstrativas, completar galerias, corrigir associações e refinar anúncio/perfil | Publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`, commit `e857cbb`; 36 capas únicas, 28 testes focados e revisão visual mobile/desktop passaram; suíte completa pendente de privilégio MySQL |
-| 0.4.0 | Onboarding de prestador, dados PF/PJ, modalidades e revisão documental humana | Implementação e checks de código concluídos; migration aplicada no MySQL local; testes de integração bloqueados por privilégio para criar `test_bico`; não integrada à `main` |
+| 0.4.0 | Onboarding de prestador, dados PF/PJ, modalidades e revisão documental humana | Publicada em `origin/feature/bico-alpha-0.4.0-provider-onboarding`, commit `8fbec3e`; checks de código concluídos e migration aplicada no MySQL local; testes de integração bloqueados por privilégio para criar `test_bico`; não integrada à `main` |
 | 0.4.1 | Área do Prestador, gestão de perfil profissional e controles BICO Gestão | Planejada |
 | 0.4.2 | Publicação e gestão de anúncios pelo prestador | Planejada |
 | 0.5.0 | Solicitações de serviço e estados de atendimento | Planejada |

@@ -15,6 +15,9 @@
 - [x] Fazer smoke checks sem banco de testes: JPEG/PNG/WebP, arquivo corrompido, storage cifrado sem URL pública, templates e normalização CPF/CNPJ.
 - [ ] Executar os quatro testes de integração focados. O runner parou antes de iniciar por erro MySQL 1044 ao criar `test_bico`; provisionar privilégios limitados ao banco de teste antes de tentar novamente.
 - [ ] Fazer revisão visual mobile/desktop do onboarding.
-- [ ] Revisar diff/segredos, criar commit e publicar a branch sem force push.
+- [x] Revisar diff/segredos, confirmar arquivos locais ignorados e validar `git diff --cached --check`.
+- [x] Criar o commit `8fbec3e` e publicar a branch no `origin` sem force push.
 
-Pendências antes de coleta em produção: aprovação jurídica, finalidade e base legal, retenção/descarte, revisão de proteção do MySQL e backups, rotação/recuperação de chaves, operação de revisão e validação responsiva. Não integrar à `main` enquanto os testes MySQL focados não executarem e passarem.
+Pendências antes de integrar à `main`: executar os quatro testes focados em banco MySQL isolado e revisar visualmente o fluxo em mobile/desktop. Pendências antes de coleta em produção: aprovação jurídica, finalidade e base legal, retenção/descarte, revisão de proteção do MySQL e backups, rotação/recuperação de chaves e operação de revisão.
+
+Implementação publicada em `origin/feature/bico-alpha-0.4.0-provider-onboarding`, commit `8fbec3e`. A `main` não foi alterada porque os testes focados não puderam iniciar.
