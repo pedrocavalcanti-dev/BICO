@@ -12,6 +12,7 @@
 - [x] Atualizar README, estado atual, roadmap, banco, segurança, privacidade, funcionalidade de prestadores, API, changelog, índice, ADR e esta tarefa.
 - [x] Aplicar a migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` no MySQL local autorizado.
 - [x] Executar `manage.py check`, `makemigrations --check --dry-run`, Ruff nos módulos alterados e `git diff --check`.
+- [x] Confirmar reversão das rotas Web/API e localização de CSS/JavaScript com `findstatic`.
 - [x] Fazer smoke checks sem banco de testes: JPEG/PNG/WebP, arquivo corrompido, storage cifrado sem URL pública, templates e normalização CPF/CNPJ.
 - [ ] Executar os quatro testes de integração focados. O runner parou antes de iniciar por erro MySQL 1044 ao criar `test_bico`; provisionar privilégios limitados ao banco de teste antes de tentar novamente.
 - [ ] Fazer revisão visual mobile/desktop do onboarding.

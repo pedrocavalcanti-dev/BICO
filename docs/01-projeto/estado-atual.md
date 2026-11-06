@@ -20,6 +20,7 @@
 ## Validação da Alpha 0.4.0
 
 - `manage.py check --settings=config.settings.development`, `makemigrations --check --dry-run`, Ruff nos módulos Python alterados e `git diff --check` passaram. A migration não destrutiva `providers.0002_providerapplication_providerdocument_and_more` foi aplicada ao MySQL local autorizado; `showmigrations` confirmou as dependências aplicadas.
+- `findstatic` encontrou o CSS e o JavaScript do onboarding; `reverse()` resolveu as rotas Web e os três endpoints da API.
 - Smoke checks sem banco de testes passaram para JPEG/PNG/WebP, rejeição de arquivo corrompido, storage cifrado sem URL pública, compilação dos templates e normalização de CPF/CNPJ formatados. A suíte de quatro testes focados cobre formato/qualidade, storage e autorização por proprietário, os dois lados e persistência pendente, e proteção dos campos internos pela API.
 - A execução de `manage.py test apps.providers.tests` parou antes de iniciar os testes: MySQL retornou erro 1044 ao criar o banco isolado `test_bico`. Nenhum teste foi executado no banco principal. Repetir somente após conceder privilégios de criação/remoção restritos ao banco de teste.
 - Revisão visual em navegador mobile/desktop ainda não foi realizada nesta etapa.
