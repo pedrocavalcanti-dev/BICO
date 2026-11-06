@@ -10,9 +10,9 @@
 - [x] Tornar o seed idempotente para arquivos com sufixo de colisão gerado pelo armazenamento, preservando arquivos personalizados.
 - [x] Documentar origem e uso dos assets, seed, páginas, regra de publicação, estado, roadmap e release.
 - [x] Executar o seed no MySQL local com `DEBUG=True`; verificações confirmaram 36 capas únicas, 41 fotos de galeria, 12 categorias com imagem e 18 perfis com avatar/logo. Repetições não criaram registros nem trocaram os nomes de arquivos já semeados.
-- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 25 testes focados de `apps.catalog.tests` e `apps.core.tests`, Ruff nos módulos Python alterados e integridade/formato dos 81 assets.
+- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 28 testes focados de `apps.catalog.tests` e `apps.core.tests`, Ruff nos módulos Python alterados e integridade/formato dos 81 assets.
 - [x] Confirmar que `.env`, logs, banco local, caches e temporários permanecem ignorados pelo Git.
 - [x] Revisar Home, anúncio e perfil em navegador com viewport mobile de 412 px e desktop de 1440 px. A página não excede a largura do viewport; composição mobile e desktop conferidas.
-- [x] Revisar o diff, confirmar que arquivos sensíveis e locais estão ignorados e preparar o commit final local para publicação sem force push.
+- [x] Revisar o diff, confirmar que arquivos sensíveis e locais estão ignorados, criar o commit `e857cbb` e publicar a branch no origin sem force push.
 
 Limites mantidos: sem migrations, alteração de contratos API, contratação, chat real, avaliações, pagamento ou modo Prestador. A suíte completa continua pendente porque o usuário MySQL de aplicação não pode criar `test_bico` (erro 1044); não usar o schema principal como substituto. A branch não será integrada à `main` nesta entrega.

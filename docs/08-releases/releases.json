@@ -2,7 +2,7 @@
   {
     "version": "0.3.2-alpha",
     "date": "2026-11-05",
-    "status": "validações focadas e revisão visual concluídas na branch feature/bico-alpha-0.3.2-visual-assets; suíte com banco isolado pendente; não integrada à main",
+    "status": "publicada em origin/feature/bico-alpha-0.3.2-visual-assets no commit e857cbb; 28 testes focados e revisão visual concluídos; suíte completa pendente do privilégio MySQL para test_bico; não integrada à main",
     "summary": "81 novos assets WebP de demonstração, galerias completas nos anúncios, imagens em categorias/perfis, associações coerentes e refinamento de anúncios e perfis profissionais."
   },
   {

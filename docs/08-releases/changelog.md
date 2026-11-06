@@ -7,8 +7,9 @@
 - Seed reconhece o sufixo aleatório que o armazenamento adiciona aos nomes e continua idempotente sem substituir mídia personalizada.
 - Perfil profissional apresenta cards de serviço mais largos, portfólio em grade e profissionais relacionados em cards compactos. Empresas exibem logo próprio sem distorção; a rolagem horizontal da Home fica sem barra visível em desktop.
 - O admin exige duas imagens distintas para publicar um anúncio novo ou promover um rascunho. Rascunhos e anúncios anteriormente publicados seguem editáveis. Sem alterações de modelo ou migrations; APIs existentes permanecem compatíveis.
-- Validações: `manage.py check`, `makemigrations --check --dry-run`, 25 testes focados (`apps.catalog.tests` e `apps.core.tests`), Ruff nos quatro arquivos Python alterados e inspeção dos 81 WebP passaram. O seed foi repetido no MySQL local sem criar registros.
+- Validações: `manage.py check`, `makemigrations --check --dry-run`, 28 testes focados (`apps.catalog.tests` e `apps.core.tests`), Ruff nos quatro arquivos Python alterados e inspeção dos 81 WebP passaram. O seed foi repetido no MySQL local sem criar registros.
 - Revisão visual em navegador com viewport de 412 px e 1440 px passou para Home, anúncio e perfil, sem largura horizontal excedente. A suíte completa com banco isolado permanece pendente: a conta MySQL atual não pode criar `test_bico` (erro 1044). Não houve teste contra o schema principal nem integração à `main`.
+- Implementação publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`, commit `e857cbb`. A `main` não foi alterada enquanto a suíte completa aguarda o privilégio MySQL de teste.
 
 ## 0.3.1-alpha — 2026-11-05
 

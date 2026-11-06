@@ -3,6 +3,7 @@
 **Versão em desenvolvimento:** 0.3.2-alpha
 **Atualizado:** 2026-11-05
 **Branch:** `feature/bico-alpha-0.3.2-visual-assets`
+**Commit da implementação:** `e857cbb` (publicado em `origin/feature/bico-alpha-0.3.2-visual-assets`)
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
 
 ## Alpha 0.3.2 — imagens e refinamento visual
@@ -17,7 +18,7 @@
 ## Validação da Alpha 0.3.2
 
 - `manage.py check` passou; `manage.py makemigrations --check --dry-run` informou que não há migrations pendentes.
-- 25 testes focados de `apps.catalog.tests` e `apps.core.tests` passaram sem usar o banco de testes.
+- 28 testes focados de `apps.catalog.tests` e `apps.core.tests` passaram sem usar o banco de testes.
 - Ruff passou nos quatro módulos Python alterados (`admin.py`, `models.py`, `seed_bico_demo.py` e `tests.py`); `git diff --check` também passou.
 - O seed foi executado repetidamente no MySQL local com `DEBUG=True` sem criar registros ou trocar os nomes de arquivos já associados. Consulta confirmou 36 capas únicas, 41 imagens de galeria, 12 categorias com imagem e 18 perfis demonstrativos com retrato/logo.
 - Os 81 novos assets foram verificados como imagens WebP legíveis, com hashes distintos e tamanho individual inferior a 500 KB. A inspeção em navegador com viewport de 412 px e 1440 px confirmou Home, anúncio e perfil sem rolagem horizontal da página.
