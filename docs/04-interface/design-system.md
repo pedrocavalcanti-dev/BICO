@@ -37,3 +37,9 @@ O container usa largura máxima centralizada e gutters fluidos. Títulos usam `c
 8. Anúncios recentes, especialidades e footer institucional.
 
 Os dados comerciais são consultados do MySQL por seletores compartilhados pela Web e API. Não fixar conteúdo de anúncios nos templates. O seed local é identificável como demonstração. A área geográfica é somente composição visual: sem mapa, geolocalização, distância ou coordenadas nesta etapa.
+
+## Alpha 0.3.1 — páginas públicas e mídia demonstrativa
+
+O cabeçalho mostra até sete categorias destacadas do banco e um link para todas; desktop usa uma grade sem scrollbar e a navegação compacta mantém rolagem apenas no componente. As páginas de anúncio e perfil usam `static/css/marketplace/detail.css`; a galeria usa botões com foco visível, `aria-pressed` e miniaturas com carregamento tardio. Imagens mantêm proporção e dimensões, e estados vazios são apresentados quando não existe mídia.
+
+O login apresenta o símbolo Google oficial com botão desabilitado “Em breve”, sem sugerir autenticação disponível. Imagens WebP demonstrativas ficam em `static/marketplace/demo/` como origem para o seed, com documentação de cada arquivo. Use-as somente em registros e exemplos identificados como demonstração; para uploads de usuários, utilizar `MEDIA_ROOT`/storage configurado, nunca `static/`.

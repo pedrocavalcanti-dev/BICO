@@ -1,10 +1,11 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.utils import timezone
 
-from apps.catalog.models import ServiceCategory, ServiceListing
+from apps.catalog.models import ServiceCategory, ServiceListing, ServiceListingImage
 from apps.core.models import HomeBanner
 from apps.providers.models import ProviderProfile
 
@@ -98,6 +99,27 @@ BANNERS = (
         "Conhecer a BICO",
     ),
 )
+CATEGORY_IMAGES = {
+    "jardinagem": "garden-trimmer.webp",
+    "encanamento": "plumbing-repair.webp",
+    "pintura": "wall-painting.webp",
+    "limpeza": "home-cleaning.webp",
+    "eletrica": "electrical-installation.webp",
+    "tecnologia": "computer-repair.webp",
+    "mecanica": "automotive-diagnostics.webp",
+    "fotografia": "event-photography.webp",
+    "reformas": "wall-painting.webp",
+}
+PROVIDER_AVATARS = {
+    "demo.provider01@example.invalid": "demo-provider-alex.webp",
+    "demo.provider02@example.invalid": "demo-provider-beatriz.webp",
+    "demo.provider03@example.invalid": "demo-provider-caio.webp",
+}
+DEMO_GARDEN_GALLERY = (
+    ("lawn-mowing.webp", "Corte de grama em jardim residencial"),
+    ("garden-hedge-pruning.webp", "Poda e manutenção de cerca viva"),
+    ("garden-planting.webp", "Plantio e cuidado de jardim"),
+)
 
 
 class Command(BaseCommand):
@@ -133,10 +155,14 @@ class Command(BaseCommand):
                 },
             )
             created_count += int(created)
-        return created_count, [
+        categories = [
             ServiceCategory.objects.get(slug=slug)
             for _name, slug, _featured, _specialty in CATEGORIES
         ]
+        for category in categories:
+            if not category.cover_image and (filename := CATEGORY_IMAGES.get(category.slug)):
+                self._attach_image_if_empty(category, "cover_image", filename)
+        return created_count, categories
 
     def _seed_providers(self, categories):
         User = get_user_model()
@@ -185,6 +211,8 @@ class Command(BaseCommand):
                 continue
             if profile.is_demo:
                 profile.categories.add(categories[(index - 1) % len(categories)])
+                if filename := PROVIDER_AVATARS.get(email):
+                    self._attach_image_if_empty(profile, "avatar", filename)
             if profile_created:
                 created_count += 1
         return created_count
@@ -238,13 +266,33 @@ class Command(BaseCommand):
                 listing.title = title
                 listing.description = description
                 listing.save(update_fields=["title", "description", "updated_at"])
+            if listing.is_demo:
+                filename = CATEGORY_IMAGES.get(category.slug)
+                if filename:
+                    self._attach_image_if_empty(listing, "image", filename)
+                if slug == "demo-servico-01":
+                    self._seed_garden_gallery(listing)
             created_count += int(created)
         return created_count
+
+    def _seed_garden_gallery(self, listing):
+        if not listing.is_demo:
+            return
+        for order, (filename, alt_text) in enumerate(DEMO_GARDEN_GALLERY):
+            image, _created = ServiceListingImage.objects.get_or_create(
+                listing=listing,
+                display_order=order,
+                defaults={"alt_text": alt_text},
+            )
+            if not image.alt_text:
+                image.alt_text = alt_text
+                image.save(update_fields=["alt_text"])
+            self._attach_image_if_empty(image, "image", filename)
 
     def _seed_banners(self):
         created_count = 0
         for order, (slug, title, subtitle, action) in enumerate(BANNERS, start=1):
-            _banner, created = HomeBanner.objects.get_or_create(
+            banner, created = HomeBanner.objects.get_or_create(
                 slug=slug,
                 defaults={
                     "title": title,
@@ -256,5 +304,26 @@ class Command(BaseCommand):
                     "is_demo": True,
                 },
             )
+            if banner.is_demo and not banner.image:
+                filename = {
+                    "demo-encontre-profissionais": "garden-trimmer.webp",
+                    "demo-resolva-com-bico": "computer-repair.webp",
+                    "demo-talento-bico": "wall-painting.webp",
+                }.get(slug)
+                if filename:
+                    self._attach_image_if_empty(banner, "image", filename)
+                    banner.image_alt = f"Imagem demonstrativa: {title.lower()}"
+                    banner.save(update_fields=["image_alt"])
             created_count += int(created)
         return created_count
+
+    def _attach_image_if_empty(self, instance, field_name, filename):
+        image_field = getattr(instance, field_name)
+        if image_field:
+            return False
+        source = settings.BASE_DIR / "static" / "marketplace" / "demo" / filename
+        if not source.is_file():
+            self.stdout.write(self.style.WARNING(f"Asset demonstrativo ausente: {filename}"))
+            return False
+        image_field.save(filename, ContentFile(source.read_bytes()), save=True)
+        return True

@@ -15,6 +15,7 @@ from .serializers import (
     PublicBannerSerializer,
     PublicCategorySerializer,
     PublicListingSerializer,
+    PublicProviderDetailSerializer,
     PublicProviderSerializer,
 )
 
@@ -128,7 +129,7 @@ class ProviderListAPIView(PublicReadOnlyMixin, generics.ListAPIView):
 class ProviderDetailAPIView(PublicReadOnlyMixin, generics.RetrieveAPIView):
     authentication_classes = []
     permission_classes = [AllowAny]
-    serializer_class = PublicProviderSerializer
+    serializer_class = PublicProviderDetailSerializer
     lookup_field = "id"
     lookup_url_kwarg = "provider_id"
 

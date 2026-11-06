@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ServiceCategory, ServiceListing
+from .models import ServiceCategory, ServiceListing, ServiceListingImage
 
 
 @admin.register(ServiceCategory)
@@ -15,6 +15,11 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceListing)
 class ServiceListingAdmin(admin.ModelAdmin):
+    class GalleryImageInline(admin.TabularInline):
+        model = ServiceListingImage
+        extra = 0
+        fields = ("image", "alt_text", "display_order")
+
     list_display = (
         "title",
         "provider",
@@ -30,3 +35,4 @@ class ServiceListingAdmin(admin.ModelAdmin):
     ordering = ("-published_at", "-created_at")
     readonly_fields = ("id", "is_demo", "created_at", "updated_at", "published_at")
     autocomplete_fields = ("provider", "category")
+    inlines = (GalleryImageInline,)

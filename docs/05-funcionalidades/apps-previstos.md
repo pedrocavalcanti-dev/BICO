@@ -3,10 +3,10 @@
 | Domínio | Responsabilidade | Estado |
 |---|---|---|
 | `core` | Home, banners, páginas informativas e conteúdo público | Home e banners implementados; health está em `api.v1` |
-| `accounts` | Identidade, autenticação e perfil pessoal | Usuário customizado; fluxos ainda pendentes |
+| `accounts` | Identidade, autenticação e perfil pessoal | Cadastro, sessão, recuperação de senha e perfil de cliente implementados; confirmação de e-mail e recursos profissionais futuros |
 | `audit` | Eventos administrativos/de segurança | Modelo inicial e admin somente leitura |
-| `providers` | Perfil público e estado de aprovação de profissionais/empresas | Implementado para leitura pública e administração; cadastro pendente |
-| `catalog` | Categorias e anúncios de serviços | Implementado para descoberta, busca e administração; criação por prestadores pendente |
+| `providers` | Perfil público e estado de aprovação de profissionais/empresas | Leitura pública e administração implementadas; ativação/cadastro profissional pendente |
+| `catalog` | Categorias e anúncios de serviços | Descoberta, busca, galeria e administração implementadas; publicação por prestadores pendente |
 | `service_requests` | Solicitação e transições de contratação | Planejado |
 | `messaging` | Conversas, participantes e mensagens | Planejado |
 | `reviews` | Avaliações vinculadas a serviço concluído | Planejado |

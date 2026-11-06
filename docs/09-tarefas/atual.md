@@ -1,21 +1,20 @@
-# Tarefa atual — Alpha 0.3.0: autenticação e área do cliente
+# Tarefa atual — Alpha 0.3.1: Marketplace Experience Update
 
-- [x] Inspecionar estado Git, `AGENTS.md`, arquitetura, User, segurança, URLs, templates e API da Alpha 0.2.0.
-- [x] Criar `feature/bico-alpha-0.3.0-auth` a partir do commit da Home `3702e69`.
-- [x] Implementar conta única, validação de senha, login, sessão persistente opcional e logout POST/CSRF.
-- [x] Implementar recuperação nativa Django, resposta neutra, e-mail de desenvolvimento em arquivo e SMTP obrigatório em produção.
-- [x] Implementar Minha Conta, edição allowlist de nome e mudança de senha autenticada.
-- [x] Integrar header compartilhado e proteger ações pessoais; preservar a Home pública.
-- [x] Implementar `GET/PATCH /api/v1/users/me/` com sessão, CSRF, serializer allowlist e usuário derivado da sessão.
-- [x] Implementar throttle MySQL com chaves HMAC e auditoria sem credenciais/PII.
-- [x] Criar migration não destrutiva e comando de limpeza de buckets antigos.
-- [x] Atualizar documentação funcional, interface, API, segurança, release e ADR mobile futuro.
-- [x] `manage.py check`, `makemigrations --check --dry-run`, Ruff `check`/`format --check` e `git diff --check` passaram.
-- [ ] Suíte Django completa: encontrou 40 testes, mas não conseguiu iniciar porque `bico_app` não tem privilégio para criar `test_bico` (MySQL 1044). Reexecutar após configurar usuário de teste com permissões necessárias para criar/remover o banco isolado.
-- [x] 20 testes sem acesso ao banco passaram (`UserModelContractTests` e `apps.core.tests`).
-- [x] Revisar login e cadastro no Edge em 360, 390, 768, 1024 e 1440 px; confirmar ausência de overflow horizontal.
-- [x] Revisar diff final e registrar o commit `dba6100 feat: implement BICO authentication and customer account`.
-- [x] Publicar `feature/bico-alpha-0.3.0-auth` em `origin` sem force push.
-- [ ] Integrar à `main` somente após a suíte completa executar e passar no MySQL de teste.
+- [x] Inspecionar instruções, documentação, Git, modelos de catálogo, seletores, páginas públicas, API, seed e design system.
+- [x] Criar `feature/bico-alpha-0.3.1-experience` a partir da branch Alpha 0.3.0, preservando a Home Alpha 0.2.0.
+- [x] Limitar as categorias do cabeçalho a sete destaques ativos, com destino para todas as categorias e overflow contido em telas estreitas.
+- [x] Refinar detalhes públicos de anúncio e perfil sem inventar avaliações, distância, disponibilidade, verificação ou transações.
+- [x] Criar galeria de imagens de anúncio, migration não destrutiva, inline de administração e contrato REST de leitura.
+- [x] Melhorar seed idempotente com imagens WebP locais por especialidade e registros claramente demonstrativos.
+- [x] Manter solicitações e chat como ações explicativas, protegidas por login, sem criar registros ou simular envio.
+- [x] Exibir marca Google como opção desabilitada “Em breve”; nenhum login social foi apresentado como integrado.
+- [x] Atualizar documentação de estado, roadmap, banco, API, segurança, navegação, marketplace público, ADR e release.
+- [x] Validar `manage.py check`, `makemigrations --check --dry-run`, 22 testes focados de `apps.core.tests`, Ruff nos arquivos Python alterados e `git diff --check`.
+- [x] Registrar que a varredura Ruff mais ampla permanece com 29 apontamentos preexistentes em `apps/accounts/admin.py` e migrations iniciais, fora dos arquivos desta entrega.
+- [x] Confirmar migration `catalog.0003_servicelistingimage` aplicada no banco local e executar `seed_bico_demo` duas vezes sem duplicação.
+- [x] Confirmar respostas HTTP 200 em Home, páginas públicas, endpoints públicos e ativos locais por meio do cliente Django e servidor local.
+- [ ] Suíte Django completa encontrou 45 testes, mas ficou bloqueada antes da execução: MySQL retorna erro 1044 ao criar `test_bico` com a conta `bico_app`. Não rodar testes no schema principal nem ampliar privilégio global da conta da aplicação.
+- [ ] Revisão visual da Alpha 0.3.1 em 360, 390, 768, 1024 e 1440 px; Edge reutilizou sessão existente e não produziu screenshots nesta sessão.
+- [ ] Publicar a branch validada após commit local; integração à `main` fica condicionada à suíte completa passar e à revisão visual final.
 
-Dependência: `feature/bico-alpha-0.3.0-auth` deriva de `feature/bico-alpha-0.2.0-home` no commit `3702e69`; o commit de autenticação é `dba6100`. A Alpha 0.2.0 deve preceder esta versão na integração. Pendências do produto: confirmação de e-mail, MFA, login social, modo Prestador, chat, favoritos, notificações reais e contratação. A integração à `main` só deve ocorrer após a suíte completa passar; não usar push forçado.
+Dependência: esta branch deriva de `feature/bico-alpha-0.3.0-auth` no commit `0be5a3e`, que preserva os commits de autenticação e a Home Alpha 0.2.0 (`3702e69`). Pendências de produto permanecem: chat, contratação, avaliações reais, favoritos persistentes, notificações, modo Prestador, confirmação de e-mail, login social e pagamentos. Não usar push forçado nem integrar a `main` enquanto a suíte completa estiver bloqueada.

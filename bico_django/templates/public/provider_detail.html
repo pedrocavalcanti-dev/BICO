@@ -1,13 +1,72 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ provider.public_name }} — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/marketplace/detail.css' %}">{% endblock %}
 {% block content %}
-<main id="main-content" class="container page-content">
-  <article class="provider-profile">
-    {% if provider.avatar %}<img class="provider-profile__avatar" src="{{ provider.avatar.url }}" alt="Foto de {{ provider.public_name }}">{% else %}<span class="provider-profile__avatar provider-profile__avatar--placeholder" aria-hidden="true">{{ provider.public_name|slice:":1"|upper }}</span>{% endif %}
-    <div><p class="eyebrow">{% if provider.provider_type == "COMPANY" %}Empresa prestadora{% else %}Profissional autônomo{% endif %}</p><h1>{{ provider.public_name }}</h1><p class="provider-profile__location">{{ provider.city }}-{{ provider.state }}</p>{% if provider.is_demo %}<span class="demo-badge">Perfil de demonstração</span>{% endif %}</div>
-    {% if provider.description %}<p class="provider-profile__description">{{ provider.description|linebreaksbr }}</p>{% endif %}
-    {% if provider.categories.all %}<div class="provider-profile__categories">{% for category in provider.categories.all %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}</div>{% endif %}
+<main id="main-content" class="container page-content marketplace-detail">
+  <nav class="breadcrumbs" aria-label="Você está aqui">
+    <a href="{% url 'core:home' %}">Início</a><span aria-hidden="true">/</span>
+    <a href="{% url 'core:search' %}">Profissionais</a><span aria-hidden="true">/</span>
+    <span aria-current="page">{{ provider.public_name }}</span>
+  </nav>
+
+  <article class="provider-hero">
+    {% if provider.avatar %}
+      <img class="provider-hero__avatar" src="{{ provider.avatar.url }}" alt="{% if provider.is_demo %}Imagem demonstrativa de {{ provider.public_name }}{% else %}Foto de {{ provider.public_name }}{% endif %}" width="128" height="128" fetchpriority="high">
+    {% else %}
+      <span class="provider-hero__avatar provider-hero__avatar--placeholder" aria-hidden="true">{{ provider.public_name|first|upper }}</span>
+    {% endif %}
+    <div class="provider-hero__identity">
+      <p class="eyebrow">{% if provider.provider_type == "COMPANY" %}Empresa prestadora{% else %}Profissional autônomo{% endif %}{% if provider.is_demo %} · Demonstração{% endif %}</p>
+      <h1>{{ provider.public_name }}</h1>
+      <p class="provider-hero__location">{{ provider.city }}-{{ provider.state }}</p>
+      {% if provider.is_demo %}<span class="demo-badge">Perfil demonstrativo</span>{% endif %}
+    </div>
+    {% if provider.categories.all %}
+      <nav class="provider-hero__categories" aria-label="Especialidades">
+        {% for category in provider.categories.all %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}
+      </nav>
+    {% endif %}
   </article>
-  <section class="home-section" aria-labelledby="provider-listings-title"><div class="section-heading"><h2 class="section-heading__title" id="provider-listings-title">Serviços publicados</h2><span class="section-heading__rule" aria-hidden="true"></span></div>{% if listings %}<div class="listing-grid">{% for listing in listings %}{% include "components/service_card.html" %}{% endfor %}</div>{% else %}<p class="empty-state">Este perfil ainda não tem serviços publicados.</p>{% endif %}</section>
+
+  <div class="provider-detail-grid">
+    <div class="provider-detail-grid__main">
+      <section class="detail-section" aria-labelledby="provider-about-title">
+        <h2 id="provider-about-title">Sobre</h2>
+        {% if provider.description %}<p>{{ provider.description|linebreaksbr }}</p>
+        {% else %}<p class="empty-state">Este profissional ainda não adicionou uma apresentação.</p>{% endif %}
+      </section>
+
+      <section class="detail-section" aria-labelledby="provider-services-title">
+        <div class="section-heading"><h2 class="section-heading__title" id="provider-services-title">Serviços publicados</h2><span class="section-heading__rule" aria-hidden="true"></span></div>
+        {% if listings %}<div class="listing-grid">{% for listing in listings %}{% include "components/service_card.html" %}{% endfor %}</div>
+        {% else %}<p class="empty-state">Este perfil ainda não tem serviços publicados.</p>{% endif %}
+      </section>
+
+      <section class="detail-section" aria-labelledby="provider-portfolio-title">
+        <h2 id="provider-portfolio-title">Portfólio</h2>
+        {% if portfolio_images %}
+          <div class="provider-portfolio">
+            {% for photo in portfolio_images %}<figure><img src="{{ photo.image.url }}" alt="{{ photo.alt_text }}" width="480" height="320" loading="lazy"><figcaption>{{ photo.listing.title }}</figcaption></figure>{% endfor %}
+          </div>
+        {% else %}<p class="empty-state">As imagens de portfólio serão exibidas quando forem adicionadas aos serviços.</p>{% endif %}
+      </section>
+    </div>
+
+    <aside class="provider-detail-grid__aside">
+      <section class="detail-section" aria-labelledby="provider-reviews-title">
+        <h2 id="provider-reviews-title">Avaliações</h2>
+        <p class="empty-state">Ainda não há avaliações publicadas. A BICO não exibe notas demonstrativas.</p>
+      </section>
+      {% if related_providers %}
+        <section class="detail-section" aria-labelledby="related-providers-title">
+          <h2 id="related-providers-title">Profissionais da região</h2>
+          <div class="provider-related-list">
+            {% for provider in related_providers %}{% include "components/provider_card.html" with compact=True %}{% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    </aside>
+  </div>
 </main>
 {% endblock %}

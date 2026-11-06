@@ -15,7 +15,9 @@ Prefixo oficial: `/api/v1/`. As rotas de descoberta são públicas, somente leit
 
 Busca aceita até 100 caracteres para texto/cidade e 150 para slug de categoria; tipo de perfil deve ser `INDIVIDUAL` ou `COMPANY`. Erros de parâmetro retornam 400. As consultas da Web e API compartilham os seletores de `catalog`, `providers` e `core`.
 
-Os serializers públicos não incluem e-mail, usuário relacionado, estado administrativo ou dados documentais. O campo `is_demo` permite identificar conteúdo demonstrativo.
+Os serializers públicos não incluem e-mail, usuário relacionado, estado administrativo ou dados documentais. O campo `is_demo` permite identificar conteúdo demonstrativo. Anúncios incluem `gallery_images` como lista de `{image, alt_text, display_order}`; URLs representam imagens públicas associadas ao anúncio.
+
+O detalhe `/api/v1/providers/{uuid}/` inclui `listings` (no máximo 12), serializados com a mesma regra de publicação e galeria. Listagens de provedores e seções da Home usam o serializer compacto sem expandir anúncios por perfil, para limitar consultas.
 
 Formato de listagem DRF: `count`, `next`, `previous`, `results`. Não existe escrita pública para estes recursos.
 

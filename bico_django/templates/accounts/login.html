@@ -32,6 +32,15 @@
         </div>
         <button class="button auth-submit" type="submit">Entrar</button>
       </form>
+      <div class="auth-social" aria-label="Outras formas de entrar">
+        <span class="auth-social__divider">ou</span>
+        <button class="auth-social__google" type="button" disabled aria-describedby="google-login-status">
+          <img src="{% static 'branding/logos/google-g-icon.png' %}" alt="" width="20" height="20">
+          <span>Continuar com Google</span>
+          <span class="auth-social__soon">Em breve</span>
+        </button>
+        <p class="visually-hidden" id="google-login-status">A integração com Google ainda não está disponível.</p>
+      </div>
       <p class="auth-switch">Ainda não tem uma conta BICO? <a href="{% url 'accounts:register' %}">Crie agora</a></p>
       <p class="auth-legal">Ao continuar, você acessará uma conta única para encontrar serviços na BICO.</p>
     </div>

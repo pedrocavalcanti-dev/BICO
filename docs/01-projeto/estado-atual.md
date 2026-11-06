@@ -1,67 +1,54 @@
 # Estado atual
 
-**Versão:** 0.3.0-alpha
-
+**Versão em desenvolvimento:** 0.3.1-alpha
 **Atualizado:** 2026-11-05
+**Branch:** `feature/bico-alpha-0.3.1-experience`
+**Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
 
-**Ambiente inspecionado:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
+## Alpha 0.3.1 — Marketplace Experience Update
+
+- Navegação do cabeçalho usa até sete categorias ativas e destacadas do MySQL, selecionáveis pelo campo `is_featured` no admin, mais o destino “Todas as categorias”. Em telas estreitas, a rolagem fica contida na navegação.
+- Página pública de anúncio ganhou galeria de capa/miniaturas acessível, resumo do serviço, prestador, cidade/UF, preço quando configurado, descrição, estado vazio de avaliações e serviços relacionados. Ações de solicitação e conversa explicam que não criam pedido nem enviam mensagem; visitantes seguem para login.
+- Perfil público apresenta identidade, especialidades, descrição, anúncios publicados, portfólio formado pelas galerias de anúncios, estado vazio de avaliações e profissionais aprovados da mesma cidade/categoria. Não exibe estatísticas, distância, nota, disponibilidade ou verificação sem dados reais.
+- `ServiceListingImage` adiciona imagens relacionadas com texto alternativo, ordem e restrição única por anúncio/ordem. A migration `catalog.0003_servicelistingimage` é não destrutiva e aparece aplicada no banco MySQL local (`showmigrations`).
+- Serializer público de anúncio inclui `gallery_images`; detalhe de prestador inclui até 12 anúncios públicos. O serializer usado em listas/home não expande anúncios por prestador, evitando consultas N+1. Os filtros públicos existentes continuam exigindo perfil aprovado, anúncio publicado e categoria ativa.
+- O seed `seed_bico_demo` foi ampliado de forma idempotente para copiar assets locais somente para campos vazios de categorias, perfis/anúncios demonstrativos e banners demonstrativos. Galeria do anúncio demonstrativo de jardinagem usa três imagens adicionais. Registros não demonstrativos e imagens já existentes não são alterados.
+- Há imagens WebP geradas para demonstração, com mapa de uso em `bico_django/static/marketplace/demo/README.md`. Não são pessoas, serviços, avaliações nem recomendações reais. O seed copia os arquivos para `MEDIA_ROOT`; `static/` não é storage de uploads de usuários.
+- Login mostra o ícone oficial Google com botão desabilitado e estado “Em breve”; autenticação social não está integrada. A origem e o limite de uso estão em `static/branding/logos/README.md`.
+
+## Validação da Alpha 0.3.1
+
+- `manage.py check`: passou sem problemas.
+- `manage.py makemigrations catalog --noinput`: gerou `0003_servicelistingimage`.
+- `manage.py makemigrations --check --dry-run`: nenhuma alteração de migration pendente.
+- Testes sem acesso a banco em `apps.core.tests`: 22 testes passaram, incluindo contrato de galeria/API, proteção do endpoint de ação anônima e validação da migration/modelo.
+- Ruff `check` e `format --check` passaram nos arquivos Python alterados pela Alpha 0.3.1; `git diff --check` passou.
+- `seed_bico_demo` foi executado duas vezes sem criar registros duplicados. Consulta local confirmou imagens para nove categorias, três avatares demonstrativos, 27 capas de anúncios, três imagens de galeria e três banners.
+- Cliente Django recebeu HTTP 200 na Home, em detalhe de anúncio e perfil, e nos endpoints públicos de anúncio e prestador. A API do anúncio retornou três imagens de galeria; a API do perfil incluiu os anúncios relacionados. O servidor local serviu CSS, JavaScript e mídia com HTTP 200.
+- Ruff `check`/`format --check` passou nos dez arquivos Python alterados. Uma varredura mais ampla ainda encontra 29 violações de estilo em arquivos preexistentes não alterados (`apps/accounts/admin.py` e migrations iniciais de accounts/catalog/core).
+- `manage.py test --verbosity 1` encontrou 45 testes, mas parou antes da execução ao criar o banco MySQL isolado: a conta `bico_app` não tem privilégio para `test_bico` (erro 1044). Nenhum teste foi executado contra o banco principal para contornar esse bloqueio.
+- A inspeção visual nos breakpoints 360, 390, 768, 1024 e 1440 px segue pendente. A tentativa de captura com Edge reutilizou a sessão já aberta e não gerou screenshots; por isso, não se declara validação visual desta versão.
 
 ## Alpha 0.3.0 — autenticação e área do cliente
 
-- Conta única de cliente com cadastro por nome/e-mail/senha, hash Django e login imediato; confirmação de e-mail ainda não existe.
-- Login/logout por sessão Django, logout POST/CSRF, retorno `next` restrito ao próprio host e política explícita de sessão persistente.
-- Recuperação de senha pelos tokens temporários Django; mensagens em arquivo local durante desenvolvimento e SMTP exigido em produção.
-- Minha Conta e edição restrita ao nome, mudança de senha com senha atual, formulários responsivos e menu compartilhado conforme a sessão.
-- Throttle de login/cadastro/reset persistido em buckets HMAC no MySQL; eventos relevantes gravados em `audit` sem senha, token, IP ou payload pessoal.
-- `GET/PATCH /api/v1/users/me/` opera apenas sobre `request.user`, exige autenticação e CSRF na mutação e permite editar somente o nome.
-- Home permanece pública. Links de ações pessoais usam login; destinos legados de autenticação e conta redirecionam para as rotas novas.
+- Cadastro, login/logout por sessão Django, recuperação e troca de senha, Minha Conta e edição allowlist do nome.
+- `GET/PATCH /api/v1/users/me/` deriva o usuário da sessão e limita o PATCH ao nome.
+- Throttle MySQL com chaves HMAC, auditoria sem credenciais/PII excessiva e redirecionamento `next` restrito.
+- Em validação anterior, `check`, checagem de migrations, Ruff e 20 testes sem banco passaram. A suíte completa parou antes dos testes pelo erro 1044 de criação de `test_bico`.
 
-## Alpha 0.2.0 — Home do marketplace
+## Alpha 0.2.0 — marketplace público
 
-- Home de marketplace responsiva na ordem visual aprovada: header/busca, categorias, banners, profissionais, serviços em destaque, chamada para prestadores, área reservada a mapa, anúncios, empresas, novidades, especialidades e footer.
-- Fontes locais Inter variável e Quicksand 700; tokens de pesos, famílias, tamanhos e cores atualizados para as referências tipográficas fornecidas.
-- Apps `providers` e `catalog`; modelos `ProviderProfile`, `ServiceCategory`, `ServiceListing` e `HomeBanner`, com UUID, relações, estados de publicação, datas, índices e campos demonstrativos.
-- Seletores compartilhados entre a Home/API, restringindo perfis a `APPROVED` e anúncios a `PUBLISHED` com categoria ativa.
-- Busca Web por título, categoria, prestador e cidade; páginas simples de resultados, anúncio e perfil; destinos informativos para ações futuras.
-- API v1 pública de leitura para Home, categorias, perfis e anúncios; paginação limitada e serializers sem dados privados.
-- Admin técnico dos quatro modelos e comando MySQL/DEBUG `seed_bico_demo`, idempotente e sem remoção ou alteração de registros legítimos.
-- Fallbacks CSS locais quando banners, capas, avatars ou imagens de anúncio não estão disponíveis. Nenhuma imagem externa é carregada.
-- Área de proximidade sem mapa, geolocalização, distância ou pins falsos.
+- Home, navegação, busca pública, categorias, perfis, anúncios e banners a partir de modelos MySQL; API v1 pública de leitura; seed demonstrativo.
+- Conteúdo público exige perfil aprovado, anúncio publicado e categoria ativa. A Home foi validada anteriormente em Edge em 360, 390, 768, 1024 e 1440 px; 21 testes sem banco passaram.
+- Commit da Home: `3702e69`, ancestral das branches de autenticação e experiência.
 
-## Validação da Alpha 0.2.0
+## Limites e pendências
 
-- `manage.py check`: sem erros.
-- `makemigrations --check --dry-run`: nenhuma migration pendente após gerar as migrations versionadas.
-- `manage.py migrate --noinput`: aplicou apenas as novas tabelas e índices `catalog`, `providers` e `core` no MySQL local existente; não criou nem apagou o schema.
-- `manage.py test`: 21 testes passaram. São testes unitários/web/API sem criação de banco temporário.
-- Seed inicial criou 12 categorias, 18 perfis demonstrativos, 36 anúncios e 3 banners. Reexecuções não criaram duplicatas; os 36 títulos demonstrativos são distintos.
-- Cliente Django contra o banco local: `/`, `/servicos/`, busca filtrada, endpoints raiz/health/Home/categorias/perfis/anúncios responderam 200.
-- Testes confirmaram `POST`, `PUT`, `DELETE` e `OPTIONS` recusados em listagens públicas e parâmetros de busca fora do limite retornando 400.
-- `findstatic` localizou `css/home.css`, `js/home.js` e a fonte Inter vendorizada.
-- Página inteira conferida no Edge em 360, 390, 768, 1024 e 1440 px, sem overflow horizontal do documento; capturas locais estão em `artifacts/responsive-alpha-0.2.0/` e são ignoradas pelo Git.
+- Solicitações, contratação, chat, favoritos persistentes, notificações reais, avaliações, modo Prestador, login Google, mapa, pagamentos e aplicativos continuam não implementados.
+- Confirmação de e-mail não está disponível. Não há avaliações, notas, distância ou estado online/verificado reais nos perfis demonstrativos.
+- Antes de integrar a versão à `main`, provisionar o banco de teste MySQL isolado e executar a suíte completa. Não conceder privilégio global ao usuário da aplicação e não rodar testes no schema principal `Bico`.
+- Fazer revisão visual das páginas de anúncio/perfil em 360, 390, 768, 1024 e 1440 px quando houver uma sessão de navegador independente disponível.
 
-## Validação da Alpha 0.3.0
+## Histórico Git
 
-- `manage.py check`: sem erros.
-- `makemigrations --check --dry-run`: nenhuma migration pendente.
-- Migration `accounts.0002_auththrottlebucket`: consta aplicada no MySQL local.
-- `manage.py test`: a suíte completa encontrou 40 testes, mas parou antes de executá-los porque `bico_app` não tem permissão para criar `test_bico` (MySQL 1044). Em separado, 20 testes sem acesso ao banco passaram (`UserModelContractTests` e `apps.core.tests`).
-- Ruff `check` e `format --check` nos arquivos Python alterados: sem erros.
-- Login e cadastro conferidos no Edge em 360, 390, 768, 1024 e 1440 px, sem overflow horizontal; capturas locais em `artifacts/responsive-alpha-0.3.0/` são ignoradas pelo Git.
-
-## Histórico Git e integração
-
-- A Alpha 0.2.0 está no commit `3702e69`; a Alpha 0.3.0 parte dele e está no commit `dba6100`, na branch `feature/bico-alpha-0.3.0-auth`.
-- A branch `feature/bico-alpha-0.3.0-auth` foi publicada em `origin`. A integração à `main` fica pendente até a suíte completa executar e passar no MySQL de teste; preservar a ordem Alpha 0.2.0 → Alpha 0.3.0.
-
-## Regras e limites
-
-- O estado aprovado de perfil e publicado de anúncio controla a descoberta pública. E-mail, usuário, estado de moderação e dados documentais não fazem parte dos serializers públicos.
-- Conteúdo demonstrativo tem `is_demo=True`, senha inutilizável e identificação visual na Home. Ele existe apenas no MySQL de desenvolvimento; o comando falha fora de `DEBUG=True` e MySQL.
-- Não há avaliações, preço presumido, distância, localização precisa ou status de verificação inventados. Anúncios demonstrativos podem mostrar preço ou “Sob orçamento” porque isso está explicitamente marcado como demonstração.
-- Confirmação de e-mail, ativação de prestador, solicitação/contratação, chat, notificações funcionais, favoritos persistentes, avaliações, mapa real e pagamentos permanecem pendentes.
-- Fotos e banners oficiais ainda não foram recebidos; a interface usa fallback CSS até existirem imagens autorizadas. O Figma editável não está no repositório, então a composição segue as referências visuais compartilhadas.
-
-## Próximos passos
-
-Implementar habilitação de perfil profissional com regras de aprovação; depois, solicitações de serviços. Planejar confirmação de e-mail, armazenamento definitivo de mídia e mapa somente com requisitos e dados adequados.
+`feature/bico-alpha-0.3.1-experience` deriva de `feature/bico-alpha-0.3.0-auth`, commit `0be5a3e`. A Alpha 0.3.0 deriva da Home no commit `3702e69`. A `main` local ainda está em `e1a2cdd`; não integrar esta branch antes da suíte integral passar e de confirmar o estado remoto.

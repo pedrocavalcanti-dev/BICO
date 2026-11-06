@@ -1,16 +1,85 @@
 {% extends "base.html" %}
-{% load l10n %}
+{% load static l10n %}
 {% block title %}{{ listing.title }} — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/marketplace/detail.css' %}">{% endblock %}
 {% block content %}
-<main id="main-content" class="container page-content">
-  <nav class="breadcrumbs" aria-label="Você está aqui"><a href="{% url 'core:home' %}">Início</a><span aria-hidden="true">/</span><a href="{% url 'core:search' %}?categoria={{ listing.category.slug|urlencode }}">{{ listing.category.name }}</a></nav>
-  <article class="detail-layout">
-    <div class="detail-main">
-      {% if listing.image %}<img class="detail-image" src="{{ listing.image.url }}" alt="Imagem do serviço {{ listing.title }}">{% else %}<div class="detail-image detail-image--placeholder" aria-hidden="true">{{ listing.category.name }}</div>{% endif %}
-      <h1>{{ listing.title }}</h1>{% if listing.is_demo %}<span class="demo-badge">Conteúdo de demonstração</span>{% endif %}
-      <p class="detail-description">{{ listing.description|linebreaksbr }}</p>
+<main id="main-content" class="container page-content marketplace-detail">
+  <nav class="breadcrumbs" aria-label="Você está aqui">
+    <a href="{% url 'core:home' %}">Início</a><span aria-hidden="true">/</span>
+    <a href="{% url 'core:search' %}?categoria={{ listing.category.slug|urlencode }}">{{ listing.category.name }}</a>
+    <span aria-hidden="true">/</span><span aria-current="page">{{ listing.title }}</span>
+  </nav>
+
+  <article class="listing-detail">
+    <div class="listing-detail__gallery" data-service-gallery>
+      {% if gallery %}
+        <figure class="listing-gallery__cover">
+          <img data-gallery-cover src="{{ gallery.0.url }}" alt="{{ gallery.0.alt_text }}" width="1280" height="800" fetchpriority="high">
+        </figure>
+        {% if gallery|length > 1 %}
+          <div class="listing-gallery__thumbnails" aria-label="Fotos do serviço">
+            {% for photo in gallery %}
+              <button class="listing-gallery__thumbnail{% if forloop.first %} is-active{% endif %}" type="button"
+                data-gallery-image="{{ photo.url }}" data-gallery-alt="{{ photo.alt_text }}"
+                aria-label="Mostrar foto {{ forloop.counter }} de {{ gallery|length }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+                <img src="{{ photo.url }}" alt="" width="160" height="110" loading="lazy">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="listing-gallery__empty" role="img" aria-label="Imagem ainda não adicionada para {{ listing.category.name }}">
+          <span>{{ listing.category.name }}</span><small>Fotos do serviço em breve</small>
+        </div>
+      {% endif %}
     </div>
-    <aside class="detail-aside"><p class="detail-category">{{ listing.category.name }}</p><p class="detail-price">{% if listing.price_type == "FROM" and listing.price_start != None %}<span>A partir de</span>R$ {{ listing.price_start|floatformat:2|localize }}{% else %}Sob orçamento{% endif %}</p><p class="detail-location">{{ listing.city }}-{{ listing.state }}</p><a class="button" href="{% url 'core:info' 'conversar' %}">Saiba sobre contato</a><p class="detail-note">A solicitação de serviços e o contato pela plataforma ainda não estão disponíveis.</p><a class="detail-provider" href="{% url 'core:provider-detail' listing.provider.slug %}">{% if listing.provider.avatar %}<img src="{{ listing.provider.avatar.url }}" alt="">{% endif %}<span><strong>{{ listing.provider.public_name }}</strong><small>Ver perfil profissional</small></span></a></aside>
+
+    <aside class="listing-summary" aria-labelledby="listing-title">
+      <p class="eyebrow">{{ listing.category.name }}{% if listing.is_demo %} · Demonstração{% endif %}</p>
+      <h1 id="listing-title">{{ listing.title }}</h1>
+      <a class="listing-summary__provider" href="{% url 'core:provider-detail' listing.provider.slug %}">
+        {% if listing.provider.avatar %}
+          <img src="{{ listing.provider.avatar.url }}" alt="" width="48" height="48">
+        {% else %}
+          <span class="listing-summary__avatar" aria-hidden="true">{{ listing.provider.public_name|first|upper }}</span>
+        {% endif %}
+        <span><strong>{{ listing.provider.public_name }}</strong><small>Ver perfil profissional</small></span>
+      </a>
+      <p class="listing-summary__location"><span aria-hidden="true">⌖</span>{{ listing.city }}-{{ listing.state }}</p>
+      <div class="listing-summary__price">
+        {% if listing.price_type == "FROM" and listing.price_start != None %}
+          <span>A partir de</span><strong>R$ {{ listing.price_start|floatformat:2|localize }}</strong>
+        {% else %}<strong>Sob orçamento</strong>{% endif %}
+      </div>
+      <a class="button listing-summary__primary" href="{% url 'core:service-action-unavailable' listing.slug 'solicitar' %}">Solicitar serviço</a>
+      <a class="button button--outline listing-summary__secondary" href="{% url 'core:service-action-unavailable' listing.slug 'conversar' %}">Conversar com profissional</a>
+      <p class="listing-summary__note">Solicitações e conversas ainda não estão disponíveis. Nenhum pedido ou mensagem será enviado.</p>
+      {% if listing.is_demo %}<p class="demo-notice">Este anúncio e os dados do profissional são demonstrativos.</p>{% endif %}
+    </aside>
   </article>
+
+  <div class="listing-detail__lower">
+    <div class="listing-detail__information">
+      <section class="detail-section" aria-labelledby="description-title">
+        <h2 id="description-title">Descrição</h2>
+        <p>{{ listing.description|linebreaksbr }}</p>
+      </section>
+      <section class="detail-section" aria-labelledby="coverage-title">
+        <h2 id="coverage-title">Localização</h2>
+        <p>{{ listing.city }}-{{ listing.state }}</p>
+        <p class="detail-section__muted">A área de atendimento será informada pelo profissional. A BICO não estima distância nesta versão.</p>
+      </section>
+      <section class="detail-section" aria-labelledby="reviews-title">
+        <h2 id="reviews-title">Avaliações</h2>
+        <p class="empty-state">Ainda não há avaliações publicadas para este anúncio.</p>
+      </section>
+    </div>
+    <section class="detail-section listing-related" aria-labelledby="related-listings-title">
+      <div class="section-heading"><h2 class="section-heading__title" id="related-listings-title">Serviços relacionados</h2><span class="section-heading__rule" aria-hidden="true"></span></div>
+      {% if related_listings %}<div class="listing-grid">{% for listing in related_listings %}{% include "components/service_card.html" %}{% endfor %}</div>
+      {% else %}<p class="empty-state">Não há outros serviços desta categoria publicados no momento.</p>{% endif %}
+    </section>
+  </div>
 </main>
 {% endblock %}
+{% block extra_js %}<script src="{% static 'js/marketplace/service-gallery.js' %}" defer></script>{% endblock %}

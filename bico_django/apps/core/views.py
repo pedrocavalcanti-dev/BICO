@@ -1,14 +1,21 @@
 import re
 
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.catalog.models import ServiceCategory
+from apps.catalog.models import ServiceCategory, ServiceListingImage
+from apps.catalog.selectors import header_categories
 from apps.providers.models import ProviderProfile
 
-from .selectors import active_categories, home_sections, public_listings, search_listings
+from .selectors import (
+    active_categories,
+    home_sections,
+    public_listings,
+    search_listings,
+)
 
 INFO_PAGES = {
     "entrar": (
@@ -79,7 +86,7 @@ INFO_PAGES = {
 
 def home(request):
     sections = home_sections()
-    sections["navigation_categories"] = active_categories()[:10]
+    sections["navigation_categories"] = header_categories()
     sections["banners"] = list(sections["banners"])
     if not sections["banners"]:
         sections["banners"] = [
@@ -124,7 +131,7 @@ def search(request):
             "city": city,
             "selected_category": category,
             "categories": active_categories(),
-            "navigation_categories": active_categories()[:10],
+            "navigation_categories": header_categories(),
             "result_count": paginator.count,
         },
     )
@@ -132,10 +139,29 @@ def search(request):
 
 def listing_detail(request, slug):
     listing = get_object_or_404(public_listings().select_related("provider", "category"), slug=slug)
+    gallery_images = list(listing.gallery_images.all())
+    gallery = []
+    if listing.image:
+        gallery.append({"url": listing.image.url, "alt_text": f"{listing.title} — foto principal"})
+    elif gallery_images:
+        cover = gallery_images.pop(0)
+        gallery.append({"url": cover.image.url, "alt_text": cover.alt_text})
+    gallery.extend({"url": item.image.url, "alt_text": item.alt_text} for item in gallery_images)
+    related_listings = list(
+        public_listings()
+        .filter(category=listing.category)
+        .exclude(pk=listing.pk)
+        .order_by("-published_at", "-created_at")[:4]
+    )
     return render(
         request,
         "public/service_detail.html",
-        {"listing": listing, "navigation_categories": active_categories()[:10]},
+        {
+            "listing": listing,
+            "gallery": gallery,
+            "related_listings": related_listings,
+            "navigation_categories": header_categories(),
+        },
     )
 
 
@@ -148,14 +174,61 @@ def provider_detail(request, slug):
         ),
         slug=slug,
     )
-    listings = public_listings().filter(provider=provider).order_by("-published_at")[:12]
+    listings = list(public_listings().filter(provider=provider).order_by("-published_at")[:12])
+    portfolio_images = list(
+        ServiceListingImage.objects.filter(listing__in=listings)
+        .select_related("listing")
+        .order_by("-listing__published_at", "display_order")[:8]
+    )
+    category_slugs = [category.slug for category in provider.categories.all()]
+    related_providers = []
+    if category_slugs:
+        related_providers = list(
+            ProviderProfile.objects.filter(
+                status=ProviderProfile.Status.APPROVED,
+                city__iexact=provider.city,
+                categories__slug__in=category_slugs,
+            )
+            .exclude(pk=provider.pk)
+            .distinct()
+            .select_related("user")
+            .prefetch_related("categories")[:4]
+        )
     return render(
         request,
         "public/provider_detail.html",
         {
             "provider": provider,
             "listings": listings,
-            "navigation_categories": active_categories()[:10],
+            "portfolio_images": portfolio_images,
+            "related_providers": related_providers,
+            "navigation_categories": header_categories(),
+        },
+    )
+
+
+@login_required
+def listing_action_unavailable(request, slug, action):
+    listing = get_object_or_404(public_listings(), slug=slug)
+    if action == "solicitar":
+        title = "Solicitação de serviço"
+        message = (
+            "A solicitação ainda não pode ser enviada. Nenhum pedido foi criado. "
+            "Você pode voltar ao anúncio e acompanhar as próximas etapas da BICO."
+        )
+    elif action == "conversar":
+        title = "Conversa com o profissional"
+        message = "O chat ainda não está disponível. Nenhuma mensagem foi enviada."
+    else:
+        raise Http404
+    return render(
+        request,
+        "accounts/feature_unavailable.html",
+        {
+            "title": title,
+            "message": message,
+            "listing": listing,
+            "navigation_categories": header_categories(),
         },
     )
 
@@ -180,6 +253,6 @@ def info_page(request, slug):
         {
             "title": page[0],
             "message": page[1],
-            "navigation_categories": active_categories()[:10],
+            "navigation_categories": header_categories(),
         },
     )

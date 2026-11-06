@@ -1,6 +1,6 @@
 <nav class="category-nav" aria-label="Categorias de serviços">
   <div class="category-nav__inner container">
     {% for category in navigation_categories %}<a href="{% url 'core:search' %}?categoria={{ category.slug|urlencode }}">{{ category.name }}</a>{% endfor %}
-    <a href="{% url 'core:search' %}">Todos os serviços</a>
+    <a href="{% url 'core:search' %}">Todas as categorias</a>
   </div>
 </nav>

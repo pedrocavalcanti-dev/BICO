@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1-alpha — 2026-11-05
+
+- Cabeçalho mostra categorias destacadas gerenciáveis no banco, até sete, e “Todas as categorias”; navegação horizontal fica restrita ao componente em telas estreitas.
+- Detalhes públicos de serviço incluem galeria responsiva e acessível, resumo, prestador, localização, preço configurado, descrição, estado vazio de avaliações e serviços relacionados.
+- Perfil público inclui especialidades, apresentação, anúncios, portfólio baseado em galeria, estado vazio de avaliações e perfis relacionados por região/categoria; sem distância, nota, verificação ou disponibilidade inventadas.
+- `ServiceListingImage` e migration não destrutiva `catalog.0003_servicelistingimage`; API de anúncio expõe galerias e detalhe de prestador inclui anúncios publicados.
+- Seed idempotente passou a preencher apenas imagens ausentes em registros demonstrativos; imagens geradas foram otimizadas em WebP e documentadas. Login apresenta Google como opção visual desabilitada, sem OAuth.
+- `check`, verificação de migrations, 22 testes focados de `apps.core.tests`, Ruff nos Python alterados e `git diff --check` passaram. A migration consta aplicada no MySQL local e o seed foi executado duas vezes sem duplicação. A suíte completa continua bloqueada pelo erro MySQL 1044 ao criar `test_bico`; há SQL com escopo restrito documentado em `testes-e-qa.md`. Não integrar à `main` até executar todos os testes no banco isolado e concluir revisão visual responsiva.
+
 ## 0.3.0-alpha — 2026-11-05
 
 - Cadastro de conta única de cliente, login por sessão Django, logout POST/CSRF e área privada para consultar/editar o nome.

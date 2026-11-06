@@ -1,7 +1,12 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from api.v1.serializers import PublicProviderSerializer
+from api.v1.serializers import (
+    PublicListingImageSerializer,
+    PublicListingSerializer,
+    PublicProviderDetailSerializer,
+    PublicProviderSerializer,
+)
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
@@ -9,7 +14,7 @@ from django.core.management.base import CommandError
 from django.test import SimpleTestCase
 from django.urls import reverse
 
-from apps.catalog.models import ServiceListing
+from apps.catalog.models import ServiceListing, ServiceListingImage
 from apps.core.validators import validate_internal_destination, validate_public_image
 from apps.providers.models import ProviderProfile
 
@@ -26,10 +31,10 @@ EMPTY_HOME = {
 
 
 class PublicHomeTests(SimpleTestCase):
-    @patch("apps.core.views.active_categories", return_value=[])
+    @patch("apps.core.views.header_categories", return_value=[])
     @patch("apps.core.views.home_sections", return_value=EMPTY_HOME)
     def test_home_renders_the_marketplace_sections_with_empty_states(
-        self, _home_sections, _active_categories
+        self, _home_sections, _header_categories
     ):
         response = self.client.get(reverse("core:home"))
 
@@ -43,10 +48,10 @@ class PublicHomeTests(SimpleTestCase):
         self.assertContains(response, "Explore por especialidade")
         self.assertContains(response, "A descoberta de profissionais por localização")
 
-    @patch("apps.core.views.active_categories", return_value=[])
+    @patch("apps.core.views.header_categories", return_value=[])
     @patch("apps.core.views.home_sections", return_value=EMPTY_HOME)
     def test_home_uses_local_styles_scripts_and_official_branding(
-        self, _home_sections, _active_categories
+        self, _home_sections, _header_categories
     ):
         response = self.client.get(reverse("core:home"))
 
@@ -56,8 +61,8 @@ class PublicHomeTests(SimpleTestCase):
         self.assertContains(response, "branding/logos/logo-bico-sem-fundo.png")
         self.assertContains(response, "branding/logos/logo-bico-quadrada.png")
 
-    @patch("apps.core.views.active_categories", return_value=[])
-    def test_informational_routes_render_without_broken_footer_links(self, _active_categories):
+    @patch("apps.core.views.header_categories", return_value=[])
+    def test_informational_routes_render_without_broken_footer_links(self, _header_categories):
         slugs = (
             "quem-somos",
             "como-funciona",
@@ -90,9 +95,10 @@ class PublicHomeTests(SimpleTestCase):
                 response = self.client.get(reverse("core:info", args=[slug]))
                 self.assertRedirects(response, reverse(destination), fetch_redirect_response=False)
 
+    @patch("apps.core.views.header_categories", return_value=[])
     @patch("apps.core.views.active_categories", return_value=[])
     @patch("apps.core.views.search_listings", return_value=[])
-    def test_search_page_renders_for_empty_results(self, _search, _categories):
+    def test_search_page_renders_for_empty_results(self, _search, _categories, _header_categories):
         response = self.client.get(
             reverse("core:search"), {"q": "jardinagem", "cidade": "Campinas"}
         )
@@ -158,8 +164,48 @@ class PublicApiTests(SimpleTestCase):
         self.assertNotIn("status", fields)
         self.assertNotIn("approved_at", fields)
 
+    def test_public_listing_contract_exposes_gallery_without_private_fields(self):
+        fields = set(PublicListingSerializer().fields)
+
+        self.assertIn("gallery_images", fields)
+        self.assertIn("provider", fields)
+        self.assertNotIn("status", fields)
+        self.assertNotIn("created_at", fields)
+        self.assertEqual(
+            set(PublicListingImageSerializer().fields),
+            {"image", "alt_text", "display_order"},
+        )
+
+    def test_public_provider_contract_exposes_public_listings(self):
+        fields = set(PublicProviderDetailSerializer().fields)
+
+        self.assertIn("listings", fields)
+        self.assertNotIn("user", fields)
+        self.assertNotIn("email", fields)
+
+    def test_provider_list_serializer_does_not_expand_listing_queries(self):
+        fields = set(PublicProviderSerializer().fields)
+
+        self.assertNotIn("listings", fields)
+
+    def test_anonymous_service_request_returns_to_login_before_placeholder(self):
+        response = self.client.get(
+            reverse("core:service-action-unavailable", args=["demo-servico-01", "solicitar"])
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/entrar/", response.headers["Location"])
+        self.assertIn("next=", response.headers["Location"])
+
 
 class DomainValidationTests(SimpleTestCase):
+    def test_listing_gallery_has_ordered_unique_slots_and_public_image_validation(self):
+        self.assertEqual(ServiceListingImage._meta.ordering, ["display_order", "id"])
+        constraints = ServiceListingImage._meta.constraints
+        self.assertEqual(constraints[0].name, "catalog_listing_image_order_uniq")
+        validators = ServiceListingImage._meta.get_field("image").validators
+        self.assertIn(validate_public_image, validators)
+
     def test_listing_price_type_requires_price_consistency(self):
         quote_listing = ServiceListing(price_type=ServiceListing.PriceType.QUOTE, price_start=100)
         with self.assertRaises(ValidationError):

@@ -135,3 +135,32 @@ class ServiceListing(models.Model):
             self.state = self.state.upper()
             if len(self.state) != 2:
                 raise ValidationError({"state": "Informe a sigla de um estado com duas letras."})
+
+
+class ServiceListingImage(models.Model):
+    listing = models.ForeignKey(
+        ServiceListing,
+        on_delete=models.CASCADE,
+        related_name="gallery_images",
+    )
+    image = models.ImageField(
+        upload_to="catalog/galleries/",
+        validators=[validate_public_image],
+    )
+    alt_text = models.CharField(max_length=180)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["display_order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["listing", "display_order"],
+                name="catalog_listing_image_order_uniq",
+            )
+        ]
+        verbose_name = "imagem da galeria do anúncio"
+        verbose_name_plural = "imagens da galeria do anúncio"
+
+    def __str__(self):
+        return f"{self.listing.title} — {self.alt_text}"

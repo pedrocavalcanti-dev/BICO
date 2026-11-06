@@ -27,16 +27,21 @@ build/
 *.sqlite
 *.db
 *.dump
+*.sql
 *.sql.gz
 *.bak
 *.tmp
 *.temp
+*.swp
+*.swo
+*.orig
 *.pid
 db.sqlite3
 /mysql-data/
 /.local-db/
 /var/
 /media/
+/bico_django/media/
 
 # IDEs and operating systems
 .idea/
@@ -56,6 +61,7 @@ node_modules/
 /artifacts/
 /tmp/
 .pytest_cache/
+.cache/
 .coverage
 htmlcov/
 .mypy_cache/

@@ -4,6 +4,10 @@ Controles existentes: segredos fora do Git; settings separados; produção sem D
 
 Na Alpha 0.3.0, cadastro, login e sessão Web usam os mecanismos nativos do Django. Logout é POST com CSRF, `next` é validado, formulários e serializer limitam os campos editáveis e a API deriva o usuário de `request.user`. Recuperação de senha usa token temporário Django e resposta neutra. Tentativas de login, cadastro e recuperação usam buckets HMAC persistidos no MySQL. A auditoria não guarda senha, token, IP ou payload pessoal.
 
+Na Alpha 0.3.1, detalhe de anúncio e perfil consultam os seletores públicos existentes: somente anúncios publicados de prestadores aprovados e categorias ativas, e somente perfis aprovados. A galeria expõe apenas imagem e texto alternativo; campos privados do usuário e estados de moderação seguem fora dos serializers. Uploads continuam sujeitos ao validador de extensão e tamanho existente. O seed só preenche imagens ausentes e registros demonstrativos; as imagens de exemplo não são prova de serviço, identidade, aprovação, avaliação ou vínculo comercial.
+
+O botão Google do login é desabilitado e explicitamente futuro; não envia credenciais nem realiza OAuth.
+
 Validação em 2026-11-05: `manage.py check`, `makemigrations --check --dry-run`, Ruff nos módulos alterados e 20 testes focados passaram. A suíte completa encontrou 40 testes, mas o runner não conseguiu criar `test_bico` por falta de privilégio MySQL (erro 1044); portanto, os fluxos que dependem da criação do banco de teste ainda não foram validados integralmente. Não declarar segurança absoluta. Revise o check de deploy antes de publicar.
 
 

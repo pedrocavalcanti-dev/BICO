@@ -36,4 +36,8 @@ Anúncio UUID com prestador e categoria, título/slug, descrição, imagem opcio
 
 Título, subtítulo, imagens desktop/mobile opcionais, texto alternativo, rótulo e destino interno, ordem, ativo, marca demonstrativa e datas. O destino validado é sempre um caminho interno.
 
+## `catalog_servicelistingimage`
+
+Galeria 1:N de `catalog_servicelisting`: imagem validada, texto alternativo obrigatório, ordem e data de criação. A ordem é única dentro do mesmo anúncio. A migration `catalog.0003_servicelistingimage` somente cria a tabela e não altera os anúncios existentes.
+
 Avaliações, solicitações, pagamentos, conversas e localização geográfica ainda não possuem tabelas nesta versão.
