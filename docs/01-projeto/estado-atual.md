@@ -25,6 +25,13 @@
 - Revisão visual em navegador mobile/desktop ainda não foi realizada nesta etapa.
 - Uploads reais em produção dependem de aprovação jurídica, política de retenção/exclusão, proteção de banco e backups, gestão das chaves e processo seguro de revisão. Nenhuma afirmação de entrega externa de e-mail, aprovação ou identidade verificada é feita.
 
+## Próximas metas
+
+- Novembro/2026: continuar o desenvolvimento do Modo Prestador com a Área do Prestador (Alpha 0.4.1).
+- Dezembro/2026: meta de conclusão da Beta Web Django.
+- Janeiro/2027: início planejado do aplicativo Flutter para Android e iOS.
+- Avaliações e reputação, moderação automatizada de anúncios e BICO Agora com Mapbox permanecem planejados; nenhum desses recursos está implementado.
+
 ## Alpha 0.3.2 — imagens e refinamento visual (histórico)
 
 ## Alpha 0.3.2 — imagens e refinamento visual

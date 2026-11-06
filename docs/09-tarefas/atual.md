@@ -21,3 +21,5 @@
 Pendências antes de integrar à `main`: executar os quatro testes focados em banco MySQL isolado e revisar visualmente o fluxo em mobile/desktop. Pendências antes de coleta em produção: aprovação jurídica, finalidade e base legal, retenção/descarte, revisão de proteção do MySQL e backups, rotação/recuperação de chaves e operação de revisão.
 
 Implementação publicada em `origin/feature/bico-alpha-0.4.0-provider-onboarding`, commit `8fbec3e`. A `main` não foi alterada porque os testes focados não puderam iniciar.
+
+Próxima implementação planejada: **BICO Alpha 0.4.1 — Área do Prestador**. Não iniciada nesta etapa.

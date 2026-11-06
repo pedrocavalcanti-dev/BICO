@@ -2,6 +2,8 @@
 
 Alpha `0.4.0` em desenvolvimento: marketplace público, autenticação por sessão, área do cliente e onboarding progressivo para solicitação de ativação como prestador. A coleta documental é habilitada apenas no ambiente local de desenvolvimento; produção mantém o fluxo fechado até a aprovação jurídica e operacional. Aprovação de prestadores, confirmação de e-mail, contratação, chat, avaliações e pagamentos ainda não estão implementados.
 
+A próxima etapa planejada é a **Alpha 0.4.1 — Área do Prestador**. O roadmap tem como metas concluir a Beta Web Django em dezembro de 2026 e iniciar os aplicativos Flutter para Android/iOS em janeiro de 2027.
+
 Esta versão preserva a Home, busca, páginas públicas e APIs de leitura da Alpha 0.2.0; inclui recuperação de senha, edição segura do nome, sessão Web, `GET/PATCH /api/v1/users/me/`, detalhe público com galeria, perfil profissional demonstrativo e o onboarding do prestador. O marketplace continua exclusivamente de serviços; não inclui comércio de produtos físicos.
 
 ## Estrutura

@@ -46,6 +46,7 @@ As rotas exigem autenticação. A Web e a API compartilham os mesmos forms e ser
 
 ## Próximas etapas
 
-- Alpha 0.4.1: operação restrita de análise, correções, histórico de decisões, retenção e gestão de acesso.
-- Alpha 0.4.2: perfil público e publicação de anúncios pelo prestador após aprovação.
+- **Alpha 0.4.1 — Área do Prestador:** dashboard, edição do perfil, especialidades, localização, portfólio, indicadores com dados reais e navegação exclusiva. Esta etapa não está implementada.
+- **Alpha 0.4.2 — BICO Gestão:** análise humana restrita, correções, histórico de decisões, retenção e gestão de acesso. Esta etapa não está implementada.
+- **Alpha 0.4.3 — Publicação:** perfil público e publicação/gestão de anúncios após aprovação. Esta etapa não está implementada.
 - Antes de disponibilizar documentos reais: decisões jurídicas e de segurança indicadas acima, testes integrados em banco MySQL isolado e revisão de acessibilidade/responsividade.

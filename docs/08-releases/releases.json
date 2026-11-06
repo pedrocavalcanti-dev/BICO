@@ -2,7 +2,7 @@
   {
     "version": "0.4.0-alpha",
     "date": "2026-11-06",
-    "status": "publicada em origin/feature/bico-alpha-0.4.0-provider-onboarding, commit 8fbec3e; check, migrations, Ruff e smoke checks passaram; migration aplicada no MySQL local; quatro testes focados bloqueados antes da execução por erro 1044 ao criar test_bico; não integrada à main",
+    "status": "publicada em origin/feature/bico-alpha-0.4.0-provider-onboarding; implementação 8fbec3e; check, migrations, Ruff e smoke checks passaram; migration aplicada no MySQL local; quatro testes focados bloqueados antes da execução por erro 1044 ao criar test_bico; não integrada à main",
     "summary": "Onboarding de prestador PF/PJ em cinco etapas, validação e storage privado cifrado das duas faces de documento, revisão humana pendente, API e acompanhamento por Minha Conta. Upload em produção permanece desabilitado."
   },
   {
