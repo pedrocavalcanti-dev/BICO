@@ -10,7 +10,9 @@
 - [x] Criar migration não destrutiva `providers.0003_providerportfolioimage` e aplicá-la no MySQL local; `showmigrations` confirma 0001–0003 aplicadas.
 - [ ] Suíte focada `apps.providers.test_dashboard`: localizada com 8 testes, mas não iniciou porque a conta MySQL não tem permissão para criar `test_bico` (1044). Nenhum teste foi executado no schema principal; repetir ao provisionar privilégio restrito para o banco isolado.
 - [ ] Revisão visual manual em navegador desktop/mobile ainda pendente.
-- [ ] Validar, revisar diff/ignorados, criar commit e publicar a branch `feature/bico-alpha-0.4.1-provider-dashboard`; não integrar à `main`.
+- [x] Validar e revisar diff/ignorados; `.env`, uploads privados, mídia local, logs e artefatos estão fora do Git.
+- [x] Criar e publicar o commit `331ae2b` na branch `feature/bico-alpha-0.4.1-provider-dashboard`.
+- [ ] Revisão visual manual em navegador desktop/mobile ainda pendente; nenhuma integração à `main` foi feita.
 
 Próxima versão: **Alpha 0.4.2 — criação e gerenciamento completo de anúncios**. BICO Gestão, pedidos, chat, notificações, avaliações e financeiro não fazem parte desta entrega.
 

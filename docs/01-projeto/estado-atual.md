@@ -2,7 +2,7 @@
 
 **Versão em desenvolvimento:** 0.4.1-alpha
 **Atualizado:** 2026-11-06
-**Branch de entrega:** `feature/bico-alpha-0.4.1-provider-dashboard`
+**Branch de entrega:** `feature/bico-alpha-0.4.1-provider-dashboard` (publicada em `origin`)
 **Base da implementação:** `e6d1538`, publicada na branch `feature/bico-alpha-0.4.0-provider-onboarding`; a Alpha 0.4.1 deriva desta base e preserva o onboarding.
 **Base:** Alpha 0.3.2 no commit `e857cbb`, publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
@@ -26,7 +26,7 @@
 - `manage.py check`, `makemigrations --check --dry-run`, Ruff check/format e `git diff --check` passaram. Dez templates da área e nove rotas Web/API compilaram/resolveram.
 - `providers.0003_providerportfolioimage` foi aplicada ao MySQL local e `showmigrations providers` confirmou 0001–0003. A suíte encontrou 8 testes, mas parou antes de executá-los porque `bico_app` não pode criar `test_bico` (erro 1044); nenhum teste foi executado no banco principal.
 - `.gitignore` cobre `.env`, credenciais, logs, databases locais, caches, artefatos, mídia pública local e o caminho padrão `bico_django/.private-media/`. A inspeção confirmou que estes itens são ignorados e não estão no status do Git.
-- Não foi possível fazer revisão visual por navegador nesta execução. A branch deriva de `e6d1538`; publicação e integração a `main` não foram feitas até o fechamento desta tarefa.
+- Não foi possível fazer revisão visual manual por navegador nesta execução. A implementação está publicada no commit `331ae2b` da branch `feature/bico-alpha-0.4.1-provider-dashboard`, derivada de `e6d1538`. A `main` não foi alterada.
 
 ## Refinamento visual do onboarding Alpha 0.4.0 (incorporado à branch de entrega Alpha 0.4.0)
 

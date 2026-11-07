@@ -17,6 +17,7 @@
 - API v1 adiciona dashboard e perfil `me`, restritos a sessão e aprovação, com serializer allowlist e auditoria mínima.
 - Migration não destrutiva `providers.0003_providerportfolioimage` adiciona galeria privada.
 - `manage.py check`, `makemigrations --check --dry-run`, Ruff check/format e smoke de templates/rotas passaram; migration `0003` aplicada no MySQL local. Oito testes focados não iniciaram por MySQL 1044 ao criar `test_bico`; não houve escrita de testes no banco principal. Inspeção visual em navegador ainda pendente.
+- Publicado em `origin/feature/bico-alpha-0.4.1-provider-dashboard`, commit `331ae2b`; a `main` permanece inalterada.
 - CRUD de anúncios, tracking, BICO Gestão, pedidos, chat, notificações, avaliações e financeiro permanecem futuros.
 
 ## Refinamento de UX do onboarding Alpha 0.4.0 — 2026-11-06
