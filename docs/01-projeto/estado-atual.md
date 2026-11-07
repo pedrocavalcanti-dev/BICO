@@ -1,13 +1,37 @@
 # Estado atual
 
-**Versão em desenvolvimento:** 0.4.0-alpha
+**Versão em desenvolvimento:** 0.4.1-alpha
 **Atualizado:** 2026-11-06
-**Branch:** `feature/bico-alpha-0.4.0-provider-onboarding`
-**Commit da implementação:** `8fbec3e` (publicado em `origin/feature/bico-alpha-0.4.0-provider-onboarding`)
+**Branch de entrega:** `feature/bico-alpha-0.4.0-provider-onboarding`
+**Base da refatoração:** `e415242`, preservando a Alpha 0.4.0 publicada (implementação `8fbec3e`). O refinamento visual solicitado como Alpha 0.4.1 e suas correções finais foram reunidos na branch da Alpha 0.4.0 por solicitação do usuário.
 **Base:** Alpha 0.3.2 no commit `e857cbb`, publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
 
-## Alpha 0.4.0 — onboarding do prestador
+## Correções finais do onboarding — Alpha 0.4.0
+
+- Enter na busca de especialidades filtra sem submeter ou navegar. O tratamento é exclusivo desse input; Enter em textarea, Continuar e Salvar e sair foi preservado. A origem era o submit implícito escolher o primeiro botão associado ao formulário, não a falta de `type` nos botões.
+- Título PJ atualizado para “Tenho uma empresa ou MEI”, mantendo `COMPANY` e CNPJ, sem terceira categoria.
+- Identidade continua restrita a fotografias JPG/PNG/WebP de frente/verso. PDF para documentação empresarial adicional é somente uma pendência futura de processamento seguro.
+- Revisão diferencia rascunho, imagem salva para análise, envio faltante e substituição necessária. Solicitação enviada continua aguardando análise humana, sem aprovação automática. Layout e backend preservados nestes ajustes finais.
+- Nesta correção foram executados somente `manage.py check` e 16 verificações focadas: teclado em 390/1440 px, tipos de conta, estados da revisão e formatos documentais. Sem escrita no banco; ações POST no navegador foram interceptadas para verificar o destino de cada botão. As validações extensas anteriores não foram repetidas.
+
+## Alpha 0.4.1 — experiência do onboarding (incorporada à branch Alpha 0.4.0)
+
+- Tela dedicada com navegação própria, trilha lateral no desktop, progresso compacto no mobile, fontes locais Inter/Quicksand e identidade laranja BICO. Cards menores, ícones SVG locais, foco visível e transições com respeito à preferência de movimento reduzido.
+- Cinco etapas preservadas: tipo PF/PJ; identificação com frente/verso; perfil/especialidades; atendimento/localização; revisão e envio. Campos opcionais ficam recolhidos. Rascunhos antigos com documentos faltantes podem completá-los na revisão.
+- Upload com prévia, substituição, arrastar/soltar, feedback por imagem e envio à API privada existente. Qualidade/formatos e cifragem continuam no servidor. Nenhuma aprovação automática ou criação de perfil público.
+- Especialidades ativas agrupadas visualmente, com busca, limite configurado e categoria principal. Localização parte do CEP com ViaCEP, fallback manual, cidade/UF únicos, slider de raio e apresentação reduzida para atendimento somente remoto.
+- Salvamento automático das etapas 1–4 quando os campos passam na validação; só confirma após resposta do servidor. Entradas incompletas ou inválidas ficam como alterações não salvas. Documentos são enviados separadamente; o POST normal continua disponível sem JavaScript. Botão Salvar e sair persiste uma etapa válida.
+- Revisão final exige ciência da análise humana na Web. Essa ciência não é um aceite jurídico versionado. Envio segue `PENDING_REVIEW`/`NOT_REVIEWED`; previsão inicial de até 24h é apresentada como estimativa variável. BICO Gestão permanece futura.
+- Não houve mudança de modelos, migrations ou mecanismo de autorização. A consulta externa recebe somente CEP, sem cookies BICO ou dados documentais; ADR-011 registra a decisão.
+
+### Validação da Alpha 0.4.1
+
+- Smoke controlado com dados sintéticos no MySQL real verificou o fluxo PF/PJ, salvamento das cinco etapas, exigência de duas fotos, armazenamento cifrado/sem URL pública, prévia por proprietário, CSRF e envio final pendente. Foram 66 asserções; as transações foram revertidas e os arquivos sintéticos usaram diretório temporário.
+- A revisão de layout em Edge headless cobriu identificação PF/PJ, as demais etapas e sucesso em 360, 390, 768, 1024 e 1440 px, sem rolagem horizontal. Interações de seleção, busca/limite de especialidades, máscaras, CEP, fallback, modo remoto e upload foram verificadas com respostas de rede controladas. A persistência real foi conferida no smoke MySQL separado.
+- Resultados finais de checks e artefatos locais estão registrados na tarefa atual. A suíte integral em `test_bico` continua pendente de privilégios; não foi repetida nesta tarefa visual.
+
+## Alpha 0.4.0 — onboarding do prestador (histórico)
 
 - A conta existente pode iniciar ou continuar um onboarding de cinco etapas: tipo PF/PJ, identificação/contato, perfil/especialidades, modalidades/localização e revisão/envio. O rascunho fica associado ao usuário autenticado; não cria outro usuário nem aprova um perfil público.
 - CPF/CNPJ e telefones são normalizados/validados no backend. Especialidades vêm das categorias ativas do banco e o limite é configurável por `BICO_PROVIDER_MAX_CATEGORIES` (padrão 5). Modalidades a domicílio, ponto fixo e remota podem ser combinadas; endereço de ponto fixo não é publicado.
@@ -28,7 +52,7 @@
 
 ## Próximas metas
 
-- Novembro/2026: continuar o desenvolvimento do Modo Prestador com a Área do Prestador (Alpha 0.4.1).
+- Novembro/2026: continuar o desenvolvimento do Modo Prestador com a Área do Prestador (numeração a definir após a Alpha 0.4.1 visual).
 - Dezembro/2026: meta de conclusão da Beta Web Django.
 - Janeiro/2027: início planejado do aplicativo Flutter para Android e iOS.
 - Avaliações e reputação, moderação automatizada de anúncios e BICO Agora com Mapbox permanecem planejados; nenhum desses recursos está implementado.

@@ -1,0 +1,22 @@
+{% load provider_forms %}
+<section class="onboarding-section" aria-labelledby="document-title">
+  <div class="onboarding-section__heading"><span class="onboarding-section__icon">{% include "providers/components/icon.html" with name="document" %}</span><div><h2 id="document-title">Seu documento, com clareza</h2><p>Fotografe a frente e o verso do RG, CIN ou CNH do responsável.</p></div><span class="onboarding-private-tag">{% include "providers/components/icon.html" with name="lock" %} Privado</span></div>
+  {% if document_form.non_field_errors %}<div class="provider-form__errors" role="alert">{{ document_form.non_field_errors }}</div>{% endif %}
+  <div class="provider-document-grid" data-upload-url="{% url 'api_v1:provider-onboarding-documents' %}">
+    {% for side, field_name, document, label in document_uploads %}
+    <section class="provider-document{% if document.prevalidation_passed %} is-saved{% endif %}" data-document-card data-saved="{% if document.prevalidation_passed %}true{% else %}false{% endif %}" aria-labelledby="document-{{ side }}-label">
+      <div class="provider-document__heading"><h3 id="document-{{ side }}-label">{{ label }}</h3><span class="provider-document__state" data-document-state>{% if document.prevalidation_passed %}Salva{% else %}Obrigatória{% endif %}</span></div>
+      <label class="provider-document__dropzone" for="id_{{ field_name }}">
+        <div class="provider-document__placeholder" data-document-placeholder="{{ field_name }}"{% if document.prevalidation_passed %} hidden{% endif %}><span class="provider-document__upload-icon">{% include "providers/components/icon.html" with name="upload" %}</span><strong>Escolher fotografia</strong><span>ou arraste a imagem aqui</span></div>
+        <img class="provider-document__preview" {% if document.prevalidation_passed %}src="{% url 'providers:document-image' side %}"{% endif %} alt="Prévia privada da {{ label|lower }}" data-document-preview="{{ field_name }}"{% if not document.prevalidation_passed %} hidden{% endif %}>
+        <input type="file" name="{{ field_name }}" id="id_{{ field_name }}" accept="image/jpeg,image/png,image/webp" data-document-input data-side="{{ side }}" aria-describedby="{{ field_name }}_feedback {{ field_name }}_formats">
+        <span class="provider-document__replace" data-replace-label>{% include "providers/components/icon.html" with name="edit" %} Substituir imagem</span>
+      </label>
+      <small class="provider-field__help" id="{{ field_name }}_formats">JPG, PNG ou WebP · até 8 MB · mín. 800 × 500 px</small>
+      <p class="provider-document__feedback" id="{{ field_name }}_feedback" data-document-feedback aria-live="polite">{% for error in document_form|get_field_errors:field_name %}{{ error }}{% empty %}{% if document.prevalidation_passed %}Imagem salva para análise humana.{% else %}Use uma foto nítida, sem reflexos e sem cortes.{% endif %}{% endfor %}</p>
+    </section>
+    {% endfor %}
+  </div>
+  <details class="onboarding-details onboarding-details--guide"><summary>{% include "providers/components/icon.html" with name="camera" %} Como tirar uma boa foto <span aria-hidden="true">+</span></summary><div class="onboarding-photo-tips"><p><strong>01. Boa iluminação</strong>Luz uniforme, sem reflexos ou sombras.</p><p><strong>02. Documento inteiro</strong>Todos os cantos devem estar visíveis.</p><p><strong>03. Texto legível</strong>Foque a câmera e evite fotos tremidas.</p></div></details>
+  <p class="onboarding-trust-line">{% include "providers/components/icon.html" with name="shield" %} Armazenamento privado. A pré-validação avalia a qualidade da imagem; a identidade e a autenticidade dependem de análise humana.</p>
+</section>

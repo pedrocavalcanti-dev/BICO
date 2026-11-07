@@ -1,0 +1,28 @@
+<svg class="onboarding-icon{% if icon_class %} {{ icon_class }}{% endif %}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{% if name == 'person' %}<circle cx="12" cy="8" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+{% elif name == 'company' %}<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 21v-5h6v5M8 7h1m6 0h1M8 11h1m6 0h1"/>
+{% elif name == 'shield' %}<path d="m12 2 8 3v6c0 5-4 9-8 11-4-2-8-6-8-11V5l8-3Z"/><path d="m8 12 3 3 5-6"/>
+{% elif name == 'lock' %}<rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/>
+{% elif name == 'check' %}<path d="m5 12 4 4L19 6"/>
+{% elif name == 'arrow' %}<path d="M4 12h16m-6-6 6 6-6 6"/>
+{% elif name == 'back' %}<path d="M20 12H4m6-6-6 6 6 6"/>
+{% elif name == 'upload' %}<path d="M12 16V3m-5 5 5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+{% elif name == 'document' %}<rect x="2" y="5" width="20" height="14" rx="3"/><circle cx="8" cy="11" r="2"/><path d="M5 16a3 3 0 0 1 6 0m3-7h5m-5 4h5m-5 3h3"/>
+{% elif name == 'location' %}<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>
+{% elif name == 'home' %}<path d="m3 10 9-8 9 8M5 9v12h14V9M9 21v-7h6v7"/>
+{% elif name == 'monitor' %}<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4M8 10l3 3 5-6"/>
+{% elif name == 'tool' %}<path d="M14 6a5 5 0 0 0-6 6l-5 5a3 3 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-4 3-3-3 3-3Z"/>
+{% elif name == 'leaf' %}<path d="M20 3C9 2 3 7 4 14s12 9 15-1c1-3 1-6 1-10ZM3 22 15 9"/>
+{% elif name == 'paint' %}<rect x="3" y="3" width="15" height="6" rx="2"/><path d="M18 6h3v7h-9v3m-2 0h4v6h-4z"/>
+{% elif name == 'bolt' %}<path d="m13 2-9 12h7l-1 8 10-13h-7l1-7Z"/>
+{% elif name == 'drop' %}<path d="M12 2S4 10 4 15a8 8 0 0 0 16 0c0-5-8-13-8-13ZM8 15a4 4 0 0 0 4 4"/>
+{% elif name == 'sparkles' %}<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3ZM20 2v4m-2-2h4"/>
+{% elif name == 'camera' %}<path d="M8 5 9 3h6l1 2h4a2 2 0 0 1 2 2v12H2V7a2 2 0 0 1 2-2h4Z"/><circle cx="12" cy="12" r="4"/>
+{% elif name == 'pen' %}<path d="m3 21 2-7L17 2l5 5-12 12-7 2ZM14 5l5 5M5 14l5 5"/>
+{% elif name == 'box' %}<path d="m12 2 10 5v10l-10 5-10-5V7l10-5ZM2 7l10 5 10-5M12 12v10M7 4l10 5"/>
+{% elif name == 'clock' %}<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>
+{% elif name == 'search' %}<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/>
+{% elif name == 'edit' %}<path d="m15 4 5 5M3 21l6-1L21 8l-5-5L4 15l-1 6Z"/>
+{% elif name == 'cloud' %}<path d="M6 18a5 5 0 0 1-1-10 7 7 0 0 1 13-1 5.5 5.5 0 0 1 0 11H6Z"/><path d="m9 12 2 2 4-4"/>
+{% else %}<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/>{% endif %}
+</svg>

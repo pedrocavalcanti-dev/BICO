@@ -1,26 +1,14 @@
-{% extends "base.html" %}
-{% load static %}
-{% block title %}Acompanhamento da solicitação — BICO{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/providers/onboarding.css' %}">{% endblock %}
-{% block content %}
-<main id="main-content" class="provider-onboarding container">
-  <section class="provider-status-card">
-    <span class="provider-status-card__icon" aria-hidden="true">✓</span>
-    {% if application.status == "PENDING_REVIEW" %}
-      <p class="eyebrow">Cadastro profissional</p>
-      <h1>Recebemos sua solicitação</h1>
-      <p>Sua solicitação para se tornar um prestador BICO foi enviada.</p>
-      <strong class="provider-status-card__status">Aguardando verificação documental e aprovação</strong>
-      <p>A equipe fará a análise humana. A pré-validação das imagens não confirma a autenticidade do documento nem a correspondência com o CPF.</p>
-      <p>Enviado em {{ application.submitted_at|date:"j \d\e F \d\e Y, H:i" }}</p>
-    {% else %}
-      <p class="eyebrow">Cadastro profissional</p>
-      <h1>Status da solicitação</h1>
-      <strong class="provider-status-card__status">{{ application.get_status_display }}</strong>
-      <p>O modo Prestador só será liberado após a análise e aprovação pela BICO.</p>
-    {% endif %}
-    <a class="button" href="{% url 'core:home' %}">Voltar à página inicial</a>
-    <a class="provider-status-card__link" href="{% url 'accounts:account' %}">Ir para Minha conta</a>
-  </section>
-</main>
+{% extends 'providers/base_onboarding.html' %}
+{% block title %}Sua solicitação — BICO{% endblock %}
+{% block onboarding_content %}
+<section class="onboarding-success">
+  <div class="onboarding-success__art" aria-hidden="true"><span class="onboarding-success__ring"></span><span class="onboarding-success__document">{% include 'providers/components/icon.html' with name='document' %}</span><span class="onboarding-success__check">{% include 'providers/components/icon.html' with name='check' %}</span><i></i><i></i><i></i></div>
+  <span class="onboarding-kicker">UM NOVO CAPÍTULO COMEÇA AQUI</span>
+  {% if application.status == 'PENDING_REVIEW' %}
+  <h1>Solicitação enviada<br>com sucesso<span>!</span></h1><p class="onboarding-success__lead">Você deu o primeiro passo. Agora sua documentação aguarda análise da equipe BICO.</p>
+  <div class="onboarding-success__status">{% include 'providers/components/icon.html' with name='clock' %}<div><strong>Aguardando verificação documental e aprovação</strong><p>Previsão inicial de análise: até 24 horas. O prazo pode variar.</p></div></div>
+  <ol class="onboarding-success__timeline"><li class="is-complete"><span>{% include 'providers/components/icon.html' with name='check' %}</span><div><strong>Cadastro recebido</strong><p>Enviado em {{ application.submitted_at|date:'d/m/Y' }} às {{ application.submitted_at|date:'H:i' }}.</p></div></li><li class="is-current"><span>2</span><div><strong>Análise dos dados e documentos</strong><p>Conferência humana antes de qualquer aprovação.</p></div></li><li><span>3</span><div><strong>Próximos passos após a decisão</strong><p>A publicação de serviços depende da aprovação.</p></div></li></ol>
+  {% else %}<h1>Sua solicitação</h1><p class="onboarding-success__lead">{{ application.get_status_display }}</p><p>O modo Prestador depende de análise e aprovação pela BICO.</p>{% endif %}
+  <a class="onboarding-button" href="{% url 'accounts:account' %}">Ir para minha conta {% include 'providers/components/icon.html' with name='arrow' %}</a><a class="onboarding-small-link" href="{% url 'core:home' %}">Continuar explorando a BICO</a><p class="onboarding-bottom-note">{% include 'providers/components/icon.html' with name='shield' %} Enquanto isso, sua conta de cliente segue ativa normalmente.</p>
+</section>
 {% endblock %}

@@ -1,5 +1,7 @@
 # Privacidade e LGPD
 
+Na UX Alpha 0.4.1, o preenchimento opcional por ViaCEP envia somente CEP ao serviço, sem cookies BICO ou referrer; número/complemento, identificação e imagens não integram essa consulta. O serviço recebe metadados de conexão próprios da requisição. Há alternativa manual e nenhum resultado é usado como prova de residência ou identidade. Ver ADR-011. A ciência da revisão final não equivale a um aceite jurídico versionado; a coleta real de produção continua bloqueada.
+
 Coletar apenas dados necessários para a finalidade do serviço, com controle de acesso, retenção e exclusão definidos antes de cada funcionalidade. Não exigir CPF nesta fundação. Região de atendimento pode ser pública; endereço residencial preciso não deve ser exposto sem necessidade legítima.
 
 Logs e auditoria devem evitar tokens, senhas, conteúdo de conversa e payloads pessoais. Processos de atendimento a titulares, base legal, prazos de retenção e política pública de privacidade ainda precisam de definição antes do lançamento com usuários reais.

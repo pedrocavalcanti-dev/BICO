@@ -1,5 +1,9 @@
 # Segurança
 
+## Refinamento do onboarding — Alpha 0.4.1
+
+A nova interface mantém sessão/CSRF, autorização por proprietário, limites de upload, pré-validação e storage documental privado cifrado da Alpha 0.4.0. Páginas de edição e acompanhamento recebem `never_cache`/`no-store`. Prévia local usa URL temporária em memória; o código não persiste dados em localStorage nem envia documentos a terceiros. O salvamento automático usa os endpoints autenticados existentes e o envio final mantém revisão humana pendente. A consulta ViaCEP recebe somente CEP, sem cookies/referrer da BICO (ADR-011). Produção continua com onboarding/upload desabilitados.
+
 Controles existentes: segredos fora do Git; settings separados; produção sem DEBUG e com variáveis obrigatórias; cookies seguros em produção; proteção CSRF e clickjacking do Django; hosts/origens explícitos; permissões DRF autenticadas por padrão; hashing de senha Django; admin de auditoria somente leitura. MySQL usa credenciais de ambiente, conexão `utf8mb4` e um engine único explícito; produção deve usar conta de aplicação com privilégio mínimo, sem root.
 
 Na Alpha 0.3.0, cadastro, login e sessão Web usam os mecanismos nativos do Django. Logout é POST com CSRF, `next` é validado, formulários e serializer limitam os campos editáveis e a API deriva o usuário de `request.user`. Recuperação de senha usa token temporário Django e resposta neutra. Tentativas de login, cadastro e recuperação usam buckets HMAC persistidos no MySQL. A auditoria não guarda senha, token, IP ou payload pessoal.

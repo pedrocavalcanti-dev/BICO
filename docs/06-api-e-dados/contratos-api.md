@@ -46,3 +46,11 @@ O endpoint deriva o objeto exclusivamente de `request.user`. Não recebe UUID de
 Os endpoints estão sujeitos à configuração de disponibilidade; em produção a implementação os deixa indisponíveis até aprovação jurídica e operacional. O usuário e a solicitação derivam de `request.user`, nunca de UUID fornecido pelo cliente. Upload e envio têm limites compartilhados por IP/usuário no MySQL. Imagens cifradas e respectivos caminhos não são retornados pela API; a prévia Web é privada, sem cache e limitada ao proprietário. Erros retornam validação DRF sem dados do arquivo. Envio repetido de uma solicitação já pendente é idempotente.
 
 Campos CPF/CNPJ, dados de empresa, representante, endereço fixo e decisão/revisor não fazem parte das APIs públicas. A futura autenticação móvel continua documentada em ADR-008; estes endpoints usam sessão Web e não implementam JWT ou tokens mobile.
+
+### Uso pela interface Alpha 0.4.1
+
+Os endpoints e os payloads principais permanecem disponíveis. A interface usa PATCH para salvamento automático de etapas completas e válidas; requisições são serializadas para evitar sobrescrita por uma versão anterior. Uploads multipart usam o endpoint documental já existente durante a identificação, antes da revisão. Enviar a solicitação continua exigindo frente/verso válidos no serviço de domínio.
+
+Os forms compartilhados exigem tipo PF/PJ, nome/apresentação/categoria principal e cidade/UF. A categoria principal é limitada ao mesmo conjunto ativo de especialidades. CEP informado é normalizado e validado em oito dígitos. Quando `fixed_point_city`/`fixed_point_state` não são fornecidos, usam `city`/`state`; nome do ponto vazio usa o nome profissional. Campos anteriores de endereço próprio continuam aceitos pela API. Não há endpoint de busca de CEP no backend; a consulta opcional é feita pelo navegador conforme ADR-011.
+
+A ciência `acknowledged` pertence ao formulário Web final, sem alteração no contrato de submissão da API. Não é tratada como registro de aceite jurídico. Nenhum campo de aprovação, decisão ou revisor passou a ser editável.

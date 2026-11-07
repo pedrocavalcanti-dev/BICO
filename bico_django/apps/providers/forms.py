@@ -49,9 +49,21 @@ class ProviderApplicationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.setdefault("class", "provider-field")
+        for name, field in self.fields.items():
+            if name in {"phone", "company_phone", "representative_phone"}:
+                field.widget.attrs.update(
+                    {"inputmode": "tel", "autocomplete": "tel", "placeholder": "(19) 99999-9999"}
+                )
+            elif name in {"legal_name", "representative_name"}:
+                field.widget.attrs["autocomplete"] = "name"
 
 
 class ProviderTypeForm(ProviderApplicationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["provider_type"].required = True
+        self.fields["provider_type"].choices = ProviderApplication.ProviderType.choices
+
     class Meta:
         model = ProviderApplication
         fields = ["provider_type"]
@@ -162,8 +174,13 @@ class ProviderIdentityForm(ProviderApplicationForm):
                 )
         if "birth_date" in self.fields:
             self.fields["birth_date"].widget = forms.DateInput(
-                attrs={"type": "date", "class": "provider-field"}
+                format="%Y-%m-%d", attrs={"type": "date", "class": "provider-field"}
             )
+        self.fields["document_type"].label = "Tipo de documento"
+        self.fields["document_type"].choices = [
+            ("", "Selecione"),
+            *ProviderApplication.DocumentType.choices,
+        ]
 
     def clean(self):
         cleaned = super().clean()
@@ -220,6 +237,24 @@ class ProviderProfileForm(ProviderApplicationForm):
             "experience_years": forms.NumberInput(attrs={"min": 0, "max": 80}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        labels = {
+            "public_name": "Como os clientes vão chamar você?",
+            "professional_description": "Conte um pouco sobre o seu trabalho",
+            "experience_years": "Anos de experiência (opcional)",
+            "main_category": "Sua especialidade principal",
+        }
+        for name, label in labels.items():
+            self.fields[name].label = label
+        for name in ("public_name", "professional_description", "main_category"):
+            self.fields[name].required = True
+        self.fields["main_category"].queryset = self.fields["categories"].queryset
+        self.fields["public_name"].widget.attrs["placeholder"] = "Seu nome profissional ou empresa"
+        self.fields["professional_description"].widget.attrs.update(
+            {"placeholder": "O que você faz e o que torna seu atendimento especial?", "rows": 3}
+        )
+
     def clean(self):
         cleaned = super().clean()
         categories = cleaned.get("categories")
@@ -270,12 +305,46 @@ class ProviderServiceAreaForm(ProviderApplicationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        labels = {
+            "city": "Cidade-base",
+            "state": "Estado",
+            "service_region": "Região de atuação",
+            "service_radius_km": "Até onde você vai?",
+            "fixed_point_name": "Nome do ponto de atendimento (opcional)",
+            "fixed_point_postal_code": "CEP",
+            "fixed_point_street": "Rua ou avenida",
+            "fixed_point_number": "Número",
+            "fixed_point_complement": "Complemento (opcional)",
+            "fixed_point_neighborhood": "Bairro",
+        }
+        for name, label in labels.items():
+            self.fields[name].label = label
+        self.fields["city"].required = True
+        self.fields["state"].required = True
+        self.fields["fixed_point_postal_code"].widget.attrs.update(
+            {"inputmode": "numeric", "autocomplete": "postal-code", "placeholder": "00000-000"}
+        )
+        self.fields["fixed_point_street"].widget.attrs["autocomplete"] = "address-line1"
+        self.fields["city"].widget.attrs["autocomplete"] = "address-level2"
+        self.fields["service_region"].widget.attrs["placeholder"] = (
+            "Ex.: Campinas e cidades próximas"
+        )
+        self.fields["service_radius_km"].widget = forms.NumberInput(
+            attrs={"class": "provider-field", "type": "range", "min": 1, "max": 200, "step": 1}
+        )
+        if not self.initial.get("service_radius_km"):
+            self.initial["service_radius_km"] = 20
         self.fields["state"].widget.attrs["maxlength"] = 2
         self.fields["fixed_point_state"].widget.attrs["maxlength"] = 2
+        self.fields["state"].widget = forms.Select(
+            choices=[("", "Selecione")] + [(state, state) for state in STATE_CHOICES],
+            attrs={"class": "provider-field", "autocomplete": "address-level1"},
+        )
         self.fields["remote_scope"] = forms.ChoiceField(
             choices=[("BRAZIL", "Todo o Brasil"), ("REGIONS", "Regiões selecionadas")],
             required=False,
             label="Região do atendimento remoto",
+            widget=forms.Select(attrs={"class": "provider-field"}),
         )
         if self.instance and self.instance.pk:
             self.initial["service_modes"] = self.instance.service_modes
@@ -292,9 +361,21 @@ class ProviderServiceAreaForm(ProviderApplicationForm):
             raise ValidationError("Informe uma sigla de estado válida.")
         return value
 
+    def clean_fixed_point_postal_code(self):
+        value = self.cleaned_data["fixed_point_postal_code"]
+        if not value:
+            return ""
+        digits = re.sub(r"\D", "", value)
+        if len(digits) != 8:
+            raise ValidationError("Informe os 8 números do CEP.")
+        return f"{digits[:5]}-{digits[5:]}"
+
     def clean(self):
         cleaned = super().clean()
         modes = cleaned.get("service_modes", [])
+        # One city/state input in the wizard; preserve the existing API's fixed-point fields.
+        cleaned["fixed_point_city"] = cleaned.get("fixed_point_city") or cleaned.get("city", "")
+        cleaned["fixed_point_state"] = cleaned.get("fixed_point_state") or cleaned.get("state", "")
         if not cleaned.get("city") or not cleaned.get("state"):
             self.add_error("city", "Informe sua cidade-base e estado.")
         if "HOME" in modes:
@@ -303,6 +384,9 @@ class ProviderServiceAreaForm(ProviderApplicationForm):
             if not cleaned.get("service_radius_km"):
                 self.add_error("service_radius_km", "Informe um raio aproximado de atendimento.")
         if "FIXED" in modes:
+            cleaned["fixed_point_name"] = (
+                cleaned.get("fixed_point_name") or self.instance.public_name
+            )
             required = (
                 "fixed_point_name",
                 "fixed_point_postal_code",
@@ -371,3 +455,17 @@ class ProviderDocumentsForm(forms.Form):
 class ProviderDocumentSide:
     FRONT = "FRONT"
     BACK = "BACK"
+
+
+class ProviderReviewForm(ProviderDocumentsForm):
+    acknowledged = forms.BooleanField(
+        label=(
+            "Conferi minhas informações e entendo que o envio não libera a publicação "
+            "de serviços. Meu cadastro depende de análise e aprovação."
+        ),
+        error_messages={"required": "Confirme que conferiu as informações antes de enviar."},
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["acknowledged"].required = self.submit

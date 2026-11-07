@@ -1,8 +1,14 @@
 [
   {
+    "version": "0.4.1-alpha",
+    "date": "2026-11-06",
+    "status": "refinamento incorporado na entrega final da Alpha 0.4.0 em feature/bico-alpha-0.4.0-provider-onboarding; validacoes anteriores preservadas; sem integracao a main",
+    "summary": "Onboarding dedicado com nova UX, documentos na identificação, especialidades com busca, CEP e fallback manual, salvamento de etapas válidas, revisão e sucesso. Sem aprovação automática ou mudança de schema."
+  },
+  {
     "version": "0.4.0-alpha",
     "date": "2026-11-06",
-    "status": "publicada em origin/feature/bico-alpha-0.4.0-provider-onboarding; implementação 8fbec3e; check, migrations, Ruff e smoke checks passaram; migration aplicada no MySQL local; quatro testes focados bloqueados antes da execução por erro 1044 ao criar test_bico; não integrada à main",
+    "status": "branch feature/bico-alpha-0.4.0-provider-onboarding; novo design e correcoes finais de teclado, PJ/MEI e estados documentais incorporados; check e 16 verificacoes focadas passaram; sem integracao a main",
     "summary": "Onboarding de prestador PF/PJ em cinco etapas, validação e storage privado cifrado das duas faces de documento, revisão humana pendente, API e acompanhamento por Minha Conta. Upload em produção permanece desabilitado."
   },
   {

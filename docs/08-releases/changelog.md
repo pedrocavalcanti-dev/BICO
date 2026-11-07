@@ -1,5 +1,23 @@
 # Changelog
 
+## Correções finais do onboarding Alpha 0.4.0 — 2026-11-06
+
+- Incorporado o novo design anteriormente validado e ainda não commitado à mesma branch de desenvolvimento da Alpha 0.4.0, preservando seu histórico.
+- Enter na busca de especialidades impede apenas o submit implícito desse campo; demais usos de Enter mantidos. Todos os botões do fluxo têm tipo explícito.
+- Opção “Tenho uma empresa ou MEI” continua `COMPANY`/CNPJ. JPG/PNG/WebP preservados; PDF empresarial adicional registrado como futuro, sem habilitação.
+- Revisão esclarece rascunho, imagem salva para análise e necessidade de envio/substituição, sem indicar aprovação documental. Solicitação enviada permanece pendente de análise humana.
+- `manage.py check` e 16 verificações focadas passaram, sem escrita no banco. Sem redesenho adicional, mudança de backend, force push ou merge automático.
+
+## 0.4.1-alpha — 2026-11-06
+
+- Refatorado o frontend do onboarding em tela dedicada, com trilha lateral, progresso mobile, identidade BICO, SVGs locais, cards compactos e microinterações com movimento reduzido.
+- Documentos passaram à identificação, com prévia, substituição, arrastar/soltar e feedback do envio privado. Opcionais recolhidos; especialidades agrupadas com busca/limite; atendimento contextual com CEP ViaCEP, fallback manual e raio visual.
+- Salvamento automático de etapas válidas pela API existente, confirmação após resposta do servidor e ação Salvar e sair. Fluxo POST sem JavaScript preservado.
+- Revisão e sucesso redesenhados, ciência da análise humana e estimativa variável de até 24h. `PENDING_REVIEW`/`NOT_REVIEWED`, armazenamento cifrado e bloqueio de produção preservados; sem aprovação automática ou perfil público novo.
+- Sem mudança de modelos ou migrations. Forms receberam ajustes de labels/validação, categoria principal ativa e cidade/UF únicos no editor. Rotas privadas usam `no-store`.
+- Smoke PF/PJ controlado no MySQL com 66 asserções e rollback; renderização em cinco larguras e interações do navegador verificadas. Suíte completa isolada permanece pendente de privilégios de `test_bico` e não foi repetida nesta tarefa visual.
+- Refinamento incorporado na branch `feature/bico-alpha-0.4.0-provider-onboarding`, derivada de `e415242`. A Área do Prestador permanece futura, com numeração a definir.
+
 ## 0.4.0-alpha — 2026-11-06
 
 - Implementado onboarding progressivo do prestador em cinco etapas, com persistência de rascunho, PF/PJ, validação de CPF/CNPJ e telefone, categorias do banco, modalidades combináveis e localização privada.

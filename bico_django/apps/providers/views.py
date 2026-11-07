@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
 from .forms import (
@@ -11,6 +12,7 @@ from .forms import (
     ProviderDocumentsForm,
     ProviderIdentityForm,
     ProviderProfileForm,
+    ProviderReviewForm,
     ProviderServiceAreaForm,
     ProviderTypeForm,
 )
@@ -29,8 +31,8 @@ STEPS = {
         "Escolha como pretende oferecer seus serviços na BICO.",
     ),
     2: (
-        "Vamos conhecer você",
-        "Precisamos de algumas informações para analisar seu cadastro profissional.",
+        "Vamos conhecer você melhor",
+        "Seus dados e documentos ficam privados. Eles serão usados na análise do cadastro.",
     ),
     3: (
         "O que você faz de melhor?",
@@ -38,8 +40,8 @@ STEPS = {
     ),
     4: ("Onde e como você atende?", "Defina sua região e as modalidades de atendimento."),
     5: (
-        "Seu cadastro está quase pronto!",
-        "Confira suas informações e envie as duas fotos do documento oficial.",
+        "Tudo pronto para o próximo passo?",
+        "Confira seu cadastro. Depois do envio, a documentação seguirá para análise humana.",
     ),
 }
 
@@ -73,7 +75,7 @@ def _stage_form(step, request, application, *, post=False):
     if step == 4:
         return ProviderServiceAreaForm(data, instance=application)
     if step == 5:
-        return ProviderDocumentsForm(
+        return ProviderReviewForm(
             data,
             request.FILES if post else None,
             application=application,
@@ -83,6 +85,7 @@ def _stage_form(step, request, application, *, post=False):
 
 
 @login_required
+@never_cache
 @require_http_methods(["GET", "POST"])
 def onboarding_step(request, step):
     if not settings.PROVIDER_ONBOARDING_ENABLED:
@@ -96,70 +99,95 @@ def onboarding_step(request, step):
         return redirect("providers:onboarding-step", step=application.current_step)
     if step > 1 and not application.provider_type:
         return redirect("providers:onboarding-step", step=1)
-    if step == 5 and not settings.PROVIDER_DOCUMENT_UPLOAD_ENABLED:
+    if step in {2, 5} and not settings.PROVIDER_DOCUMENT_UPLOAD_ENABLED:
         return _unavailable(request)
 
     form = _stage_form(step, request, application, post=request.method == "POST")
     if form is None:
         return redirect("providers:onboarding-step", step=1)
+    document_form = (
+        ProviderDocumentsForm(
+            request.POST if request.method == "POST" else None,
+            request.FILES if request.method == "POST" else None,
+            application=application,
+            submit=request.method == "POST" and request.POST.get("action") != "save_exit",
+        )
+        if step == 2
+        else form
+        if step == 5
+        else None
+    )
 
     rate_limited = False
-    if request.method == "POST" and step == 5:
+    if request.method == "POST" and step in {2, 5}:
         if request.FILES and not throttle_document_upload(request).allowed:
-            form.add_error(None, "Muitos envios de imagem. Aguarde e tente novamente.")
+            document_form.add_error(None, "Muitos envios de imagem. Aguarde e tente novamente.")
             rate_limited = True
         if (
             not rate_limited
+            and step == 5
             and request.POST.get("action") == "submit"
             and not throttle_application_submission(request).allowed
         ):
             form.add_error(None, "Muitas solicitações de envio. Aguarde e tente novamente.")
             rate_limited = True
 
-    if request.method == "POST" and not rate_limited and form.is_valid():
+    valid = False
+    if request.method == "POST" and not rate_limited:
+        valid = form.is_valid()
+        if step == 2:
+            valid = document_form.is_valid() and valid
+    if valid:
         try:
-            if step == 5:
+            if step in {2, 5}:
                 for side, field_name in (
                     (ProviderDocument.Side.FRONT, "front_image"),
                     (ProviderDocument.Side.BACK, "back_image"),
                 ):
-                    upload = form.cleaned_data.get(field_name)
+                    upload = document_form.cleaned_data.get(field_name)
                     if upload:
                         replace_identity_document(application=application, side=side, upload=upload)
-                if request.POST.get("action") == "submit":
+                if step == 5 and request.POST.get("action") == "submit":
                     application = submit_application(application=application, actor=request.user)
                     messages.success(
                         request,
                         "Solicitação enviada. Aguardando verificação documental e aprovação.",
                     )
                     return redirect("providers:application-status")
-                messages.success(
-                    request, "As imagens foram salvas. Você pode substituí-las antes do envio."
-                )
-            else:
+            if step < 5:
                 application = form.save(commit=False)
                 application.current_step = max(application.current_step, step + 1)
                 application.save()
                 if step == 3:
                     form.save_m2m()
-                messages.success(
-                    request, "Etapa salva. Você pode voltar e editar suas informações."
-                )
+            messages.success(request, "Alterações salvas. Seu rascunho está atualizado.")
+            if request.POST.get("action") == "save_exit":
+                return redirect("accounts:account")
             return redirect("providers:onboarding-step", step=min(step + 1, 5))
         except (PermissionDenied, ValidationError) as error:
             form.add_error(None, error)
 
     saved_documents = (
         {document.side: document for document in application.identity_documents.all()}
-        if step == 5
+        if step in {2, 5}
         else {}
     )
     service_mode_labels = dict(SERVICE_MODE_CHOICES)
     context = {
         "application": application,
         "form": form,
+        "document_form": document_form,
         "step": step,
         "steps": STEPS,
+        "step_labels": [
+            {"number": number, "label": label, "available": number <= application.current_step}
+            for number, label in enumerate(
+                ["Seu caminho", "Identificação", "Perfil profissional", "Atendimento", "Revisão"],
+                start=1,
+            )
+        ],
+        "progress": (step - 1) * 20,
+        "max_categories": settings.PROVIDER_MAX_CATEGORIES,
         "title": STEPS[step][0],
         "subtitle": STEPS[step][1],
         "previous_step": step - 1 if step > 1 else None,
@@ -189,6 +217,7 @@ def onboarding_step(request, step):
 
 
 @login_required
+@never_cache
 def application_status(request):
     if not settings.PROVIDER_ONBOARDING_ENABLED:
         return _unavailable(request)

@@ -1,0 +1,21 @@
+<section class="onboarding-section"><div class="onboarding-section__heading"><span class="onboarding-section__icon">{% include "providers/components/icon.html" with name="person" %}</span><div><h2>{% if application.provider_type == 'COMPANY' %}Empresa e responsável{% else %}Seus dados essenciais{% endif %}</h2><p>{% if application.provider_type == 'COMPANY' %}Identifique a empresa e a pessoa responsável pelo cadastro.{% else %}Precisamos conhecer a pessoa por trás do serviço.{% endif %}</p></div><span class="onboarding-private-tag">{% include "providers/components/icon.html" with name="lock" %} Privado</span></div>
+  <div class="provider-field-grid">
+  {% if application.provider_type == 'COMPANY' %}
+    {% include 'providers/components/field.html' with field=form.company_legal_name wide=True %}
+    {% include 'providers/components/field.html' with field=form.cnpj %}
+    {% include 'providers/components/field.html' with field=form.company_phone %}
+    {% include 'providers/components/field.html' with field=form.company_email wide=True %}
+    {% include 'providers/components/field.html' with field=form.representative_name wide=True %}
+    {% include 'providers/components/field.html' with field=form.representative_cpf %}
+    {% include 'providers/components/field.html' with field=form.representative_phone %}
+    {% include 'providers/components/field.html' with field=form.representative_role %}
+  {% else %}
+    {% include 'providers/components/field.html' with field=form.legal_name wide=True %}
+    {% include 'providers/components/field.html' with field=form.cpf %}
+    {% include 'providers/components/field.html' with field=form.birth_date %}
+    {% include 'providers/components/field.html' with field=form.phone %}
+  {% endif %}
+    {% include 'providers/components/field.html' with field=form.document_type %}
+  </div>
+  <details class="onboarding-details"{% if form.identity_document_number.errors or form.issuing_authority.errors or form.issuer_state.errors or form.company_trade_name.errors %} open{% endif %}><summary>Adicionar detalhes opcionais <span aria-hidden="true">+</span></summary><div class="provider-field-grid">{% include 'providers/components/field.html' with field=form.company_trade_name wide=True %}{% include 'providers/components/field.html' with field=form.identity_document_number wide=True %}{% include 'providers/components/field.html' with field=form.issuing_authority %}{% include 'providers/components/field.html' with field=form.issuer_state %}</div></details>
+</section>

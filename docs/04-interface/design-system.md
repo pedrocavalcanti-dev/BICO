@@ -43,3 +43,7 @@ Os dados comerciais são consultados do MySQL por seletores compartilhados pela 
 O cabeçalho mostra até sete categorias destacadas do banco e um link para todas; desktop usa uma grade sem scrollbar e a navegação compacta mantém rolagem apenas no componente. As páginas de anúncio e perfil usam `static/css/marketplace/detail.css`; a galeria usa botões com foco visível, `aria-pressed` e miniaturas com carregamento tardio. Imagens mantêm proporção e dimensões, e estados vazios são apresentados quando não existe mídia.
 
 O login apresenta o símbolo Google oficial com botão desabilitado “Em breve”, sem sugerir autenticação disponível. Imagens WebP demonstrativas ficam em `static/marketplace/demo/` como origem para o seed, com documentação de cada arquivo. Use-as somente em registros e exemplos identificados como demonstração; para uploads de usuários, utilizar `MEDIA_ROOT`/storage configurado, nunca `static/`.
+
+## Alpha 0.4.1 — onboarding dedicado
+
+`static/css/providers/onboarding.css` aplica os tokens BICO em um layout exclusivo, com trilha de progresso, cards de escolha compactos, chips agrupados, opcionais recolhíveis, upload privado e revisão. `static/js/providers/onboarding.js` controla busca/seleções, máscaras, CEP, envio documental e feedback de salvamento. Os ícones são SVG locais em `templates/providers/components/icon.html`; não exigem fontes, imagens ou bibliotecas externas. Detalhes e validação estão em [onboarding-prestador.md](onboarding-prestador.md).

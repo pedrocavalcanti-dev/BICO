@@ -1,4 +1,4 @@
-# Onboarding do prestador — Alpha 0.4.0
+# Onboarding do prestador — Alpha 0.4.1
 
 ## Estado
 
@@ -9,16 +9,22 @@ O CTA aparece na Home e em Minha Conta. Usuários anônimos passam pelo login co
 ## Etapas
 
 1. Tipo: profissional autônomo (PF) ou empresa (PJ).
-2. Identificação e contato: dados pessoais ou empresariais e representante. CPF/CNPJ têm dígitos verificadores; telefone e UF são validados no servidor. A escolha de documento é RG, CIN ou CNH.
+2. Identificação, contato e documentos: dados pessoais ou empresariais e representante, com campos opcionais recolhidos. CPF/CNPJ têm dígitos verificadores; telefone e UF são validados no servidor. A escolha é RG, CIN ou CNH, com upload privado separado de frente/verso e substituição antes do envio. Na Web, continuar exige as duas fotos válidas; salvar e sair permite manter a etapa sem fotos.
 3. Perfil e especialidades: nome público, descrição, experiência, categoria principal e categorias ativas. O limite de categorias usa `BICO_PROVIDER_MAX_CATEGORIES` (padrão 5). Não cria anúncio, preço, avaliação ou perfil público.
-4. Atendimento: combina domicílio, ponto fixo e remoto. A cidade/UF e os dados exigidos por modalidade são validados no backend. Endereço fixo fica privado, sem publicação automática, GPS ou distância calculada.
-5. Revisão e documentos: resumo com identificadores parcialmente mascarados; upload separado de frente e verso; arquivos podem ser substituídos antes do envio. O formulário mostra instruções, prévia e mensagens para cada problema de qualidade.
+4. Atendimento: combina domicílio, ponto fixo e remoto em cards compactos. O CEP consulta ViaCEP e preenche rua, bairro, cidade/UF; há edição manual se não encontrar ou se o serviço falhar. Número/complemento ficam separados, raio usa slider e atendimento apenas remoto mostra cidade-base/UF. Um único par cidade/UF também preenche os campos internos do ponto fixo. O endereço fica privado, sem publicação automática, GPS ou distância calculada.
+5. Revisão e envio: resumo editável por etapa, identificadores parcialmente mascarados, especialidades, modalidades, região e checklist dos documentos. A Web exige ciência de que o envio depende de análise e não libera publicação. Rascunhos antigos sem documentos podem enviá-los nesta etapa.
 
 Os dados do rascunho são persistidos progressivamente no MySQL. Campos PF/PJ que não pertencem à modalidade escolhida não são aceitos pelo formulário daquela etapa.
+
+A interface dedicada da Alpha 0.4.1 remove o cabeçalho/rodapé do marketplace somente neste fluxo. O salvamento automático reutiliza PATCH da API para etapas 1–4 válidas; entradas incompletas ou inválidas continuam sinalizadas como não salvas. Não guarda dados pessoais ou imagens em localStorage. O upload assíncrono usa o endpoint privado existente e o POST multipart continua funcionando sem JavaScript. Ver [experiência do onboarding](../04-interface/onboarding-prestador.md).
 
 ## Documentos e pré-validação
 
 Cada solicitação admite uma imagem de frente e uma de verso. São aceitos somente conteúdos reais JPEG, PNG ou WebP, até 8 MB, até 25 megapixels e com dimensões mínimas de 800 × 500. O backend decodifica o arquivo, rejeita imagem corrompida ou grande demais e verifica heurísticas simples de escurecimento, falta de detalhes e desfoque. Imagens aprovadas pela pré-validação são reprocessadas para remover metadados EXIF.
+
+PDF para documentos empresariais adicionais fica planejado para uma etapa futura, condicionado a processamento seguro. Não é aceito no upload atual de identidade e não substitui as fotografias de frente/verso de RG, CIN ou CNH. A opção “Tenho uma empresa ou MEI” mantém o tipo `COMPANY` e a identificação por CNPJ; não cria outra categoria de conta.
+
+Na revisão, “salva para análise” significa somente que a imagem passou pela pré-validação técnica e foi armazenada. Fotos faltantes aparecem como “envio pendente”; uma foto que não passou pela pré-validação exige substituição. O cadastro continua rascunho até o envio, quando passa a aguardar verificação documental e aprovação humana.
 
 Essa inspeção trata apenas formato e qualidade visual. Não usa OCR, não lê ou compara CPF, não reconhece rosto, não prova autenticidade, não consulta governo e não substitui a revisão humana. Nenhuma imagem recebe aprovação automática.
 
@@ -46,7 +52,7 @@ As rotas exigem autenticação. A Web e a API compartilham os mesmos forms e ser
 
 ## Próximas etapas
 
-- **Alpha 0.4.1 — Área do Prestador:** dashboard, edição do perfil, especialidades, localização, portfólio, indicadores com dados reais e navegação exclusiva. Esta etapa não está implementada.
+- **Área do Prestador (numeração a definir):** dashboard, edição do perfil, especialidades, localização, portfólio, indicadores com dados reais e navegação exclusiva. Esta etapa não está implementada; a Alpha 0.4.1 foi redirecionada ao refinamento do onboarding.
 - **Alpha 0.4.2 — BICO Gestão:** análise humana restrita, correções, histórico de decisões, retenção e gestão de acesso. Esta etapa não está implementada.
 - **Alpha 0.4.3 — Publicação:** perfil público e publicação/gestão de anúncios após aprovação. Esta etapa não está implementada.
 - Antes de disponibilizar documentos reais: decisões jurídicas e de segurança indicadas acima, testes integrados em banco MySQL isolado e revisão de acessibilidade/responsividade.

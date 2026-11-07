@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Cadastro profissional — BICO{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/providers/onboarding.css' %}">{% endblock %}
+{% block extra_js %}<script src="{% static 'js/providers/onboarding.js' %}" defer></script>{% endblock %}
+{% block site_header %}{% endblock %}
+{% block site_footer %}{% endblock %}
+{% block content %}
+<div class="onboarding-layout">
+  <aside class="onboarding-rail" aria-label="Cadastro profissional">
+    <a class="onboarding-brand" href="{% url 'core:home' %}" aria-label="BICO — página inicial"><img src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="" width="40" height="40"><span>BICO<span class="onboarding-brand__descriptor">para profissionais</span></span></a>
+    <div class="onboarding-rail__intro"><span class="onboarding-kicker">NOVAS POSSIBILIDADES</span><h2>Seu talento merece<br>ir mais longe<span>.</span></h2><p>Vamos preparar o seu próximo passo, juntos.</p></div>
+    {% if step %}
+    <nav class="onboarding-steps" aria-label="Etapas do cadastro">
+      {% for item in step_labels %}
+      <div class="onboarding-step{% if item.number == step %} is-current{% elif item.number < application.current_step %} is-complete{% endif %}"{% if item.number == step %} aria-current="step"{% endif %}>
+        <span class="onboarding-step__number">{% if item.number < application.current_step and item.number != step %}{% include "providers/components/icon.html" with name="check" %}{% else %}{{ item.number }}{% endif %}</span>
+        <span>{% if item.available %}<a href="{% url 'providers:onboarding-step' item.number %}"{% if item.number == step %} aria-current="step"{% endif %}>{{ item.label }}</a>{% else %}{{ item.label }}{% endif %}<small>{% if item.number == step %}Estamos aqui{% elif item.number < application.current_step %}Etapa salva{% else %}Seu próximo passo{% endif %}</small></span>
+      </div>
+      {% endfor %}
+    </nav>
+    {% else %}
+    <div class="onboarding-journey" aria-hidden="true"><div class="onboarding-journey__orbit"></div><span class="onboarding-journey__center">{% include "providers/components/icon.html" with name="shield" %}</span><span class="onboarding-journey__node onboarding-journey__node--one">{% include "providers/components/icon.html" with name="document" %}</span><span class="onboarding-journey__node onboarding-journey__node--two">{% include "providers/components/icon.html" with name="tool" %}</span><span class="onboarding-journey__node onboarding-journey__node--three">{% include "providers/components/icon.html" with name="person" %}</span></div>
+    {% endif %}
+    <div class="onboarding-rail__privacy">{% include "providers/components/icon.html" with name="lock" %}<p>Um cadastro, a mesma conta.<span>Seus dados pessoais e documentos ficam em uma área privada.</span></p></div>
+  </aside>
+  <div class="onboarding-main">
+    <header class="onboarding-topbar"><span>{% include "providers/components/icon.html" with name="shield" %} Cadastro profissional</span>{% if step %}<button type="submit" form="provider-onboarding-form" name="action" value="save_exit" class="onboarding-text-button" data-save-exit>Salvar e sair {% include "providers/components/icon.html" with name="arrow" %}</button>{% else %}<a href="{% url 'accounts:account' %}" class="onboarding-text-button">Minha conta {% include "providers/components/icon.html" with name="arrow" %}</a>{% endif %}</header>
+    <main id="main-content" class="onboarding-content{% if not step %} onboarding-content--status{% endif %}">{% block onboarding_content %}{% endblock %}</main>
+    <footer class="onboarding-footer"><span>© {% now "Y" %} BICO</span><span>{% include "providers/components/icon.html" with name="lock" %} Seus dados não são publicados nesta etapa</span></footer>
+  </div>
+</div>
+{% endblock %}

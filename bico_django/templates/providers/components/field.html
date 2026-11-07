@@ -1,0 +1,7 @@
+{% if field %}
+<div class="provider-field-wrap{% if field.errors %} has-error{% endif %}{% if wide %} provider-field-wrap--wide{% endif %}" data-field="{{ field.name }}">
+  <label class="provider-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+  {% if help %}<small class="provider-field__help" id="{{ field.id_for_label }}_help">{{ help }}</small>{% endif %}
+  {% for error in field.errors %}<small class="provider-field__error" role="alert">{{ error }}</small>{% endfor %}
+</div>
+{% endif %}
