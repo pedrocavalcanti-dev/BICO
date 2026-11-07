@@ -1,0 +1,22 @@
+{% extends "providers/dashboard_base.html" %}
+{% block title %}Perfil profissional | BICO{% endblock %}
+{% block dashboard_content %}
+<div class="provider-page-heading"><div><span class="provider-eyebrow">Meu trabalho</span><h1>Perfil profissional</h1><p>Edite as informações públicas da sua apresentação na BICO.</p></div><a class="provider-button secondary" href="{{ public_url }}">Ver perfil público <span aria-hidden="true">↗</span></a></div>
+<div class="provider-page-two-col">
+  <section class="provider-card provider-panel provider-form-layout">
+    <h2>Apresentação</h2>
+    <form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="provider-form-errors">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="provider-form-grid">
+        <div class="provider-form-field full"><label for="{{ form.public_name.id_for_label }}">{{ form.public_name.label }}</label>{{ form.public_name }}{{ form.public_name.errors }}</div>
+        <div class="provider-form-field full"><label for="{{ form.avatar.id_for_label }}">Foto profissional ou logotipo</label>{{ form.avatar }}{{ form.avatar.errors }}<p class="provider-help">JPG, PNG ou WebP; máximo de 5 MB. A imagem será otimizada antes de aparecer no perfil público.</p></div>
+        <div class="provider-form-field full"><label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>{{ form.description }}{{ form.description.errors }}<p class="provider-help">Esta apresentação ficará visível no seu perfil público.</p></div>
+        <fieldset class="provider-form-field full"><legend class="provider-form-label">{{ form.categories.label }}</legend><div class="provider-choice-list">{{ form.categories }}</div>{{ form.categories.errors }}</fieldset>
+      </div>
+      <p class="provider-notice">Nome, apresentação e especialidades são atualizados no perfil público aprovado. CPF, CNPJ, documentos e endereço residencial não podem ser alterados por esta tela.</p>
+      <div class="provider-form-actions"><button class="provider-button" type="submit">Salvar alterações</button></div>
+    </form>
+  </section>
+  <aside class="provider-card provider-panel"><h2>Seu perfil</h2><div class="provider-preview-head">{% if provider.avatar %}<img src="{{ provider.avatar.url }}" alt="Foto de {{ provider.public_name }}" class="provider-preview-photo">{% else %}<div class="provider-preview-photo" aria-hidden="true">{{ provider.public_name|first|upper }}</div>{% endif %}<div class="provider-preview-data"><h2>{{ provider.public_name }}</h2><p>{{ provider.city }}-{{ provider.state }}</p><span class="provider-status-badge PUBLISHED">Aprovado para publicação</span></div></div><p class="provider-notice">O selo de aprovação do perfil não representa verificação de identidade.</p><p><a href="{% url 'providers:profile-preview' %}">Abrir prévia privada →</a></p></aside>
+</div>
+{% endblock %}

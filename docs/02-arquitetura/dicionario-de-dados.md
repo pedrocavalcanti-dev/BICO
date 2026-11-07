@@ -40,4 +40,8 @@ Título, subtítulo, imagens desktop/mobile opcionais, texto alternativo, rótul
 
 Galeria 1:N de `catalog_servicelisting`: imagem validada, texto alternativo obrigatório, ordem e data de criação. A ordem é única dentro do mesmo anúncio. A migration `catalog.0003_servicelistingimage` somente cria a tabela e não altera os anúncios existentes.
 
+## `providers_providerportfolioimage`
+
+Imagem de portfólio privada associada a `ProviderProfile`, com UUID, descrição opcional, ordem e timestamps. O arquivo é reprocessado e gravado no storage privado cifrado; a rota Web de leitura verifica proprietário e aprovação. Não representa imagem pública de anúncio e não é retornada nas APIs públicas. Adicionada por `providers.0003_providerportfolioimage`.
+
 Avaliações, solicitações, pagamentos, conversas e localização geográfica ainda não possuem tabelas nesta versão.

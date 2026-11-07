@@ -1,0 +1,24 @@
+{% extends "providers/dashboard_base.html" %}
+{% block title %}Meus serviços | BICO Prestador{% endblock %}
+{% block dashboard_content %}
+<div class="provider-page-heading"><div><span class="provider-eyebrow">Meu trabalho</span><h1>Meus serviços</h1><p>Organize e acompanhe os anúncios associados ao seu perfil.</p></div></div>
+<nav class="provider-filter-row" aria-label="Filtrar serviços">
+  <a class="provider-filter {% if not status_filter %}is-active{% endif %}" href="{% url 'providers:managed-listings' %}?q={{ query|urlencode }}">Todos ({{ page_obj.paginator.count }})</a>
+  {% for status in status_choices %}<a class="provider-filter {% if status_filter == status.value %}is-active{% endif %}" href="?status={{ status.value }}&q={{ query|urlencode }}">{{ status.label }} ({{ status.count }})</a>{% endfor %}
+</nav>
+<section class="provider-card provider-panel provider-listings">
+  {% if page_obj.object_list %}
+  <table class="provider-listing-table"><thead><tr><th>Serviço</th><th>Categoria</th><th>Preço</th><th>Modalidade</th><th>Status</th><th>Atualizado</th></tr></thead><tbody>
+    {% for listing in page_obj %}<tr>
+      <td data-label="Serviço"><div class="provider-listing-detail">{% if listing.image %}<img src="{{ listing.image.url }}" alt="" loading="lazy">{% else %}<span aria-hidden="true">BICO</span>{% endif %}<span><strong>{{ listing.title }}</strong>{% if listing.status == 'PUBLISHED' %}<small><a href="{% url 'core:service-detail' listing.slug %}">Visualizar anúncio ↗</a></small>{% endif %}</span></div></td>
+      <td data-label="Categoria">{{ listing.category.name }}</td>
+      <td data-label="Preço">{% if listing.price_type == 'QUOTE' %}Sob orçamento{% elif listing.price_start is not None %}R$ {{ listing.price_start|floatformat:2 }}{% else %}Não informado{% endif %}</td>
+      <td data-label="Modalidade">Não disponível</td>
+      <td data-label="Status"><span class="provider-status-badge {{ listing.status }}">{{ listing.get_status_display }}</span></td>
+      <td data-label="Atualizado">{{ listing.updated_at|date:'d/m/Y' }}</td>
+    </tr>{% endfor %}
+  </tbody></table>
+  {% if page_obj.paginator.num_pages > 1 %}<nav class="provider-pagination" aria-label="Paginação">{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}&q={{ query|urlencode }}">‹ Anterior</a>{% endif %}<span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}&q={{ query|urlencode }}">Próxima ›</a>{% endif %}</nav>{% endif %}
+  {% else %}<div class="provider-empty"><strong>{% if query %}Nenhum serviço corresponde à busca{% else %}Você ainda não publicou nenhum serviço{% endif %}</strong><p>{% if query %}Tente outro termo ou remova os filtros.{% else %}A publicação e edição de anúncios serão disponibilizadas na Alpha 0.4.2.{% endif %}</p>{% if query %}<a href="{% url 'providers:managed-listings' %}">Limpar busca</a>{% endif %}</div>{% endif %}
+</section>
+{% endblock %}

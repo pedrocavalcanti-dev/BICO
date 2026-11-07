@@ -2,11 +2,24 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.paginator import Paginator
+from django.db import transaction
+from django.db.models import Count
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
+from apps.audit.models import AuditEvent
+from apps.catalog.models import ServiceListing
+
+from .dashboard import provider_dashboard_context, provider_listing_queryset
+from .dashboard_forms import (
+    ProviderManagedAreaForm,
+    ProviderManagedProfileForm,
+    ProviderPortfolioUploadForm,
+)
 from .forms import (
     SERVICE_MODE_CHOICES,
     ProviderDocumentsForm,
@@ -16,7 +29,7 @@ from .forms import (
     ProviderServiceAreaForm,
     ProviderTypeForm,
 )
-from .models import ProviderApplication, ProviderDocument
+from .models import ProviderApplication, ProviderDocument, ProviderPortfolioImage, ProviderProfile
 from .services import (
     get_or_create_application,
     replace_identity_document,
@@ -254,3 +267,274 @@ def identity_document_image(request, side):
     response["X-Content-Type-Options"] = "nosniff"
     response["Content-Security-Policy"] = "default-src 'none'; sandbox"
     return response
+
+
+def _approved_provider(request):
+    provider = ProviderProfile.objects.filter(user=request.user).first()
+    if provider and provider.status == ProviderProfile.Status.APPROVED:
+        return provider, None
+    if provider:
+        return None, render(request, "providers/area_blocked.html", status=403)
+
+    application = ProviderApplication.objects.filter(user=request.user).first()
+    if application and application.status == ProviderApplication.Status.PENDING_REVIEW:
+        return None, redirect("providers:application-status")
+    if application and application.can_edit:
+        return None, redirect(
+            "providers:onboarding-step", step=max(1, min(application.current_step, 5))
+        )
+    return None, render(request, "providers/area_access.html")
+
+
+@login_required
+@never_cache
+def dashboard(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    return render(request, "providers/dashboard.html", provider_dashboard_context(provider))
+
+
+@login_required
+@never_cache
+def managed_listings(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    status_filter = request.GET.get("status", "").upper()
+    query = request.GET.get("q", "").strip()[:100]
+    listings = provider_listing_queryset(provider, status=status_filter, query=query)
+    page_obj = Paginator(listings, 12).get_page(request.GET.get("page"))
+    status_counts = {
+        row["status"]: row["total"]
+        for row in ServiceListing.objects.filter(provider=provider)
+        .values("status")
+        .order_by()
+        .annotate(total=Count("id"))
+    }
+    return render(
+        request,
+        "providers/managed_listings.html",
+        {
+            "provider": provider,
+            "page_obj": page_obj,
+            "query": query,
+            "status_filter": status_filter,
+            "status_counts": status_counts,
+            "status_choices": [
+                {"value": value, "label": label, "count": status_counts.get(value, 0)}
+                for value, label in ServiceListing.Status.choices
+            ],
+        },
+    )
+
+
+@login_required
+@never_cache
+@require_http_methods(["GET", "POST"])
+def managed_profile(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    form = ProviderManagedProfileForm(
+        request.POST or None,
+        request.FILES or None,
+        instance=provider,
+    )
+    if request.method == "POST" and form.is_valid():
+        previous_avatar = provider.avatar.name
+        with transaction.atomic():
+            managed = form.save(commit=False)
+            update_fields = ["public_name", "description", "updated_at"]
+            if "avatar" in form.changed_data:
+                update_fields.append("avatar")
+            managed.save(update_fields=update_fields)
+            form.save_m2m()
+            if previous_avatar and previous_avatar != managed.avatar.name:
+                transaction.on_commit(lambda: provider.avatar.storage.delete(previous_avatar))
+            AuditEvent.objects.create(
+                actor=request.user,
+                action="provider.dashboard.profile_updated",
+                target_type="ProviderProfile",
+                target_id=str(provider.pk),
+            )
+        messages.success(request, "Perfil profissional atualizado.")
+        return redirect("providers:profile-edit")
+    return render(
+        request,
+        "providers/managed_profile.html",
+        {
+            "provider": provider,
+            "form": form,
+            "public_url": reverse("core:provider-detail", args=[provider.slug]),
+        },
+    )
+
+
+@login_required
+@never_cache
+def profile_preview(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    return render(request, "providers/profile_preview.html", {"provider": provider})
+
+
+@login_required
+@never_cache
+@require_http_methods(["GET", "POST"])
+def managed_service_area(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    application = ProviderApplication.objects.filter(user=request.user).first()
+    if not application:
+        return render(request, "providers/area_unavailable.html")
+    form = ProviderManagedAreaForm(request.POST or None, instance=application)
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            updated_application = form.save()
+            ProviderProfile.objects.filter(pk=provider.pk).update(
+                city=updated_application.city,
+                state=updated_application.state,
+            )
+            AuditEvent.objects.create(
+                actor=request.user,
+                action="provider.dashboard.area_updated",
+                target_type="ProviderProfile",
+                target_id=str(provider.pk),
+            )
+        messages.success(request, "Modalidades e região de atendimento atualizadas.")
+        return redirect("providers:service-area")
+    return render(
+        request,
+        "providers/managed_service_area.html",
+        {"provider": provider, "form": form},
+    )
+
+
+@login_required
+@never_cache
+@require_http_methods(["GET", "POST"])
+def portfolio(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    form = ProviderPortfolioUploadForm(request.POST or None, request.FILES or None)
+    if request.method == "POST" and form.is_valid():
+        try:
+            with transaction.atomic():
+                ProviderProfile.objects.select_for_update().get(pk=provider.pk)
+                image = form.save(provider=provider)
+                AuditEvent.objects.create(
+                    actor=request.user,
+                    action="provider.dashboard.portfolio_added",
+                    target_type="ProviderPortfolioImage",
+                    target_id=str(image.pk),
+                )
+        except ValidationError as error:
+            form.add_error(None, error)
+        else:
+            messages.success(request, "Imagem adicionada ao seu portfólio privado.")
+            return redirect("providers:portfolio")
+    images = provider.portfolio_images.all()
+    return render(
+        request, "providers/portfolio.html", {"provider": provider, "form": form, "images": images}
+    )
+
+
+@login_required
+@never_cache
+@require_http_methods(["GET"])
+def portfolio_image(request, image_id):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    image = get_object_or_404(ProviderPortfolioImage, pk=image_id, provider=provider)
+    response = FileResponse(image.image.open("rb"), content_type="image/webp")
+    response["Content-Disposition"] = f'inline; filename="portfolio-{image.pk}.webp"'
+    response["Cache-Control"] = "private, no-store"
+    response["X-Content-Type-Options"] = "nosniff"
+    response["Content-Security-Policy"] = "default-src 'none'; sandbox"
+    return response
+
+
+@login_required
+@never_cache
+@require_http_methods(["POST"])
+def portfolio_reorder(request, image_id, direction):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    if direction not in {"up", "down"}:
+        raise Http404
+    with transaction.atomic():
+        ProviderProfile.objects.select_for_update().get(pk=provider.pk)
+        images = list(
+            ProviderPortfolioImage.objects.select_for_update()
+            .filter(provider=provider)
+            .order_by("display_order", "created_at")
+        )
+        index = next((i for i, item in enumerate(images) if item.pk == image_id), None)
+        if index is None:
+            raise Http404
+        neighbor_index = index - 1 if direction == "up" else index + 1
+        if 0 <= neighbor_index < len(images):
+            current, neighbor = images[index], images[neighbor_index]
+            old_order = current.display_order
+            neighbor_order = neighbor.display_order
+            current.display_order = max(item.display_order for item in images) + 1
+            current.save(update_fields=["display_order", "updated_at"])
+            neighbor.display_order = old_order
+            neighbor.save(update_fields=["display_order", "updated_at"])
+            current.display_order = neighbor_order
+            current.save(update_fields=["display_order", "updated_at"])
+            AuditEvent.objects.create(
+                actor=request.user,
+                action="provider.dashboard.portfolio_reordered",
+                target_type="ProviderPortfolioImage",
+                target_id=str(current.pk),
+            )
+    return redirect("providers:portfolio")
+
+
+@login_required
+@never_cache
+@require_http_methods(["POST"])
+def portfolio_delete(request, image_id):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    image = get_object_or_404(ProviderPortfolioImage, pk=image_id, provider=provider)
+    stored_name = image.image.name
+    with transaction.atomic():
+        image.delete()
+        transaction.on_commit(lambda: image.image.storage.delete(stored_name))
+        AuditEvent.objects.create(
+            actor=request.user,
+            action="provider.dashboard.portfolio_removed",
+            target_type="ProviderPortfolioImage",
+            target_id=str(image_id),
+        )
+    messages.success(request, "Imagem removida do portfólio privado.")
+    return redirect("providers:portfolio")
+
+
+@login_required
+@never_cache
+def professional_settings(request):
+    provider, denied = _approved_provider(request)
+    if denied:
+        return denied
+    application = ProviderApplication.objects.filter(user=request.user).first()
+    return render(
+        request,
+        "providers/professional_settings.html",
+        {
+            "provider": provider,
+            "application": application,
+            "document_status": application.get_review_status_display()
+            if application
+            else "Indisponível",
+        },
+    )

@@ -8,7 +8,18 @@
 - Revisão esclarece rascunho, imagem salva para análise e necessidade de envio/substituição, sem indicar aprovação documental. Solicitação enviada permanece pendente de análise humana.
 - `manage.py check` e 16 verificações focadas passaram, sem escrita no banco. Sem redesenho adicional, mudança de backend, force push ou merge automático.
 
-## 0.4.1-alpha — 2026-11-06
+## 0.4.1-alpha — Área do Prestador — 2026-11-06
+
+- Criado dashboard autenticado apenas para `ProviderProfile` aprovado, com redirecionamento coerente para login/onboarding/acompanhamento e bloqueio de perfis suspensos ou não aprovados.
+- Adicionados dashboard responsivo, navegação recolhível/drawer, busca e listagem de anúncios próprios, edição do perfil público permitido, área aproximada de atendimento, configurações e prévias pública/privada.
+- Indicadores contam anúncios reais. Visualizações e gráfico ficam explicitamente indisponíveis; atividades vêm da auditoria; estados vazios não inventam pedidos, faturamento, avaliação ou mensagem.
+- Portfólio aceita até 20 imagens, com verificação/re-encode WebP e storage privado cifrado; leitura, exclusão e ordenação exigem sessão, aprovação e propriedade.
+- API v1 adiciona dashboard e perfil `me`, restritos a sessão e aprovação, com serializer allowlist e auditoria mínima.
+- Migration não destrutiva `providers.0003_providerportfolioimage` adiciona galeria privada.
+- `manage.py check`, `makemigrations --check --dry-run`, Ruff check/format e smoke de templates/rotas passaram; migration `0003` aplicada no MySQL local. Oito testes focados não iniciaram por MySQL 1044 ao criar `test_bico`; não houve escrita de testes no banco principal. Inspeção visual em navegador ainda pendente.
+- CRUD de anúncios, tracking, BICO Gestão, pedidos, chat, notificações, avaliações e financeiro permanecem futuros.
+
+## Refinamento de UX do onboarding Alpha 0.4.0 — 2026-11-06
 
 - Refatorado o frontend do onboarding em tela dedicada, com trilha lateral, progresso mobile, identidade BICO, SVGs locais, cards compactos e microinterações com movimento reduzido.
 - Documentos passaram à identificação, com prévia, substituição, arrastar/soltar e feedback do envio privado. Opcionais recolhidos; especialidades agrupadas com busca/limite; atendimento contextual com CEP ViaCEP, fallback manual e raio visual.
@@ -16,7 +27,7 @@
 - Revisão e sucesso redesenhados, ciência da análise humana e estimativa variável de até 24h. `PENDING_REVIEW`/`NOT_REVIEWED`, armazenamento cifrado e bloqueio de produção preservados; sem aprovação automática ou perfil público novo.
 - Sem mudança de modelos ou migrations. Forms receberam ajustes de labels/validação, categoria principal ativa e cidade/UF únicos no editor. Rotas privadas usam `no-store`.
 - Smoke PF/PJ controlado no MySQL com 66 asserções e rollback; renderização em cinco larguras e interações do navegador verificadas. Suíte completa isolada permanece pendente de privilégios de `test_bico` e não foi repetida nesta tarefa visual.
-- Refinamento incorporado na branch `feature/bico-alpha-0.4.0-provider-onboarding`, derivada de `e415242`. A Área do Prestador permanece futura, com numeração a definir.
+- Refinamento incorporado na branch `feature/bico-alpha-0.4.0-provider-onboarding`, derivada de `e415242`; mantém a versão Alpha 0.4.0 do onboarding.
 
 ## 0.4.0-alpha — 2026-11-06
 

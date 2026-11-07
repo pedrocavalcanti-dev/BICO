@@ -226,3 +226,31 @@ class ProviderDocument(models.Model):
 
     def __str__(self):
         return f"Documento {self.side.lower()} da solicitação {self.application_id}"
+
+
+class ProviderPortfolioImage(models.Model):
+    """Private work samples managed by their owner until portfolio moderation exists."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    provider = models.ForeignKey(
+        ProviderProfile,
+        on_delete=models.CASCADE,
+        related_name="portfolio_images",
+    )
+    image = models.ImageField(
+        storage=private_document_storage,
+        upload_to="provider-portfolio/",
+    )
+    description = models.CharField(max_length=180, blank=True)
+    display_order = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["display_order", "created_at"]
+        indexes = [models.Index(fields=["provider", "display_order"])]
+        verbose_name = "imagem de portfólio privado"
+        verbose_name_plural = "imagens de portfólio privado"
+
+    def __str__(self):
+        return f"Imagem de portfólio de {self.provider.public_name}"

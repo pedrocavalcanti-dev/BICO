@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f8">
+    <title>{% block title %}Área profissional | BICO{% endblock %}</title>
+    <link rel="preload" href="{% static 'fonts/inter-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+    <link rel="stylesheet" href="{% static 'css/providers/dashboard.css' %}">
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="provider-app">
+    <a class="provider-skip" href="#main-content">Pular para o conteúdo</a>
+    <aside class="provider-sidebar" id="provider-sidebar" aria-label="Navegação profissional">
+      <a class="provider-brand" href="{% url 'providers:dashboard' %}" aria-label="BICO Prestador, início">
+        <img src="{% static 'branding/logos/logo-bico-quadrada.png' %}" alt="BICO">
+        <span>Área profissional</span>
+      </a>
+      <nav class="provider-nav">
+        <p class="provider-nav-label">Visão geral</p>
+        <a class="provider-nav-link {% if active_page == 'dashboard' %}is-active{% endif %}" href="{% url 'providers:dashboard' %}"><span aria-hidden="true">⌂</span> Dashboard</a>
+        <a class="provider-nav-link {% if active_page == 'listings' %}is-active{% endif %}" href="{% url 'providers:managed-listings' %}"><span aria-hidden="true">▤</span> Meus serviços</a>
+        <p class="provider-nav-label">Meu trabalho</p>
+        <a class="provider-nav-link {% if active_page == 'profile' %}is-active{% endif %}" href="{% url 'providers:profile-edit' %}"><span aria-hidden="true">◎</span> Perfil profissional</a>
+        <a class="provider-nav-link {% if active_page == 'portfolio' %}is-active{% endif %}" href="{% url 'providers:portfolio' %}"><span aria-hidden="true">▧</span> Portfólio</a>
+        <a class="provider-nav-link {% if active_page == 'area' %}is-active{% endif %}" href="{% url 'providers:service-area' %}"><span aria-hidden="true">⌖</span> Onde atendo</a>
+        <div class="provider-nav-link provider-nav-disabled" aria-disabled="true" title="Disponível na Alpha 0.4.2"><span aria-hidden="true">＋</span> Criar anúncio <small>0.4.2</small></div>
+        <p class="provider-nav-label">Conta</p>
+        <a class="provider-nav-link {% if active_page == 'settings' %}is-active{% endif %}" href="{% url 'providers:professional-settings' %}"><span aria-hidden="true">⚙</span> Configurações</a>
+      </nav>
+      <div class="provider-sidebar-bottom">
+        <a class="provider-nav-link" href="{% url 'core:home' %}"><span aria-hidden="true">↗</span> Voltar ao modo Cliente</a>
+        <a class="provider-user" href="{% url 'accounts:account' %}">
+          <span class="provider-avatar">{{ provider.public_name|first|upper }}</span>
+          <span><strong>{{ provider.public_name }}</strong><small>Prestador aprovado</small></span>
+          <span class="provider-user-more" aria-hidden="true">···</span>
+        </a>
+      </div>
+    </aside>
+    <div class="provider-main-shell">
+      <header class="provider-topbar">
+        <button class="provider-menu-toggle" type="button" aria-label="Recolher navegação" title="Recolher navegação" aria-controls="provider-sidebar" aria-expanded="false">☰</button>
+        <form class="provider-search" action="{% url 'providers:managed-listings' %}" method="get" role="search">
+          <label class="visually-hidden" for="provider-search-query">Buscar nos meus serviços</label>
+          <input id="provider-search-query" type="search" name="q" maxlength="100" placeholder="Buscar nos meus serviços" value="{% if query %}{{ query }}{% endif %}">
+          <button type="submit" aria-label="Buscar">⌕</button>
+        </form>
+        <div class="provider-topbar-actions">
+          <span class="provider-approval"><i></i> Perfil aprovado</span>
+          <a href="{% url 'providers:profile-edit' %}" class="provider-top-avatar" aria-label="Editar perfil">{{ provider.public_name|first|upper }}</a>
+        </div>
+      </header>
+      <main class="provider-content" id="main-content">
+        {% if messages %}<div class="provider-messages" aria-live="polite">{% for message in messages %}<p class="provider-message {{ message.tags }}">{{ message }}</p>{% endfor %}</div>{% endif %}
+        {% block dashboard_content %}{% endblock %}
+      </main>
+      <footer class="provider-footer"><span>BICO Prestador</span><a href="{% url 'core:home' %}">Marketplace</a></footer>
+    </div>
+    <script src="{% static 'js/providers/dashboard.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

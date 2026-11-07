@@ -1,0 +1,50 @@
+{% extends "providers/dashboard_base.html" %}
+{% block title %}Dashboard profissional | BICO{% endblock %}
+{% block dashboard_content %}
+<div class="provider-page-heading">
+  <div><span class="provider-eyebrow">BICO Prestador</span><h1>{% if not published_count and not draft_count and not paused_count %}Bem-vindo à BICO Prestador, {{ provider.public_name|truncatechars:35 }}{% else %}Olá, {{ provider.public_name|truncatechars:50 }}{% endif %}</h1><p>Confira seu perfil e gerencie os serviços que você já publicou.</p></div>
+  <a class="provider-button secondary" href="{% url 'providers:profile-edit' %}">Editar perfil <span aria-hidden="true">↗</span></a>
+</div>
+<section class="provider-grid provider-metrics" aria-label="Resumo dos seus anúncios">
+  <article class="provider-card provider-metric"><span class="provider-metric-icon" aria-hidden="true">▤</span><span class="provider-metric-label">Serviços publicados</span><strong class="provider-metric-value">{{ published_count }}</strong><span class="provider-metric-note">Anúncios ativos no marketplace</span></article>
+  <article class="provider-card provider-metric"><span class="provider-metric-icon" aria-hidden="true">✎</span><span class="provider-metric-label">Rascunhos</span><strong class="provider-metric-value">{{ draft_count }}</strong><span class="provider-metric-note">Ainda não publicados</span></article>
+  <article class="provider-card provider-metric"><span class="provider-metric-icon" aria-hidden="true">Ⅱ</span><span class="provider-metric-label">Pausados</span><strong class="provider-metric-value">{{ paused_count }}</strong><span class="provider-metric-note">Anúncios pausados</span></article>
+  <article class="provider-card provider-metric"><span class="provider-metric-icon" aria-hidden="true">◉</span><span class="provider-metric-label">Visualizações</span><strong class="provider-metric-value">—</strong><span class="provider-metric-note">Métricas ainda não coletadas</span></article>
+</section>
+<section class="provider-grid provider-dashboard-grid">
+  <article class="provider-card provider-panel">
+    <div class="provider-panel-heading"><div><h2>Desempenho dos seus serviços</h2><span class="provider-panel-subtitle">Visualizações históricas ficarão disponíveis quando houver coleta de audiência.</span></div></div>
+    <div class="provider-empty"><strong>Os dados de desempenho ainda não estão disponíveis</strong><p>A BICO ainda não coleta visualizações de anúncios. Nenhum número ou gráfico demonstrativo é exibido.</p></div>
+  </article>
+  <article class="provider-card provider-panel">
+    <div class="provider-panel-heading"><h2>Situação dos anúncios</h2><a class="provider-panel-subtitle" href="{% url 'providers:managed-listings' %}">Ver serviços</a></div>
+    {% if published_count or draft_count or paused_count %}
+      <div class="provider-status-list">
+        <div class="provider-status-row"><i class="provider-status-dot published"></i><span>Publicados</span><strong>{{ published_count }}</strong></div>
+        <div class="provider-status-row"><i class="provider-status-dot draft"></i><span>Rascunhos</span><strong>{{ draft_count }}</strong></div>
+        <div class="provider-status-row"><i class="provider-status-dot paused"></i><span>Pausados</span><strong>{{ paused_count }}</strong></div>
+      </div>
+    {% else %}<div class="provider-empty"><strong>Você ainda não tem anúncios</strong><p>A criação de anúncios será habilitada na Alpha 0.4.2.</p></div>{% endif %}
+  </article>
+</section>
+<section class="provider-grid provider-lower-grid">
+  <article class="provider-card provider-panel">
+    <div class="provider-panel-heading"><h2>Meus serviços em destaque</h2><a class="provider-panel-subtitle" href="{% url 'providers:managed-listings' %}">Ver todos</a></div>
+    {% if featured_listings %}<div class="provider-featured">
+      {% for listing in featured_listings %}<a class="provider-featured-item" href="{% url 'core:service-detail' listing.slug %}">
+        {% if listing.image %}<img src="{{ listing.image.url }}" alt="" loading="lazy">{% else %}<span class="provider-featured-placeholder" aria-hidden="true">BICO</span>{% endif %}
+        <span><strong>{{ listing.title }}</strong><small>{{ listing.category.name }} · {{ listing.get_status_display }}</small></span>
+        <span class="price">{% if listing.price_type == 'QUOTE' %}Sob orçamento{% else %}A partir de R$ {{ listing.price_start|floatformat:2 }}{% endif %}</span>
+      </a>{% endfor %}
+    </div>{% else %}<div class="provider-empty"><strong>Nenhum serviço publicado ainda</strong><p>Quando houver anúncios associados ao seu perfil, eles aparecerão aqui.</p></div>{% endif %}
+  </article>
+  <article class="provider-card provider-panel">
+    <div class="provider-panel-heading"><h2>Atividades recentes</h2><span class="provider-panel-subtitle">Últimos 90 dias</span></div>
+    {% if recent_activities %}<ul class="provider-activity">{% for activity in recent_activities %}<li>{{ activity.label }}<time datetime="{{ activity.created_at|date:'c' }}">{{ activity.created_at|date:'d/m/Y H:i' }}</time></li>{% endfor %}</ul>{% else %}<div class="provider-empty"><strong>Sem atividades recentes</strong><p>Eventos reais da sua conta aparecerão aqui.</p></div>{% endif %}
+  </article>
+</section>
+<section class="provider-card provider-panel" style="margin-top:18px">
+  <div class="provider-panel-heading"><div><h2>Complete seu perfil profissional</h2><span class="provider-panel-subtitle">Sugestões calculadas com base nos dados atuais do seu perfil.</span></div><a class="provider-panel-subtitle" href="{% url 'providers:profile-edit' %}">Ver perfil</a></div>
+  {% if profile_tasks %}<ul class="provider-task-list">{% for label, url_name in profile_tasks %}<li><a href="{% url url_name %}"><span class="provider-task-icon" aria-hidden="true">＋</span>{{ label }}<span class="provider-task-done">›</span></a></li>{% endfor %}</ul>{% else %}<p class="provider-task-done">Seu perfil tem os dados básicos preenchidos.</p>{% endif %}
+</section>
+{% endblock %}

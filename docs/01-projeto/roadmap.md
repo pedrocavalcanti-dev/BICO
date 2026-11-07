@@ -8,11 +8,10 @@
 | 0.3.0 | Cadastro/login, recuperação de senha e área do cliente | Implementada na branch de desenvolvimento; suíte completa bloqueada por privilégio MySQL |
 | 0.3.1 | Refinar navegação, imagens, galeria de anúncios, perfil público, contratos API e login Google futuro | Branch `feature/bico-alpha-0.3.1-experience` publicada; validações focadas concluídas; suíte MySQL completa e revisão visual pendentes |
 | 0.3.2 | Enriquecer imagens demonstrativas, completar galerias, corrigir associações e refinar anúncio/perfil | Publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`, commit `e857cbb`; 36 capas únicas, 28 testes focados e revisão visual mobile/desktop passaram; suíte completa pendente de privilégio MySQL |
-| 0.4.0 | Onboarding de prestador, dados PF/PJ, modalidades e revisão documental humana | Publicada em `origin/feature/bico-alpha-0.4.0-provider-onboarding` (implementação `8fbec3e`); checks de código concluídos e migration aplicada no MySQL local; testes focados bloqueados pelo privilégio para criar `test_bico`; não integrada à `main` |
-| 0.4.1 | Refatoração visual e UX do onboarding: tela dedicada, identificação/documentos, especialidades, CEP e revisão | Refinamento incorporado na entrega final da Alpha 0.4.0 em `feature/bico-alpha-0.4.0-provider-onboarding`; smoke MySQL e revisão responsiva focados |
-| A definir | Área do Prestador: dashboard, edição do perfil, especialidades, localização, portfólio, indicadores e navegação exclusiva | Próxima funcionalidade planejada; numeração anterior 0.4.1 redirecionada ao onboarding por solicitação de produto |
-| 0.4.2 | BICO Gestão: análise humana, correções, histórico de decisões e controle de acesso | Planejada |
-| 0.4.3 | Publicação e gestão de anúncios pelo prestador após aprovação | Planejada |
+| 0.4.0 | Onboarding de prestador PF/PJ, modalidades, revisão documental e refinamento visual responsivo | Publicada em `origin/feature/bico-alpha-0.4.0-provider-onboarding` (implementação `8fbec3e`); checks de código concluídos, migration aplicada no MySQL local e smoke/revisão responsiva focados; suíte isolada bloqueada pelo privilégio para criar `test_bico`; não integrada à `main` |
+| 0.4.1 | Área do Prestador: dashboard, gestão do perfil/atendimento/portfólio e consulta de anúncios | Em desenvolvimento na branch `feature/bico-alpha-0.4.1-provider-dashboard`; indicadores limitados a dados existentes |
+| 0.4.2 | Criação, edição, revisão e gerenciamento de anúncios pelo prestador aprovado | Planejada; sem CRUD parcial nesta versão |
+| A definir | BICO Gestão: análise humana de onboarding, correções e histórico de decisões | Planejada; depende de revisão jurídica e operacional dos documentos |
 | 0.5.0 | Solicitações de serviço e estados de atendimento | Planejada |
 | 0.6.0 | Chat e sistema de avaliações e reputação vinculado a serviços concluídos | Planejada |
 | 0.7.0 | BICO Agora: descoberta geográfica com Mapbox, sujeita a decisão de precisão, consentimento e privacidade | Planejada |

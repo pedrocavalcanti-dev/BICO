@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Área profissional indisponível | BICO{% endblock %}
+{% block content %}<main class="page-shell"><section class="provider-card provider-panel provider-empty"><strong>A Área do Prestador não está disponível para este perfil</strong><p>O acesso profissional está condicionado à situação da conta. Consulte o acompanhamento do cadastro ou volte ao marketplace.</p><a class="provider-button secondary" href="{% url 'providers:application-status' %}">Acompanhar cadastro</a></section></main>{% endblock %}

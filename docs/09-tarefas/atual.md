@@ -1,4 +1,20 @@
-# Tarefa atual — correções finais do onboarding Alpha 0.4.0
+# Tarefa atual — Área do Prestador Alpha 0.4.1
+
+- [x] Implementar shell profissional com sidebar recolhível/drawer responsivo, busca funcional nos serviços próprios e retorno ao modo Cliente.
+- [x] Exigir perfil realmente aprovado nas views e API; redirecionar anônimo, onboarding em rascunho e solicitação pendente conforme os fluxos existentes; bloquear suspensos/reprovados.
+- [x] Dashboard com contagens reais de anúncios, estados vazios de visualizações, atividades auditadas e ações calculadas por dados faltantes; sem gráficos/contadores fictícios.
+- [x] Implementar consulta, busca, filtros e paginação de anúncios próprios, sem criar CRUD incompleto.
+- [x] Implementar edição allowlist do perfil público (nome, descrição, foto e especialidades), prévia pública/privada, modalidades/região aproximada e configurações.
+- [x] Criar portfólio privado com validação/re-encode, limite de 20 imagens, prévia protegida por proprietário, remoção e ordenação.
+- [x] Adicionar `GET /api/v1/providers/me/dashboard/` e `GET/PATCH /api/v1/providers/me/profile/` com autenticação, autorização e campos restritos.
+- [x] Criar migration não destrutiva `providers.0003_providerportfolioimage` e aplicá-la no MySQL local; `showmigrations` confirma 0001–0003 aplicadas.
+- [ ] Suíte focada `apps.providers.test_dashboard`: localizada com 8 testes, mas não iniciou porque a conta MySQL não tem permissão para criar `test_bico` (1044). Nenhum teste foi executado no schema principal; repetir ao provisionar privilégio restrito para o banco isolado.
+- [ ] Revisão visual manual em navegador desktop/mobile ainda pendente.
+- [ ] Validar, revisar diff/ignorados, criar commit e publicar a branch `feature/bico-alpha-0.4.1-provider-dashboard`; não integrar à `main`.
+
+Próxima versão: **Alpha 0.4.2 — criação e gerenciamento completo de anúncios**. BICO Gestão, pedidos, chat, notificações, avaliações e financeiro não fazem parte desta entrega.
+
+## Histórico concluído — correções finais do onboarding Alpha 0.4.0
 
 - [x] Preservar o novo design das cinco etapas e o backend já implementado. O refinamento visual solicitado anteriormente como Alpha 0.4.1 estava sem commit e foi levado à branch de entrega solicitada, sem descartar alterações.
 - [x] Corrigir o Enter exclusivamente na busca de especialidades. O envio implícito acionava o primeiro submit do formulário, “Salvar e sair”. Os botões já tinham `type` explícito.

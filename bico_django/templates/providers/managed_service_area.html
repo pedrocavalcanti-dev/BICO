@@ -1,0 +1,16 @@
+{% extends "providers/dashboard_base.html" %}
+{% block title %}Onde atendo | BICO Prestador{% endblock %}
+{% block dashboard_content %}
+<div class="provider-page-heading"><div><span class="provider-eyebrow">Meu trabalho</span><h1>Onde atendo</h1><p>Gerencie suas modalidades e região de atuação aproximada.</p></div></div>
+<section class="provider-card provider-panel provider-form-layout"><h2>Atendimento</h2><form method="post" novalidate>{% csrf_token %}{% if form.non_field_errors %}<div class="provider-form-errors">{{ form.non_field_errors }}</div>{% endif %}
+  <div class="provider-form-grid">
+    <fieldset class="provider-form-field full"><legend class="provider-form-label">{{ form.service_modes.label }}</legend><div class="provider-choice-list">{{ form.service_modes }}</div>{{ form.service_modes.errors }}</fieldset>
+    <div class="provider-form-field"><label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>{{ form.city }}{{ form.city.errors }}</div>
+    <div class="provider-form-field"><label for="{{ form.state.id_for_label }}">{{ form.state.label }}</label>{{ form.state }}{{ form.state.errors }}</div>
+    <div class="provider-form-field full"><label for="{{ form.service_region.id_for_label }}">{{ form.service_region.label }}</label>{{ form.service_region }}{{ form.service_region.errors }}</div>
+    <div class="provider-form-field"><label for="{{ form.service_radius_km.id_for_label }}">{{ form.service_radius_km.label }}</label>{{ form.service_radius_km }}{{ form.service_radius_km.errors }}</div>
+  </div>
+  <p class="provider-notice">A cidade e a região são informações públicas aproximadas. Endereço fixo, número e complemento continuam privados e não são editados aqui. Alterações desta tela atualizam apenas a área profissional, sem editar dados de identidade.</p>
+  <div class="provider-form-actions"><button class="provider-button" type="submit">Salvar área de atendimento</button></div>
+</form></section>
+{% endblock %}

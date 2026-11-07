@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
 from django.core.exceptions import ValidationError
-from rest_framework import status
+from django.db.models import Count
+from rest_framework import serializers, status
 from rest_framework.exceptions import (
     PermissionDenied,
 )
@@ -12,13 +13,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.audit.models import AuditEvent
+from apps.catalog.models import ServiceCategory, ServiceListing
+
 from .forms import (
     ProviderIdentityForm,
     ProviderProfileForm,
     ProviderServiceAreaForm,
     ProviderTypeForm,
 )
-from .models import ProviderDocument
+from .models import ProviderDocument, ProviderProfile
 from .serializers import ProviderApplicationSerializer
 from .services import (
     get_or_create_application,
@@ -143,3 +147,86 @@ class ProviderApplicationSubmitAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class ProviderDashboardAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        provider = _approved_provider_for_api(request.user)
+        counts = {
+            row["status"]: row["total"]
+            for row in ServiceListing.objects.filter(provider=provider)
+            .values("status")
+            .annotate(total=Count("id"))
+        }
+        return Response(
+            {
+                "provider": {
+                    "id": str(provider.pk),
+                    "public_name": provider.public_name,
+                    "status": provider.status,
+                },
+                "listings": {
+                    "published": counts.get(ServiceListing.Status.PUBLISHED, 0),
+                    "drafts": counts.get(ServiceListing.Status.DRAFT, 0),
+                    "paused": counts.get(ServiceListing.Status.PAUSED, 0),
+                },
+                "views": None,
+                "views_available": False,
+            }
+        )
+
+
+class ProviderMeProfileSerializer(serializers.ModelSerializer):
+    categories = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=ServiceCategory.objects.filter(is_active=True, is_specialty=True),
+    )
+
+    class Meta:
+        model = ProviderProfile
+        fields = ("id", "public_name", "description", "city", "state", "categories")
+        read_only_fields = ("id", "city", "state")
+
+    def validate_public_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Informe o nome público.")
+        return value
+
+    def validate_categories(self, value):
+        if not value:
+            raise serializers.ValidationError("Selecione ao menos uma especialidade.")
+        return value
+
+
+class ProviderMeProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        provider = _approved_provider_for_api(request.user)
+        return Response(ProviderMeProfileSerializer(provider).data)
+
+    def patch(self, request):
+        provider = _approved_provider_for_api(request.user)
+        serializer = ProviderMeProfileSerializer(provider, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        updated = serializer.save()
+        AuditEvent.objects.create(
+            actor=request.user,
+            action="provider.dashboard.profile_updated",
+            target_type="ProviderProfile",
+            target_id=str(provider.pk),
+        )
+        return Response(ProviderMeProfileSerializer(updated).data)
+
+
+def _approved_provider_for_api(user):
+    try:
+        provider = ProviderProfile.objects.get(user=user)
+    except ProviderProfile.DoesNotExist:
+        raise PermissionDenied("O acesso à área profissional exige aprovação.") from None
+    if provider.status != ProviderProfile.Status.APPROVED:
+        raise PermissionDenied("O acesso à área profissional exige aprovação.")
+    return provider

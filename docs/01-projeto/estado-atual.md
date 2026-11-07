@@ -2,8 +2,8 @@
 
 **Versão em desenvolvimento:** 0.4.1-alpha
 **Atualizado:** 2026-11-06
-**Branch de entrega:** `feature/bico-alpha-0.4.0-provider-onboarding`
-**Base da refatoração:** `e415242`, preservando a Alpha 0.4.0 publicada (implementação `8fbec3e`). O refinamento visual solicitado como Alpha 0.4.1 e suas correções finais foram reunidos na branch da Alpha 0.4.0 por solicitação do usuário.
+**Branch de entrega:** `feature/bico-alpha-0.4.1-provider-dashboard`
+**Base da implementação:** `e6d1538`, publicada na branch `feature/bico-alpha-0.4.0-provider-onboarding`; a Alpha 0.4.1 deriva desta base e preserva o onboarding.
 **Base:** Alpha 0.3.2 no commit `e857cbb`, publicada em `origin/feature/bico-alpha-0.3.2-visual-assets`
 **Ambiente:** Windows, PowerShell, Python 3.12.10, Django 5.2.19, DRF 3.18.3, MySQL Server 8.0.46
 
@@ -15,7 +15,20 @@
 - Revisão diferencia rascunho, imagem salva para análise, envio faltante e substituição necessária. Solicitação enviada continua aguardando análise humana, sem aprovação automática. Layout e backend preservados nestes ajustes finais.
 - Nesta correção foram executados somente `manage.py check` e 16 verificações focadas: teclado em 390/1440 px, tipos de conta, estados da revisão e formatos documentais. Sem escrita no banco; ações POST no navegador foram interceptadas para verificar o destino de cada botão. As validações extensas anteriores não foram repetidas.
 
-## Alpha 0.4.1 — experiência do onboarding (incorporada à branch Alpha 0.4.0)
+## Área do Prestador — Alpha 0.4.1 (em desenvolvimento)
+
+- Dashboard e páginas de gestão profissional exigem `ProviderProfile.APPROVED`; a verificação é aplicada no servidor. Rascunhos e solicitações pendentes seguem o fluxo Alpha 0.4.0; perfis suspensos/reprovados são bloqueados.
+- Dashboard mostra contagens reais de anúncios publicados, rascunhos e pausados, atividades recentes auditadas, ações baseadas em dados faltantes e um estado vazio explicando que views não são coletadas. Sem números de vendas, avaliações, mensagens ou faturamento fictícios.
+- Implementadas consulta/pesquisa/filtro/paginação dos anúncios próprios, edição allowlist de nome público/apresentação/foto/especialidades, prévia do perfil, edição limitada de modalidade/região aproximada e configurações profissionais.
+- Portfólio aceita JPG/PNG/WebP de até 5 MB/20 MP, limite de 20 imagens, re-encode WebP e armazenamento no storage privado cifrado existente. Visualização, exclusão e ordenação exigem perfil aprovado e propriedade. Não há publicação automática.
+- API v1 adiciona `GET /providers/me/dashboard/` e `GET/PATCH /providers/me/profile/`, usando sessão, perfil aprovado e campos allowlist.
+- Migration nova e não destrutiva: `providers.0003_providerportfolioimage`; aplicada no MySQL local.
+- `manage.py check`, `makemigrations --check --dry-run`, Ruff check/format e `git diff --check` passaram. Dez templates da área e nove rotas Web/API compilaram/resolveram.
+- `providers.0003_providerportfolioimage` foi aplicada ao MySQL local e `showmigrations providers` confirmou 0001–0003. A suíte encontrou 8 testes, mas parou antes de executá-los porque `bico_app` não pode criar `test_bico` (erro 1044); nenhum teste foi executado no banco principal.
+- `.gitignore` cobre `.env`, credenciais, logs, databases locais, caches, artefatos, mídia pública local e o caminho padrão `bico_django/.private-media/`. A inspeção confirmou que estes itens são ignorados e não estão no status do Git.
+- Não foi possível fazer revisão visual por navegador nesta execução. A branch deriva de `e6d1538`; publicação e integração a `main` não foram feitas até o fechamento desta tarefa.
+
+## Refinamento visual do onboarding Alpha 0.4.0 (incorporado à branch de entrega Alpha 0.4.0)
 
 - Tela dedicada com navegação própria, trilha lateral no desktop, progresso compacto no mobile, fontes locais Inter/Quicksand e identidade laranja BICO. Cards menores, ícones SVG locais, foco visível e transições com respeito à preferência de movimento reduzido.
 - Cinco etapas preservadas: tipo PF/PJ; identificação com frente/verso; perfil/especialidades; atendimento/localização; revisão e envio. Campos opcionais ficam recolhidos. Rascunhos antigos com documentos faltantes podem completá-los na revisão.
@@ -25,7 +38,7 @@
 - Revisão final exige ciência da análise humana na Web. Essa ciência não é um aceite jurídico versionado. Envio segue `PENDING_REVIEW`/`NOT_REVIEWED`; previsão inicial de até 24h é apresentada como estimativa variável. BICO Gestão permanece futura.
 - Não houve mudança de modelos, migrations ou mecanismo de autorização. A consulta externa recebe somente CEP, sem cookies BICO ou dados documentais; ADR-011 registra a decisão.
 
-### Validação da Alpha 0.4.1
+### Validação do refinamento do onboarding Alpha 0.4.0
 
 - Smoke controlado com dados sintéticos no MySQL real verificou o fluxo PF/PJ, salvamento das cinco etapas, exigência de duas fotos, armazenamento cifrado/sem URL pública, prévia por proprietário, CSRF e envio final pendente. Foram 66 asserções; as transações foram revertidas e os arquivos sintéticos usaram diretório temporário.
 - A revisão de layout em Edge headless cobriu identificação PF/PJ, as demais etapas e sucesso em 360, 390, 768, 1024 e 1440 px, sem rolagem horizontal. Interações de seleção, busca/limite de especialidades, máscaras, CEP, fallback, modo remoto e upload foram verificadas com respostas de rede controladas. A persistência real foi conferida no smoke MySQL separado.
@@ -52,7 +65,7 @@
 
 ## Próximas metas
 
-- Novembro/2026: continuar o desenvolvimento do Modo Prestador com a Área do Prestador (numeração a definir após a Alpha 0.4.1 visual).
+- Novembro/2026: concluir a Alpha 0.4.1 — Área do Prestador — e iniciar a Alpha 0.4.2 de publicação/gestão de anúncios.
 - Dezembro/2026: meta de conclusão da Beta Web Django.
 - Janeiro/2027: início planejado do aplicativo Flutter para Android e iOS.
 - Avaliações e reputação, moderação automatizada de anúncios e BICO Agora com Mapbox permanecem planejados; nenhum desses recursos está implementado.
@@ -116,7 +129,7 @@
 
 ## Limites e pendências
 
-- Solicitações, contratação, chat, favoritos persistentes, notificações reais, avaliações, modo Prestador, login Google, mapa, pagamentos e aplicativos continuam não implementados.
+- CRUD de anúncios, solicitações, contratação, chat, favoritos persistentes, notificações reais, avaliações, BICO Gestão, login social, mapa, pagamentos e aplicativos continuam não implementados.
 - Confirmação de e-mail não está disponível. Não há avaliações, notas, distância ou estado online/verificado reais nos perfis demonstrativos.
 - Antes de integrar a versão à `main`, provisionar o banco de teste MySQL isolado e executar a suíte completa. Não conceder privilégio global ao usuário da aplicação e não rodar testes no schema principal `Bico`.
 - Fazer revisão visual das páginas de anúncio/perfil em 360, 390, 768, 1024 e 1440 px quando houver uma sessão de navegador independente disponível.

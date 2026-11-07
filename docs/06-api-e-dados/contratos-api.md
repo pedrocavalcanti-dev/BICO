@@ -54,3 +54,13 @@ Os endpoints e os payloads principais permanecem disponíveis. A interface usa P
 Os forms compartilhados exigem tipo PF/PJ, nome/apresentação/categoria principal e cidade/UF. A categoria principal é limitada ao mesmo conjunto ativo de especialidades. CEP informado é normalizado e validado em oito dígitos. Quando `fixed_point_city`/`fixed_point_state` não são fornecidos, usam `city`/`state`; nome do ponto vazio usa o nome profissional. Campos anteriores de endereço próprio continuam aceitos pela API. Não há endpoint de busca de CEP no backend; a consulta opcional é feita pelo navegador conforme ADR-011.
 
 A ciência `acknowledged` pertence ao formulário Web final, sem alteração no contrato de submissão da API. Não é tratada como registro de aceite jurídico. Nenhum campo de aprovação, decisão ou revisor passou a ser editável.
+
+## Área do Prestador — Alpha 0.4.1
+
+| Método | Rota | Autenticação | Contrato |
+|---|---|---|---|
+| GET | `/api/v1/providers/me/dashboard/` | Sessão Django | Identidade pública, contagens reais de anúncios publicados/rascunhos/pausados e `views: null`, `views_available: false` |
+| GET | `/api/v1/providers/me/profile/` | Sessão Django | Perfil profissional próprio: id, nome público, descrição, cidade/UF e especialidades |
+| PATCH | `/api/v1/providers/me/profile/` | Sessão Django + CSRF | Atualiza somente nome público, descrição e especialidades ativas; id e cidade/UF são somente leitura |
+
+Os endpoints exigem `ProviderProfile.status=APPROVED`; autorização usa o usuário da sessão, não um identificador recebido. Perfil/serializers não aceitam status, usuário, documento, aprovação, permissões ou dados de identidade. Alterações registram auditoria mínima. Ainda não existem endpoints para listagem/CRUD de anúncios, portfólio, área de atendimento ou autenticação mobile; as páginas Web permanecem no Django Templates.

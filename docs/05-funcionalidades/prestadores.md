@@ -1,4 +1,27 @@
-# Onboarding do prestador — Alpha 0.4.1
+# Prestadores — onboarding Alpha 0.4.0 e Área do Prestador Alpha 0.4.1
+
+## Área do Prestador — Alpha 0.4.1
+
+A área profissional utiliza a conta BICO existente e exige sessão autenticada com `ProviderProfile.status=APPROVED`. Visitantes são encaminhados ao login; rascunhos seguem ao onboarding, solicitações pendentes à página de acompanhamento e perfis suspensos/reprovados recebem bloqueio. A aprovação é verificada no backend em cada rota; o modo de interface não concede autorização.
+
+Rotas Web implementadas: `/prestador/painel/`, `/prestador/servicos/`, `/prestador/perfil/`, `/prestador/perfil/previa/`, `/prestador/portfolio/`, `/prestador/atendimento/` e `/prestador/configuracoes/`. O shell compartilhado tem sidebar recolhível no desktop e drawer em telas móveis, busca funcional nos próprios anúncios, alternância ao marketplace e navegação responsiva.
+
+O dashboard calcula anúncios publicados, rascunhos e pausados do perfil autenticado. Visualizações aparecem indisponíveis porque não há coleta de audiência. O gráfico é um estado vazio explicativo; atividades recentes vêm da auditoria real permitida; próximas ações dependem de campos efetivamente ausentes. Não há contadores de pedidos, receita, avaliações, mensagens ou saldo.
+
+Meus serviços lista somente anúncios pertencentes ao prestador, com pesquisa, filtro pelos estados reais do modelo, paginação e links para anúncios publicados. A modalidade não está modelada nos anúncios atuais e aparece como indisponível. A criação e edição completa não existem nesta versão; o botão de criar anúncio fica indisponível e sinaliza a Alpha 0.4.2. Não se inventa estado “em análise” para anúncios, pois o modelo não o possui.
+
+Perfil profissional permite alterar nome público, descrição, foto e especialidades ativas; CPF/CNPJ, status, UUID e dados privados não pertencem ao formulário. A foto usa o validador de imagem, conferência do conteúdo JPEG/PNG/WebP, limite de 5 MB/20 MP, remoção de EXIF e re-encode para WebP. O perfil público aprovado continua acessível; a prévia autenticada também está disponível.
+
+O portfólio aceita até 20 imagens JPG/PNG/WebP, de até 5 MB e 20 MP, reprocessadas para WebP. Os bytes ficam em storage privado cifrado, sem URL pública; leitura, exclusão e ordenação exigem o prestador proprietário aprovado. As imagens permanecem privadas até que exista fluxo de moderação/publicação. Associação a anúncios ainda não está disponível.
+
+Onde atendo edita modalidades existentes, cidade/UF e região/raio aproximados usando a solicitação do próprio usuário; endereço residencial, ponto fixo e complemento não são exibidos nem alterados nessa tela. Mudanças de cidade/UF são refletidas no perfil público. Configurações mostram o estado geral da análise sem exibir, baixar ou editar documentos.
+
+API autenticada para o futuro cliente móvel:
+
+- `GET /api/v1/providers/me/dashboard/`: contagens reais de anúncios do prestador autenticado e `views_available=false`.
+- `GET/PATCH /api/v1/providers/me/profile/`: consulta/edição limitada a nome público, descrição e especialidades; id/cidade/UF somente leitura. A autorização deriva de `request.user` e exige perfil aprovado.
+
+A API não expõe documentos privados, portfólio ou dados de outros perfis. A gestão de anúncios, autenticação mobile, solicitações, mensagens, notificações, agenda, avaliações e financeiro continuam fora desta versão.
 
 ## Estado
 
@@ -52,7 +75,6 @@ As rotas exigem autenticação. A Web e a API compartilham os mesmos forms e ser
 
 ## Próximas etapas
 
-- **Área do Prestador (numeração a definir):** dashboard, edição do perfil, especialidades, localização, portfólio, indicadores com dados reais e navegação exclusiva. Esta etapa não está implementada; a Alpha 0.4.1 foi redirecionada ao refinamento do onboarding.
-- **Alpha 0.4.2 — BICO Gestão:** análise humana restrita, correções, histórico de decisões, retenção e gestão de acesso. Esta etapa não está implementada.
-- **Alpha 0.4.3 — Publicação:** perfil público e publicação/gestão de anúncios após aprovação. Esta etapa não está implementada.
+- **Alpha 0.4.2 — Publicação e gestão de anúncios:** criar, editar, enviar para revisão e gerenciar anúncios. O dashboard atual não oferece CRUD incompleto.
+- **BICO Gestão — numeração a definir:** análise humana restrita, correções, histórico de decisões, retenção e gestão de acesso. Exige revisão jurídica e operacional antes de documentos reais.
 - Antes de disponibilizar documentos reais: decisões jurídicas e de segurança indicadas acima, testes integrados em banco MySQL isolado e revisão de acessibilidade/responsividade.
